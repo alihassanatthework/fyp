@@ -35,9 +35,22 @@ db.sqlite3-journal
 /staticfiles
 /static
 
-# Environment Variables
+# Sensitive Django Files
+config/local_settings.py
+config/secret_key.txt
+secret_key.txt
+*.pem
+*.key
+*.crt
+*.p12
+
+# Environment Variables (SENSITIVE - Never commit!)
 .env
 .env.local
+.env.*
+!.env.example
+*.env
+.envrc
 
 # IDE
 .vscode/
@@ -57,7 +70,60 @@ htmlcov/
 
 # AI Models (if large)
 *.h5
+*.hdf5
 *.pb
 *.onnx
+*.pt
+*.pth
+*.ckpt
 models/
+checkpoints/
+*.weights
+*.tflite
+
+# User Uploaded Media (SENSITIVE - Contains user images)
+media/
+uploads/
+user_images/
+user_data/
+
+# Database Backups (SENSITIVE)
+*.sql
+*.dump
+backups/
+*.backup
+
+# Secrets and Credentials (SENSITIVE)
+secrets/
+credentials/
+*.secret
+*.credential
+api_keys.txt
+tokens.txt
+*.jwt
+
+# Configuration with Secrets
+config/production.py
+config/staging.py
+local_config.py
+
+# Logs (may contain sensitive data)
+logs/
+*.log.*
+*.log
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Cache (may contain sensitive data)
+.cache/
+*.cache
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
 
