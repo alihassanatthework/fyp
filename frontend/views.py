@@ -92,11 +92,32 @@ def upload_image(request):
         # TODO: Integrate actual ML model here
         severity_results = detect_severity_mock(detected_conditions)
         
+        # Check if any condition has severity > 70 (recommend dermatologist)
+        max_severity = max([severity_results[c['name']]['score'] for c in detected_conditions], default=0)
+        recommend_dermatologist = max_severity > 70
+        
         # Generate recommendations based on medical history
-        recommendations = generate_recommendations(detected_conditions, severity_results, medical_history)
+        recommendations = generate_recommendations(detected_conditions, severity_results, medical_history, recommend_dermatologist)
         
         # Store analysis result (for history)
         analysis_id = store_analysis_result(request.user, image_file, image_type, detected_conditions, severity_results)
+        
+        # Store results in session for results page
+        request.session['last_analysis'] = {
+            'analysis_id': analysis_id,
+            'image_type': image_type,
+            'conditions': [
+                {
+                    'name': condition['name'],
+                    'severity_level': severity_results[condition['name']]['level'],
+                    'severity_score': severity_results[condition['name']]['score']
+                }
+                for condition in detected_conditions
+            ],
+            'recommendations': recommendations,
+            'recommend_dermatologist': recommend_dermatologist,
+            'max_severity': max_severity,
+        }
         
         # Redirect to results page
         return redirect('frontend:results', analysis_id=analysis_id)
