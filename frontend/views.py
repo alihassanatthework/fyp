@@ -123,39 +123,46 @@ def detect_conditions_mock(image_type):
     """Mock function for disease detection (ML Model) - to be replaced with actual model"""
     if image_type == 'skin':
         return [
-            {'name': 'Acne', 'confidence': 85},
-            {'name': 'Dark Spots', 'confidence': 72},
+            {'name': 'Acne'},
+            {'name': 'Dark Spots'},
         ]
     else:  # scalp
         return [
-            {'name': 'Dandruff', 'confidence': 88},
-            {'name': 'Dryness', 'confidence': 65},
+            {'name': 'Dandruff'},
+            {'name': 'Dryness'},
         ]
 
 
 def detect_severity_mock(conditions):
-    """Mock function for severity detection (ML Model) - to be replaced with actual model"""
-    severity_map = {
-        'Acne': 'Moderate',
-        'Dark Spots': 'Mild',
-        'Dandruff': 'Moderate',
-        'Dryness': 'Mild',
-        'Hair Fall': 'Severe',
+    """Mock function for severity detection (ML Model) - returns severity score and level"""
+    # Severity scores: 0-100 (0-30: Mild, 31-70: Moderate, 71-100: Severe)
+    severity_data = {
+        'Acne': {'score': 75, 'level': 'Severe'},
+        'Dark Spots': {'score': 45, 'level': 'Moderate'},
+        'Dandruff': {'score': 65, 'level': 'Moderate'},
+        'Dryness': {'score': 35, 'level': 'Moderate'},
+        'Hair Fall': {'score': 85, 'level': 'Severe'},
+        'Hyperpigmentation': {'score': 55, 'level': 'Moderate'},
+        'Oiliness': {'score': 40, 'level': 'Moderate'},
     }
     
     results = {}
     for condition in conditions:
         name = condition['name']
-        results[name] = {
-            'severity': severity_map.get(name, 'Mild'),
-            'confidence': condition['confidence']
-        }
+        default = {'score': 50, 'level': 'Moderate'}
+        results[name] = severity_data.get(name, default)
+    
     return results
 
 
-def generate_recommendations(conditions, severity_results, medical_history):
-    """Generate personalized recommendations based on medical history"""
+def generate_recommendations(conditions, severity_results, medical_history, recommend_dermatologist=False):
+    """Generate personalized recommendations based on medical history and severity"""
     recommendations = []
+    
+    # If severity > 70, prioritize dermatologist consultation
+    if recommend_dermatologist:
+        recommendations.append('🚨 **HIGH SEVERITY DETECTED** - We strongly recommend consulting with a dermatologist for professional evaluation and treatment.')
+        recommendations.append('📞 Book an appointment with a dermatologist as soon as possible.')
     
     # Base recommendations
     base_recommendations = {
@@ -168,7 +175,10 @@ def generate_recommendations(conditions, severity_results, medical_history):
     # Filter based on medical history
     for condition in conditions:
         name = condition['name']
-        if name in base_recommendations:
+        severity_score = severity_results[name]['score']
+        
+        # Only add general recommendations if severity is not too high
+        if severity_score <= 70 and name in base_recommendations:
             for rec in base_recommendations[name]:
                 # Safety check: filter unsafe recommendations
                 if is_safe_recommendation(rec, medical_history):
@@ -182,7 +192,11 @@ def generate_recommendations(conditions, severity_results, medical_history):
     if medical_history.has_allergies:
         recommendations.append('⚠️ Check product ingredients for known allergens')
     
-    return recommendations if recommendations else ['Maintain good hygiene', 'Stay hydrated', 'Consult dermatologist if condition persists']
+    # If no recommendations, add general advice
+    if not recommendations:
+        recommendations = ['Maintain good hygiene', 'Stay hydrated', 'Consult dermatologist if condition persists']
+    
+    return recommendations
 
 
 def is_safe_recommendation(recommendation, medical_history):

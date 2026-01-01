@@ -8,6 +8,15 @@
         <div class="results-header">
             <h1 class="page-title">Analysis Results</h1>
             <p class="analysis-id">Analysis ID: {{ analysis_id }}</p>
+            {% if recommend_dermatologist %}
+            <div class="dermatologist-alert">
+                <div class="alert-icon">🚨</div>
+                <div class="alert-content">
+                    <h3>High Severity Detected</h3>
+                    <p>Severity Score: {{ max_severity }}% - We strongly recommend consulting with a dermatologist.</p>
+                </div>
+            </div>
+            {% endif %}
         </div>
 
         <div class="results-grid">
@@ -18,15 +27,28 @@
                     <div class="condition-item">
                         <div class="condition-header">
                             <h3>{{ condition.name }}</h3>
-                            <span class="severity-badge severity-{{ condition.severity|lower }}">
-                                {{ condition.severity }}
+                            <span class="severity-badge severity-{{ condition.severity_level|lower }}">
+                                {{ condition.severity_level }}
                             </span>
                         </div>
                         <div class="condition-details">
-                            <div class="confidence-bar">
-                                <div class="confidence-fill" style="width: {{ condition.confidence }}%"></div>
+                            <div class="severity-score-display">
+                                <span class="score-label">Severity Score:</span>
+                                <span class="score-value">{{ condition.severity_score }}%</span>
                             </div>
-                            <p class="confidence-text">Confidence: {{ condition.confidence }}%</p>
+                            <div class="severity-bar">
+                                <div class="severity-fill severity-{{ condition.severity_level|lower }}-fill" 
+                                     style="width: {{ condition.severity_score }}%"></div>
+                            </div>
+                            <div class="severity-description">
+                                {% if condition.severity_score > 70 %}
+                                    <span class="severity-warning">⚠️ Severe - Professional consultation recommended</span>
+                                {% elif condition.severity_score > 30 %}
+                                    <span class="severity-info">Moderate - Monitor and follow recommendations</span>
+                                {% else %}
+                                    <span class="severity-success">Mild - Continue preventive care</span>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     {% empty %}
@@ -36,11 +58,21 @@
             </div>
 
             <div class="results-card recommendations-card">
-                <h2>Recommendations</h2>
+                <h2>Personalized Recommendations</h2>
                 <div class="recommendations-list">
                     {% for recommendation in recommendations %}
-                    <div class="recommendation-item">
-                        <div class="recommendation-icon">💡</div>
+                    <div class="recommendation-item {% if '🚨' in recommendation or 'HIGH SEVERITY' in recommendation %}recommendation-urgent{% endif %}">
+                        <div class="recommendation-icon">
+                            {% if '🚨' in recommendation or 'HIGH SEVERITY' in recommendation %}
+                                🚨
+                            {% elif '⚠️' in recommendation %}
+                                ⚠️
+                            {% elif '📞' in recommendation %}
+                                📞
+                            {% else %}
+                                💡
+                            {% endif %}
+                        </div>
                         <p>{{ recommendation }}</p>
                     </div>
                     {% empty %}
@@ -50,15 +82,27 @@
             </div>
         </div>
 
+        {% if recommend_dermatologist %}
+        <div class="dermatologist-card">
+            <div class="dermatologist-content">
+                <div class="dermatologist-icon">👨‍⚕️</div>
+                <div class="dermatologist-text">
+                    <h3>Consult a Dermatologist</h3>
+                    <p>Based on the severity of detected conditions, we recommend scheduling an appointment with a dermatologist for professional evaluation and treatment.</p>
+                    <a href="#" class="btn btn-primary btn-large">Find Dermatologist</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="results-actions">
             <a href="{% url 'frontend:upload' %}" class="btn btn-primary">New Analysis</a>
             <a href="{% url 'frontend:history' %}" class="btn btn-secondary">View History</a>
         </div>
 
         <div class="results-note">
-            <p><strong>Note:</strong> This analysis is for informational purposes only. For severe conditions, please consult with a dermatologist.</p>
+            <p><strong>Note:</strong> This analysis is for informational purposes only. For severe conditions or persistent issues, please consult with a qualified dermatologist.</p>
         </div>
     </div>
 </div>
 {% endblock %}
-
