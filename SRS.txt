@@ -1,0 +1,617 @@
+ 
+ 1 
+Software Requirements Specification for Projects 
+_______________________________________________________________ 
+                                          
+         
+ 
+ 
+ 
+ 
+ 
+ 
+Department of Software Engineering 
+ University of Management and Technology (UMT), Lahore 
+Software Requirements Specification (SRS) 
+FYP-1 AI powered skin, scalp personalized treatment makeup 
+and fashion assistance 
+Version 1.0 
+Prepared by: 
+Ali Hassan 
+Huda Masood  
+Sibgha shahzadi 
+Aqsa Mustafa 
+Supervised by: 
+Asif Subhani 
+Advisor: 
+Waqar Ashiq 
+Co Advisor: 
+
+
+ 
+ 2 
+Software Requirements Specification for Projects 
+Shela Afzal 
+12thDec,2025 
+ 
+Version Table 
+    Version     Author      Date     Description 
+    
+    
+    
+    
+ 
+Table of content 
+ 
+Software Requirements Specification (SRS) .................................................................................................. 1 
+FYP-1 AI powered skin, scalp personalized treatment makeup and fashion assistance ............................... 1 
+Version 1.0 ..................................................................................................................................................... 1 
+Table of content ............................................................................................................................................. 2 
+1.   Introduction ............................................................................................................................................. 5 
+1.1 Purpose ................................................................................................................................................ 5 
+1.2   Scope .................................................................................................................................................. 5 
+1.3   Definitions, Acronyms, and Abbreviations ........................................................................................ 5 
+1.4   References ......................................................................................................................................... 5 
+1.5   Overview ............................................................................................................................................ 6 
+2   Overall Description.................................................................................................................................... 6 
+2.1 Product Perspective ............................................................................................................................. 6 
+It mainly focuses on checking the skin and scalp health of a person using AI. The user will upload or 
+scan a picture of their face or hair, and the system will automatically find skin or scalp problems. ... 6 
+2.2 Product Functions ............................................................................................................................ 6 
+2.3 User Characteristics ....................................................................................................................... 6 
+People who want to check their skin or hair/scalp condition. .............................................................. 6 
+2.4 Constraints ........................................................................................................................................... 7 
+2.5 Assumptions and Dependencies.......................................................................................................... 7 
+2.6 System Environment ............................................................................................................................ 7 
+
+ 
+ 3 
+Software Requirements Specification for Projects 
+3   Specific Requirements .............................................................................................................................. 7 
+3.1 Functional Requirements (FR) ............................................................................................................. 7 
+FR1: User Authentication ................................................................................................................... 7 
+FR-2: Database Storage...................................................................................................................... 7 
+FR-3: User Image Input ...................................................................................................................... 8 
+FR-4: Image Validation ....................................................................................................................... 8 
+FR-5: AI-Based Detection Pipeline ..................................................................................................... 8 
+FR-6: AI-Based Skin Condition Detection ........................................................................................... 8 
+FR-7: AI-Based Scalp Condition Detection ......................................................................................... 8 
+FR-8: Severity Classification ............................................................................................................... 8 
+FR-9: Personalized Diagnosis and Care Suggestions.......................................................................... 9 
+FR-10: Medical-History-Aware Treatment Recommendation ........................................................... 9 
+FR-11: Result Visualization and Report Generation .......................................................................... 9 
+FR-12: Result Storage and History Tracking....................................................................................... 9 
+FR-13: User Profile Management ...................................................................................................... 9 
+FR-14: Feedback and Model Improvement ....................................................................................... 9 
+FR-15: Data Security and Privacy ....................................................................................................... 9 
+FR-16: Error Handling......................................................................................................................... 9 
+FR-17: Safe Recommendation Enforcement ..................................................................................... 9 
+FR-18: Transparent AI Output Explanation...................................................................................... 10 
+FR-19: User Education Module ........................................................................................................ 10 
+FR-20: Quick Response Handling ..................................................................................................... 10 
+FR-21: Automatic Privacy Protection ............................................................................................... 10 
+FR-22: Regular Model Update Support ........................................................................................... 10 
+3.2 Non-Functional Requirements (NFR) ................................................................................................. 10 
+These describe how the system should perform and behave. ........................................................... 10 
+• Performance .................................................................................................................................... 10 
+• Accuracy ........................................................................................................................................... 10 
+• Reliability ......................................................................................................................................... 10 
+• Scalability ......................................................................................................................................... 10 
+• Usability ........................................................................................................................................... 10 
+• Security ............................................................................................................................................ 10 
+• Availability........................................................................................................................................ 10 
+
+ 
+ 4 
+Software Requirements Specification for Projects 
+• Maintainability ................................................................................................................................. 10 
+• Compatibility .................................................................................................................................... 11 
+• Privacy .............................................................................................................................................. 11 
+• Portability......................................................................................................................................... 11 
+• Health Safety Compliance ................................................................................................................ 11 
+3.3 Interface Requirements ..................................................................................................................... 11 
+3.4 System Features ................................................................................................................................. 12 
+3.5 Data Requirements ............................................................................................................................ 12 
+5   External Interface Requirements ............................................................................................................ 12 
+5.1 User Interfaces ................................................................................................................................... 12 
+5.2 Hardware Interfaces .......................................................................................................................... 12 
+5.3 Software Interfaces ............................................................................................................................ 13 
+5.4 Communication Interfaces ................................................................................................................ 13 
+6 Design Constraints .................................................................................................................................... 13 
+Privacy and Security: ............................................................................................................................ 14 
+7 Non-Functional Requirements (Detailed) ................................................................................................. 14 
+7.1   Performance..................................................................................................................................... 14 
+• The system shall analyze hair condition (dryness, dandruff, hair loss) and scalp health within 3–5 
+seconds per image. .................................................................................................................................. 14 
+7.2 Scalability ........................................................................................................................................... 14 
+• The module must support up to 1000 concurrent users performing hair or scalp scans. .............. 14 
+• Server resources shall auto-scale based on spikes in analysis requests. ........................................ 14 
+7.3  Security ............................................................................................................................................. 14 
+7.4 Usability ............................................................................................................................................. 15 
+7.5 Reliability ........................................................................................................................................... 15 
+7.6 Maintainability ................................................................................................................................... 15 
+8   System Evolution / Future Enhancements.............................................................................................. 15 
+9   Appendices .............................................................................................................................................. 16 
+9.1 Appendix A: Glossary ......................................................................................................................... 16 
+9.2 Appendix B: Data Samples ................................................................................................................. 16 
+ 
+
+ 
+ 5 
+Software Requirements Specification for Projects 
+1.   Introduction 
+1.1 Purpose 
+This document explains the goal of the AI-Based Skin and Hair Scalp Analysis System. The 
+main purpose of this phase is to build a smart system that can look at a person’s skin and scalp 
+image and find problems like acne, dandruff, or dryness using AI, It will also give personalized 
+treatment according to their medical history if someone have diseases like (e.g diabetic, 
+heart issues, pregnancy, etc.) so it cannot effect other diseases. This document helps 
+developers, teachers, and project members understand what the system will do and how it will 
+work. 
+_____________________________________________________________________________________ 
+ 1.2   Scope 
+In this first phase, the system focuses only on skin and scalp analysis. 
+Users can upload or scan a photo of their face or hair, and the system will: 
+• Find skin issues like acne, dark spots, or dryness. 
+• Find scalp issues like dandruff, oiliness, or hair fall. 
+• Show a simple report showing the detected problems, their severity level, and treatment 
+recommendations based on the analysis. If the severity is high, then it suggests users 
+consult with dermatologists. 
+______________________________________________________________________________ 
+ 1.3   Definitions, Acronyms, and Abbreviations 
+• AI (Artificial Intelligence): Smart computer technology that helps find skin or hair 
+problems. 
+• Scalp Analysis: Checking scalp health like dryness, oiliness, or dandruff. 
+• Skin Condition: Any visible problem on the face like acne or dark spots. 
+• Recommendation: Personalized treatment given by the system based on your results. 
+_____________________________________________________________________________________ 
+1.4   References 
+• FYP Proposal: AI-Powered Real-Time Face, Hair PERSONALIZED TREATMENT 
+AND MAKEUP AND FASHION ASSISTANCE. 
+• Datasets: kaggle 
+• Tools: draw.io, google coolab, clickup, visual etc 
+• Research on AI for skin and hair detection 
+____________________________________________________________________________________ 
+
+ 
+ 6 
+Software Requirements Specification for Projects 
+ 
+1.5   Overview 
+This document explains everything about Skin and Scalp Analysis, what the system does, how 
+it analyzes images, and what output it gives. 
+Later phases will include more advanced features like AR hairstyle preview, doctor booking, and 
+multi-language or voice features. 
+ 
+ 
+2   Overall Description  
+2.1 Product Perspective 
+It mainly focuses on checking the skin and scalp health of a person using AI. The user will upload or scan 
+a picture of their face or hair, and the system will automatically find skin or scalp problems and suggest 
+personalized treatment. 
+____________________________________________________________________________________ 
+2.2 Product Functions 
+The main things this system can do are: 
+• Take or upload a photo of your face or hair. 
+• Find skin problems like acne, dark spots, or dryness etc. 
+• Find scalp problems like dandruff, oiliness, or hair fall etc. 
+• What problems were found and how serious they are and treatments such as (Acne: Use 
+gentle face wash, aloe vera gel, Dark spots: Use vitamin C serum ,Dry skin: Use 
+moisturizer and drink more water, Dandruff: Use anti-dandruff shampoo, Hair fall: 
+Apply hair oil) 
+• The system gives AI-based care suggestions to help improve the user’s skin and hair 
+condition. It tells users what daily care routine, products, or natural remedies they can 
+use. 
+_______________________________________________________________________ 
+2.3 User Characteristics 
+ 
+User Roles: 
+ User – Users log in, upload images, and save/view reports. Admin – Manages users, system settings, AI 
+models, and databases, Salons and the dermatologist. 
+People who want to check their skin or hair/scalp condition.  
+
+ 
+ 7 
+Software Requirements Specification for Projects 
+• They can find out if they have problems like acne, dark spots, dandruff, dryness, or hair 
+fall. 
+• Skills to take or upload a photo and read the result report that have knowledge about skin 
+disease and scalp issue 
+____________________________________________________________________________________ 
+2.4 Constraints  
+• The system needs clear and good-quality images to give correct results. 
+• It works properly only with internet connection. 
+• The accuracy depends on how well the AI model is trained. 
+• It must keep user data private and safe. 
+• Works best on devices with a good cameras like smartphones or laptops. 
+_____________________________________________________________________________________ 
+2.5 Assumptions and Dependencies 
+• It is assumed that users will give real and clear photos. 
+• The system depends on AI trained with skin and scalp datasets. 
+• Use tools like TensorFlow and PyTorch for image analysis. 
+• Needs a working internet connection to process images. 
+• Future updates may depend on external APIs or expert consultations. 
+_____________________________________________________________________________________ 
+2.6 System Environment  
+• Device: Works on a mobile phone or web 
+• Software: Web or mobile app both with React  
+• Backend: Django rest api 
+• Internet: Needed for scanning images and showing results. 
+_____________________________________________________________________________________ 
+3   Specific Requirements  
+3.1 Functional Requirements (FR) 
+FR1: User Authentication 
+The system shall provide secure user registration and login using email/phone + password. 
+Users shall be authenticated via JWT-based session handling (Django REST). 
+FR-2: Database Storage 
+The system shall store: 
+• User profile information (name, gender, age, medical info). 
+
+ 
+ 8 
+Software Requirements Specification for Projects 
+• Authentication credentials (securely hashed). 
+• Uploaded images (face, scalp) to secure media storage. 
+• Diagnostic results and reports. 
+FR-3: User Image Input 
+The system must allow users to upload or capture high-quality images of their face or scalp 
+through a web or mobile interface. 
+FR-4: Image Validation 
+Before analysis, the system must validate image clarity, lighting, and file size (≤ 10 MB). If the 
+image is invalid, the system prompts the user to retake or reupload. It also confirms before 
+uploading is it scalp or skin  
+FR-5: AI-Based Detection Pipeline 
+The system shall use the following AI modules: 
+• Face & Scalp Detection: Mediapipe. 
+• Segmentation: U-Net 
+• Condition Classification: EfficientNet-B4+ YOLOv8 
+• Severity score: XGBoost 
+• Recommendation Engine: LLM 
+These models shall be integrated through Django REST + React.js + PyTorch/TensorFlow. 
+FR-6: AI-Based Skin Condition Detection 
+The AI module must detect facial skin issues such the system shall detect: 
+• Acne 
+• Dark spots 
+• Hyperpigmentation 
+• Skin dryness 
+using pre-trained CNN models. 
+FR-7: AI-Based Scalp Condition Detection 
+• The system must analyze scalp images to detect Dandruff 
+• Dryness 
+• Oiliness 
+• Indicators of hair fall 
+related problems. 
+FR-8: Severity Classification 
+• Detected skin and scalp conditions must be categorized by Mild 
+• Moderate 
+• Severe. 
+
+ 
+ 9 
+Software Requirements Specification for Projects 
+FR-9: Personalized Diagnosis and Care Suggestions 
+Based on the AI results and user-provided information (age, gender, lifestyle), the system must 
+generate custom skincare and haircare suggestions such as product use. 
+FR-10: Medical-History-Aware Treatment Recommendation 
+The system must provide personalized treatment recommendations that consider the user’s 
+medical history to ensure safety and accuracy. For example, if a user has diabetes or allergies, 
+pregnancy, the system must automatically filter out unsafe products or routines and suggest 
+medically appropriate alternatives. 
+FR-11: Result Visualization and Report Generation 
+The system must produce textual report showing detected issues, severity, and recommended 
+treatments. 
+FR-12: Result Storage and History Tracking 
+The system shall provide a dashboard where the user can: 
+• View past diagnoses 
+• Track progress over time 
+• Compare condition improvement historically 
+FR-13: User Profile Management 
+Users shall be able to: 
+• Update their personal profile 
+• Edit medical information 
+• View saved reports 
+• Manage uploaded images 
+FR-14: Feedback and Model Improvement 
+Users should be able to rate the accuracy of the diagnosis or recommendations, helping refine AI 
+models over time. 
+FR-15: Data Security and Privacy 
+All stored data including medical information and uploaded images must be encrypted and 
+accessible only to authorized users. 
+FR-16: Error Handling 
+The system must display informative error messages when encountering poor quality images, 
+network issues, or internal processing errors. 
+FR-17: Safe Recommendation Enforcement 
+The system shall ensure that all skincare and scalp care recommendations are medically safe and 
+avoid suggesting harmful or risky products. 
+
+ 
+ 10 
+Software Requirements Specification for Projects 
+FR-18: Transparent AI Output Explanation 
+The system shall provide a simple explanation or reasoning (e.g., highlighted region, detected 
+patterns) about why a condition was detected. 
+FR-19: User Education Module 
+The system shall provide educational tips related to lifestyle, environment, and habits that may 
+affect the detected skin or scalp condition. 
+FR-20: Quick Response Handling 
+The system shall notify the user if analysis takes longer than expected and shall show a progress 
+indicator to maintain user engagement. 
+FR-21: Automatic Privacy Protection 
+The system shall anonymize user images before they are used for AI model improvement or 
+dataset expansion. 
+FR-22: Regular Model Update Support 
+The system shall allow periodic updates of AI models to improve accuracy based on new data 
+and user feedback. 
+_____________________________________________________________________________________ 
+3.2 Non-Functional Requirements (NFR) 
+These describe how the system should perform and behave. 
+• 
+ Performance: Results should be produced within 15–30 seconds after image upload under 
+standard internet speed.
+ 
+• 
+ Accuracy: The AI model must achieve at least 75–80 % accuracy on benchmark dermatology 
+datasets.
+ 
+• 
+ Reliability: Consistent and repeatable outputs must be guaranteed for similar images.
+ 
+• 
+ Scalability: The Django-based backend must handle multiple concurrent users without 
+degradation.
+ 
+• 
+ Usability: The interface should be minimal, intuitive, and clearly labeled (“Upload”, “Analyze”, 
+“View Report”).
+ 
+• 
+ Security: All user data (medical, images, reports) must be encrypted in transit and at rest 
+using SSL/TLS and AES-256.
+ 
+• 
+ Availability: Maintain at least 99% uptime for 24/7 accessibility.
+ 
+• 
+ Maintainability: Codebase should be modular, documented, and version-controlled (Git) for 
+easy model retraining and updates.
+ 
+
+ 
+ 11 
+Software Requirements Specification for Projects 
+• 
+ Compatibility: Must run smoothly on web browsers and mobile devices; support standard 
+formats (JPG, PNG, JPEG).
+ 
+• 
+ Privacy: Follow data-protection principles require explicit consent before collecting or 
+using medical data and anonymize when used for AI training. Users must give consent 
+before uploading personal data. Access control for Registered User, Admin. 
+Encrypted storage and secure login (passwords, optional 2FA). 
+• 
+ Portability: Deployable on AWS or Firebase cloud environments with minimal 
+reconfiguration.
+ 
+• 
+ Error Tolerance: Handle failed uploads, poor connectivity, and invalid images 
+gracefully, prompting user correction. 
+• 
+ Health Safety Compliance: All treatment suggestions must be medically safe, context-
+aware, and compliant with health-data handling standards. 
+• High Accuracy Expectation: The system should maintain high prediction accuracy to 
+avoid misleading or incorrect diagnoses. 
+• User Interface Simplicity: The system interface must remain simple, and easy to use 
+for non-technical users. 
+• Transparency Requirement: AI decisions must be presented in an understandable 
+manner, increasing user trust in the diagnosis. 
+• Strong Privacy Assurance: User-uploaded images and medical data must be always 
+protected with strict privacy measures. 
+• Performance Speed Requirement: The system should produce diagnostic results 
+quickly to maintain user satisfaction and usability. 
+• 
+ Continuous Improvement Expectation: The system should support future model 
+enhancements without requiring major system redesign. 
+_____________________________________________________________________________________ 
+ 3.3 Interface Requirements 
+These define how users and systems will interact. 
+• User Interface: 
+o A clean and friendly screen for uploading or capturing images. 
+o Buttons for “Upload Image”, “Analyze”, and “View Report”. 
+• Software Interface: 
+o Use AI libraries for image processing. 
+o Connect with a database (like SQL) to save user data. 
+• Hardware Interface: 
+o Works on devices with a camera (mobile 
+
+ 
+ 12 
+Software Requirements Specification for Projects 
+• Communication Interface: 
+o Requires a stable internet connection for sending and receiving data. 
+_____________________________________________________________________________________ 
+3.4 System Features 
+The system includes these main feature modules: 
+• Image Upload Module: For taking or uploading photos. 
+• AI Analysis Module: For detecting skin and scalp issues. 
+• Report Generation Module: For detected issues and care advice. 
+• User Result Module: For saving or viewing past analysis reports. 
+_____________________________________________________________________________________ 
+3.5 Data Requirements 
+Defines how data will be handled and stored. 
+• Input Data: Image file (JPG, PNG, or JPEG format). 
+• Output Data: Report showing skin or scalp conditions, severity, and care tips. 
+• Data Validation: 
+o The system should check if the image is clear and under 10MB. 
+o If not, it should ask the user to upload a better photo. 
+• Data Storage: 
+o User images and reports should be saved securely in the database. 
+o Only authorized users can view their data. 
+______________________________________________________________________________ 
+5   External Interface Requirements 
+5.1 User Interfaces 
+• Simple and easy design for all users. 
+• Users can take or upload a photo of their face or hair. 
+• Systems show a report on problems, seriousness, and treatments. 
+• Buttons like Upload, Analyze, and View Report for easy use. 
+• Results shown with text and color marks (e.g., red = serious issue). 
+_____________________________________________________________________________________ 
+5.2 Hardware Interfaces 
+• Needs a camera to take clear skin or hair photos. 
+
+ 
+ 13 
+Software Requirements Specification for Projects 
+• Works on mobile phones, laptops, or PCs. 
+• Needs an internet connection for image analysis. 
+_____________________________________________________________________________________ 
+5.3 Software Interfaces 
+• Frontend: React.js 
+• Backend: Django rest api 
+• AI Tools: google coolab, clickup, visual 
+• Database: mySQL 
+• APIs: Used for photo upload, analysis, and user login. 
+_____________________________________________________________________________________
+5.4 Communication Interfaces 
+• The system uses the internet to send and receive data. 
+• When a user uploads a photo, it is sent to the Django server through the REST API. 
+• The Django server passes the photo to the AI model for checking. 
+•  The AI model analyzes the photo and creates a report showing skin or scalp problems. 
+•  The report is sent back to the Django server, which then stores it in the database and shows 
+the result to the user. 
+__________________________________________________________________________ 
+6 Design Constraints  
+• The system is built using the following technologies: 
+o Frontend: React 
+o Backend: Django to process images and manage data. 
+o AI Tools: Google coolab, clickup, visual 
+o Database: MySQL to save user photos, reports, and login data. 
+• The system uses a client–server structure: 
+Client side (user side): The user can take or upload a photo of their face or hair and see 
+the results. 
+Server side (Django): It receives the photo through the REST API, sends it to the AI 
+model to check skin or scalp problems, then sends the report back to the user. 
+•   Requires a camera and a stable internet connection to upload and analyze photos correctly. 
+ 
+
+ 
+ 14 
+Software Requirements Specification for Projects 
+Privacy and Security: 
+User Consent: Users must give consent before uploading personal information, photos, or 
+health-related data. 
+• Consent will be recorded, and users can withdraw it anytime. 
+Data Storage: All user data (personal details, skin/hair analysis, photos) will be stored securely 
+in encrypted databases. 
+• Sensitive data like passwords will use strong encryption (AWS-256). 
+Data Protection: Only authorized users (admins or the specific user) can access personal data. 
+• Secure authentication mechanisms (passwords, optional 2FA) will be used. 
+• Regular backups and system audits ensure data integrity. 
+7 Non-Functional Requirements (Detailed) 
+  7.1   Performance  
+• 
+ The system shall analyze hair condition (dryness, dandruff, hair loss) and scalp health 
+within 3–5 seconds per image. 
+• Real-time camera-based hair/scalp scanning should run at minimum 20 FPS for smooth 
+detection. 
+• Throughput: The system must support up to 50 hair/scalp analyses per minute on the 
+server without degradation. 
+______________________________________________________________________________ 
+ 7.2 Scalability 
+• 
+ The module must support up to 1000 concurrent users performing hair or scalp scans. 
+• 
+ Server resources shall auto-scale based on spikes in analysis requests. 
+• Cloud storage (for photo history) must scale dynamically as users store hair/scalp 
+progress pictures. 
+______________________________________________________________________________ 
+7.3  Security 
+• All user images (hair and scalp photos) must be encrypted end-to-end during upload and 
+storage. 
+
+ 
+ 15 
+Software Requirements Specification for Projects 
+• User medical history related to hair/scalp (dandruff history, allergies, infections) must be 
+securely stored using role-based access control. 
+• Only authenticated users can access their stored hair/scalp reports. 
+______________________________________________________________________________ 
+7.4 Usability 
+• Hair and scalp scanning UI should provide clear instructions, progress indicators, and 
+real-time feedback. 
+• AR-based hair preview must remain responsive with less than 200 ms latency. 
+• The module must be accessible (large icons, simple layout, multilingual support such as 
+English/Urdu). 
+_____________________________________________________________________________________ 
+7.5 Reliability 
+• Hair/scalp diagnosis features must maintain 99% uptime. 
+• If real-time scanning fails due to weak lighting or camera issues, the system should auto-
+switch to photo upload mode. 
+• All scanned data such as hair condition history shall have automatic cloud backup and 
+recovery capability. 
+_____________________________________________________________________________________ 
+7.6 Maintainability 
+• The hair/scalp analysis module must be built in modular components (image processing, 
+AR preview, treatment suggestions) to allow easy updates. 
+• ML models (hair loss detection, dandruff classifier) should be upgradable without 
+affecting the main app flow. 
+• Code should follow a clean architecture to simplify patching, bug fixes, and feature 
+additions. 
+______________________________________________________________________________ 
+8   System Evolution / Future Enhancements 
+In future versions, the Skin and Hair/Scalp Analysis System can be improved with the 
+following enhancements: 
+• Advanced Skin Condition Detection: Include more skin diseases such as rosacea 
+(redness, bumps, and irritation on the face) and fungal infections. 
+• AI-Based Personalized Treatment Plans 
+
+ 
+ 16 
+Software Requirements Specification for Projects 
+o Generate customized skincare routines based on daily progress and environmental 
+factors (weather, humidity, pollution). 
+o Recommend dermatologist-approved products automatically. 
+• Real-Time Scalp Health Monitoring 
+o Add smart scalp scanning to detect early signs of dandruff, hair thinning, or 
+infections. 
+o Suggest specific shampoos, oils, or diets to improve scalp health. 
+• Hair Growth and Damage Tracking 
+o Use AI to compare before/after photos to measure hair growth or recovery from 
+damage. 
+o Provide progress graphs and personalized tips. 
+• Integration with Smart Devices 
+o Connect with smart mirrors or wearables to monitor skin moisture, UV exposure, 
+and scalp temperature for better analysis. 
+• Predictive Analysis 
+o Use AI to forecast future skin or hair issues based on current health and lifestyle 
+patterns. 
+• Augmented Reality (AR) Enhancements 
+o Improve live AR previews for hair color, styles, and skin tone correction. 
+o Offer 3D scalp and skin visualization for educational and diagnostic use. 
+• Expert Collaboration and Feedback Loop 
+o Allow dermatologists to review AI results and provide professional feedback to 
+enhance model accuracy 
+______________________________________________________________________________ 
+9   Appendices 
+9.1 Appendix A: Glossary 
+• Skin Analysis: Checking the skin for acne, spots, dryness, or redness. 
+• Scalp Analysis: Studying the head skin to find dandruff, oil, or hair loss. 
+• Hair Condition: The health of hair, like smooth, dry, or damaged. 
+_____________________________________________________________________________________ 
+9.2 Appendix B: Data Samples 
+Input: 
+• User photo of face or scalp. 
+• User details: age, gender, hair type, skin type. 
+Output: 
+
+ 
+ 17 
+Software Requirements Specification for Projects 
+• Detected skin or scalp issues (e.g., acne, dandruff). 
+• Treatment or care suggestions (e.g., shampoo, moisturizer). 
+• Health report summary. 
+______________________________________________________________________________ 
+9.3 Appendix C: Revision History 
+ 
+ 
+ 
+
