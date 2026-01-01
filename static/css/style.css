@@ -1672,7 +1672,8 @@ body::before {
     }
 
     .upload-card,
-    .auth-card {
+    .auth-card,
+    .edit-card {
         padding: 2rem;
     }
 
@@ -1682,6 +1683,16 @@ body::before {
 
     .form-section {
         padding: 1rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
 
     .page-title {
