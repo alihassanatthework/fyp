@@ -1520,6 +1520,123 @@ body::before {
     transform: translateY(-2px);
 }
 
+/* Edit Medical History Page */
+.edit-medical-container {
+    padding: 3rem 0;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-top: 0.5rem;
+}
+
+.edit-card {
+    background: var(--bg-primary);
+    padding: 3rem;
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-xl);
+    max-width: 900px;
+    margin: 0 auto;
+    border: 1px solid var(--border-light);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.edit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.medical-history-form {
+    margin-top: 1rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-light);
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.card-header h2 {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+.medical-history-card {
+    position: relative;
+}
+
+.medical-conditions-section {
+    margin-bottom: 2rem;
+}
+
+.section-subtitle {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.medical-tag {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.medical-details {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.no-conditions-text {
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 0.5rem;
+}
+
+.empty-medical-history {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.empty-medical-history p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-size: 1.125rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero-title {

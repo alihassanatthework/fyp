@@ -285,12 +285,44 @@ def profile(request):
     try:
         medical_history = request.user.medical_history
     except MedicalHistory.DoesNotExist:
-        medical_history = None
+        medical_history = MedicalHistory.objects.create(user=request.user)
     
     context = {
         'medical_history': medical_history,
     }
     return render(request, 'frontend/profile.html', context)
+
+
+@login_required
+def edit_medical_history(request):
+    """Edit medical history page"""
+    try:
+        medical_history = request.user.medical_history
+    except MedicalHistory.DoesNotExist:
+        medical_history = MedicalHistory.objects.create(user=request.user)
+    
+    if request.method == 'POST':
+        # Update medical history
+        medical_history.is_pregnant = request.POST.get('is_pregnant') == 'on'
+        medical_history.has_cardio_issues = request.POST.get('has_cardio_issues') == 'on'
+        medical_history.is_diabetic = request.POST.get('is_diabetic') == 'on'
+        medical_history.has_allergies = request.POST.get('has_allergies') == 'on'
+        medical_history.has_hypertension = request.POST.get('has_hypertension') == 'on'
+        medical_history.has_asthma = request.POST.get('has_asthma') == 'on'
+        medical_history.has_skin_conditions = request.POST.get('has_skin_conditions') == 'on'
+        medical_history.has_scalp_conditions = request.POST.get('has_scalp_conditions') == 'on'
+        medical_history.other_conditions = request.POST.get('other_conditions', '')
+        medical_history.current_medications = request.POST.get('current_medications', '')
+        medical_history.known_allergens = request.POST.get('known_allergens', '')
+        medical_history.save()
+        
+        messages.success(request, 'Medical history updated successfully!')
+        return redirect('frontend:profile')
+    
+    context = {
+        'medical_history': medical_history,
+    }
+    return render(request, 'frontend/edit_medical_history.html', context)
 
 
 @login_required
