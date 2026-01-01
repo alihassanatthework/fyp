@@ -1910,4 +1910,21 @@ body::before {
     .section-title {
         font-size: 2rem;
     }
+
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .header-actions .btn {
+        width: 100%;
+    }
+
+    .conditions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .medical-history-view-card {
+        padding: 2rem;
+    }
 }
