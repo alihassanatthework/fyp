@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - AI Skin & Scalp Analysis{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">AI-Powered Skin & Scalp Analysis</h1>
+            <p class="hero-subtitle">Get personalized treatment recommendations based on AI analysis of your skin and scalp conditions</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'frontend:upload' %}" class="btn btn-large btn-primary">Start Analysis</a>
+            {% else %}
+                <a href="{% url 'frontend:register' %}" class="btn btn-large btn-primary">Get Started</a>
+                <a href="{% url 'frontend:login' %}" class="btn btn-large btn-secondary">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="container">
+        <h2 class="section-title">Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>AI Detection</h3>
+                <p>Advanced AI models detect skin and scalp conditions like acne, dark spots, dandruff, and hair fall</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Severity Assessment</h3>
+                <p>Get accurate severity classification (Mild, Moderate, Severe) for each detected condition</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💊</div>
+                <h3>Personalized Recommendations</h3>
+                <p>Receive customized care routines and product suggestions based on your medical history</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Progress Tracking</h3>
+                <p>Track your skin and scalp health over time with detailed history and progress reports</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="how-it-works-section">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Upload Image</h3>
+                <p>Upload or capture a clear photo of your face or scalp</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>AI Analysis</h3>
+                <p>Our AI models analyze the image in 3-5 seconds</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Get Results</h3>
+                <p>View detected conditions, severity, and recommendations</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Follow Treatment</h3>
+                <p>Follow personalized care routines and track progress</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

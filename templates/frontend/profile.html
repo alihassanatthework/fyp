@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - AI Skin & Scalp Analysis{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="container">
+        <h1 class="page-title">User Profile</h1>
+        
+        <div class="profile-grid">
+            <div class="profile-card">
+                <h2>Account Information</h2>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <label>Username:</label>
+                        <span>{{ user.username }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email:</label>
+                        <span>{{ user.email|default:"Not set" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Member Since:</label>
+                        <span>{{ user.date_joined|date:"F Y" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h2>Medical History</h2>
+                <div class="medical-info">
+                    <p class="info-placeholder">Medical history will be displayed here once configured.</p>
+                    <a href="#" class="btn btn-secondary">Edit Medical History</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="{% url 'frontend:upload' %}" class="btn btn-primary">New Analysis</a>
+            <a href="{% url 'frontend:history' %}" class="btn btn-secondary">View History</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

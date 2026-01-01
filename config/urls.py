@@ -12,6 +12,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     
+    # Frontend pages
+    path('', include('frontend.urls')),
+    
     # API endpoints (to be implemented)
     # path('api/auth/', include('users.urls')),
     # path('api/users/', include('users.urls')),

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Image - AI Skin & Scalp Analysis{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <div class="container">
+        <h1 class="page-title">Upload Image for Analysis</h1>
+        
+        <div class="upload-card">
+            <form method="post" enctype="multipart/form-data" id="uploadForm" class="upload-form">
+                {% csrf_token %}
+                
+                <div class="image-type-selection">
+                    <h3>Select Analysis Type</h3>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="image_type" value="skin" checked>
+                            <span>Skin Analysis</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="image_type" value="scalp">
+                            <span>Scalp Analysis</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p class="upload-text">Click to upload or drag and drop</p>
+                    <p class="upload-hint">PNG, JPG, JPEG up to 10MB</p>
+                    <input type="file" id="fileInput" name="image" accept="image/*" required>
+                </div>
+
+                <div class="preview-area" id="previewArea" style="display: none;">
+                    <img id="previewImage" src="" alt="Preview">
+                    <button type="button" class="btn btn-secondary" id="removeImage">Remove</button>
+                </div>
+
+                <div class="upload-tips">
+                    <h4>Tips for Best Results:</h4>
+                    <ul>
+                        <li>Use good lighting</li>
+                        <li>Ensure the image is clear and in focus</li>
+                        <li>Take photo from appropriate distance</li>
+                        <li>Make sure the area of interest is clearly visible</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large" id="submitBtn" disabled>
+                    Analyze Image
+                </button>
+            </form>
+        </div>
+
+        <div class="progress-bar" id="progressBar" style="display: none;">
+            <div class="progress-fill" id="progressFill"></div>
+            <p class="progress-text">Analyzing image... <span id="progressPercent">0%</span></p>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadArea = document.getElementById('uploadArea');
+    const previewArea = document.getElementById('previewArea');
+    const previewImage = document.getElementById('previewImage');
+    const removeImageBtn = document.getElementById('removeImage');
+    const submitBtn = document.getElementById('submitBtn');
+    const uploadForm = document.getElementById('uploadForm');
+
+    // File input change
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size must be less than 10MB');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                uploadArea.style.display = 'none';
+                previewArea.style.display = 'block';
+                submitBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            fileInput.files = e.dataTransfer.files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
+
+    // Remove image
+    removeImageBtn.addEventListener('click', function() {
+        fileInput.value = '';
+        uploadArea.style.display = 'block';
+        previewArea.style.display = 'none';
+        submitBtn.disabled = true;
+    });
+
+    // Form submission
+    uploadForm.addEventListener('submit', function(e) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+        // In real implementation, this would show progress
+    });
+</script>
+{% endblock %}
+{% endblock %}
+

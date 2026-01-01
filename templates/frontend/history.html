@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis History - AI Skin & Scalp Analysis{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <div class="container">
+        <h1 class="page-title">Analysis History</h1>
+        
+        <div class="history-list">
+            {% for analysis in analyses %}
+            <div class="history-item">
+                <div class="history-header">
+                    <div class="history-info">
+                        <h3>{{ analysis.type }} Analysis</h3>
+                        <p class="history-date">{{ analysis.date }}</p>
+                    </div>
+                    <a href="{% url 'frontend:results' analysis.id %}" class="btn btn-primary">View Details</a>
+                </div>
+                <div class="history-conditions">
+                    <strong>Conditions Detected:</strong>
+                    <div class="condition-tags">
+                        {% for condition in analysis.conditions %}
+                        <span class="condition-tag">{{ condition }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <p>No analysis history yet.</p>
+                <a href="{% url 'frontend:upload' %}" class="btn btn-primary">Start Your First Analysis</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

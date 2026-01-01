@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis Results - AI Skin & Scalp Analysis{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <div class="container">
+        <div class="results-header">
+            <h1 class="page-title">Analysis Results</h1>
+            <p class="analysis-id">Analysis ID: {{ analysis_id }}</p>
+        </div>
+
+        <div class="results-grid">
+            <div class="results-card conditions-card">
+                <h2>Detected Conditions</h2>
+                <div class="conditions-list">
+                    {% for condition in conditions %}
+                    <div class="condition-item">
+                        <div class="condition-header">
+                            <h3>{{ condition.name }}</h3>
+                            <span class="severity-badge severity-{{ condition.severity|lower }}">
+                                {{ condition.severity }}
+                            </span>
+                        </div>
+                        <div class="condition-details">
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: {{ condition.confidence }}%"></div>
+                            </div>
+                            <p class="confidence-text">Confidence: {{ condition.confidence }}%</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="no-conditions">No conditions detected. Your skin/scalp appears healthy!</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="results-card recommendations-card">
+                <h2>Recommendations</h2>
+                <div class="recommendations-list">
+                    {% for recommendation in recommendations %}
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">💡</div>
+                        <p>{{ recommendation }}</p>
+                    </div>
+                    {% empty %}
+                    <p>No specific recommendations at this time.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="results-actions">
+            <a href="{% url 'frontend:upload' %}" class="btn btn-primary">New Analysis</a>
+            <a href="{% url 'frontend:history' %}" class="btn btn-secondary">View History</a>
+        </div>
+
+        <div class="results-note">
+            <p><strong>Note:</strong> This analysis is for informational purposes only. For severe conditions, please consult with a dermatologist.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
