@@ -294,6 +294,20 @@ def profile(request):
 
 
 @login_required
+def view_medical_history(request):
+    """View medical history page"""
+    try:
+        medical_history = request.user.medical_history
+    except MedicalHistory.DoesNotExist:
+        medical_history = MedicalHistory.objects.create(user=request.user)
+    
+    context = {
+        'medical_history': medical_history,
+    }
+    return render(request, 'frontend/view_medical_history.html', context)
+
+
+@login_required
 def edit_medical_history(request):
     """Edit medical history page"""
     try:
@@ -317,7 +331,7 @@ def edit_medical_history(request):
         medical_history.save()
         
         messages.success(request, 'Medical history updated successfully!')
-        return redirect('frontend:profile')
+        return redirect('frontend:view_medical_history')
     
     context = {
         'medical_history': medical_history,

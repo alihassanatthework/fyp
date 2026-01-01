@@ -1637,6 +1637,214 @@ body::before {
     font-size: 1.125rem;
 }
 
+.medical-info-summary {
+    margin-bottom: 1.5rem;
+}
+
+.conditions-preview {
+    margin-bottom: 1rem;
+}
+
+.preview-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.card-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+/* Medical History View Page */
+.medical-history-view-container {
+    padding: 3rem 0;
+}
+
+.medical-history-view-card {
+    background: var(--bg-primary);
+    padding: 3rem;
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-light);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.medical-history-view-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+}
+
+.medical-section {
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 2px solid var(--border-light);
+}
+
+.medical-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.section-title-medical {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 0.75rem;
+}
+
+.conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.condition-check-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.condition-check-item:hover {
+    background: var(--bg-primary);
+    box-shadow: var(--shadow);
+    transform: translateX(5px);
+}
+
+.check-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+}
+
+.check-icon.checked {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    color: white;
+    box-shadow: var(--shadow);
+}
+
+.check-icon.unchecked {
+    background: var(--bg-tertiary);
+    color: var(--text-light);
+    border: 2px solid var(--border-color);
+}
+
+.condition-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.active-conditions-display {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+    border-radius: 1rem;
+    border: 1px solid var(--primary-light);
+}
+
+.medical-tag-large {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.info-block {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: 1rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.info-label {
+    display: block;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+}
+
+.info-content {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.no-conditions-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    background: var(--bg-secondary);
+    border-radius: 0.75rem;
+}
+
+.medical-section-footer {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-light);
+    text-align: center;
+}
+
+.last-updated {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
+.empty-medical-history-full {
+    text-align: center;
+    padding: 5rem 2rem;
+}
+
+.empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+}
+
+.empty-medical-history-full h3 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.empty-medical-history-full p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero-title {

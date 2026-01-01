@@ -12,7 +12,8 @@ urlpatterns = [
     path('results/<int:analysis_id>/', views.analysis_results, name='results'),
     path('results/', views.analysis_results, name='results'),
     path('profile/', views.profile, name='profile'),
-    path('profile/edit-medical-history/', views.edit_medical_history, name='edit_medical_history'),
+    path('profile/medical-history/', views.view_medical_history, name='view_medical_history'),
+    path('profile/medical-history/edit/', views.edit_medical_history, name='edit_medical_history'),
     path('history/', views.history, name='history'),
 ]
 

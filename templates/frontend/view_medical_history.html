@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Medical History - AI Skin & Scalp Analysis{% endblock %}
+
+{% block content %}
+<div class="medical-history-view-container">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Medical History</h1>
+            <p class="page-subtitle">Your complete medical information for personalized treatment recommendations</p>
+            <div class="header-actions">
+                <a href="{% url 'frontend:edit_medical_history' %}" class="btn btn-primary">Edit Medical History</a>
+                <a href="{% url 'frontend:profile' %}" class="btn btn-secondary">Back to Profile</a>
+            </div>
+        </div>
+        
+        <div class="medical-history-view-card">
+            {% if medical_history %}
+                <div class="medical-section">
+                    <h2 class="section-title-medical">Medical Conditions</h2>
+                    <div class="conditions-grid">
+                        <div class="condition-check-item">
+                            <span class="check-icon {% if medical_history.is_pregnant %}checked{% else %}unchecked{% endif %}">
+                                {% if medical_history.is_pregnant %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span class="condition-name">Pregnancy</span>
+                        </div>
+                        <div class="condition-check-item">
+                            <span class="check-icon {% if medical_history.has_cardio_issues %}checked{% else %}unchecked{% endif %}">
+                                {% if medical_history.has_cardio_issues %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span class="condition-name">Cardiovascular/Heart Issues</span>
+                        </div>
+                        <div class="condition-check-item">
+                            <span class="check-icon {% if medical_history.is_diabetic %}checked{% else %}unchecked{% endif %}">
+                                {% if medical_history.is_diabetic %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span class="condition-name">Diabetes</span>
+                        </div>
+                        <div class="condition-check-item">
+                            <span class="check-icon {% if medical_history.has_allergies %}checked{% else %}unchecked{% endif %}">
+                                {% if medical_history.has_allergies %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span class="condition-name">Allergies to Medications/Products</span>
+                        </div>
+                        <div class="condition-check-item">
+                            <span class="check-icon {% if medical_history.has_hypertension %}checked{% else %}unchecked{% endif %}">
+                                {% if medical_history.has_hypertension %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span class="condition-name">Hypertension (High Blood Pressure)</span>
+                        </div>
+                        <div class="condition-check-item">
+                            <span class="check-icon {% if medical_history.has_asthma %}checked{% else %}unchecked{% endif %}">
+                                {% if medical_history.has_asthma %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span class="condition-name">Asthma</span>
+                        </div>
+                        <div class="condition-check-item">
+                            <span class="check-icon {% if medical_history.has_skin_conditions %}checked{% else %}unchecked{% endif %}">
+                                {% if medical_history.has_skin_conditions %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span class="condition-name">Existing Skin Conditions</span>
+                        </div>
+                        <div class="condition-check-item">
+                            <span class="check-icon {% if medical_history.has_scalp_conditions %}checked{% else %}unchecked{% endif %}">
+                                {% if medical_history.has_scalp_conditions %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span class="condition-name">Existing Scalp Conditions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="medical-section">
+                    <h2 class="section-title-medical">Active Conditions Summary</h2>
+                    {% if medical_history.get_active_conditions %}
+                        <div class="active-conditions-display">
+                            <div class="condition-tags">
+                                {% for condition in medical_history.get_active_conditions %}
+                                    <span class="condition-tag medical-tag-large">{{ condition }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="no-conditions-message">No active medical conditions recorded.</p>
+                    {% endif %}
+                </div>
+
+                {% if medical_history.other_conditions or medical_history.current_medications or medical_history.known_allergens %}
+                <div class="medical-section">
+                    <h2 class="section-title-medical">Additional Information</h2>
+                    
+                    {% if medical_history.other_conditions %}
+                    <div class="info-block">
+                        <label class="info-label">Other Medical Conditions:</label>
+                        <div class="info-content">{{ medical_history.other_conditions }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if medical_history.current_medications %}
+                    <div class="info-block">
+                        <label class="info-label">Current Medications:</label>
+                        <div class="info-content">{{ medical_history.current_medications }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if medical_history.known_allergens %}
+                    <div class="info-block">
+                        <label class="info-label">Known Allergens:</label>
+                        <div class="info-content">{{ medical_history.known_allergens }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="medical-section-footer">
+                    <p class="last-updated">Last updated: {{ medical_history.updated_at|date:"F d, Y" }}</p>
+                </div>
+            {% else %}
+                <div class="empty-medical-history-full">
+                    <div class="empty-icon">📋</div>
+                    <h3>No Medical History Recorded</h3>
+                    <p>Add your medical history to receive personalized and safe treatment recommendations.</p>
+                    <a href="{% url 'frontend:edit_medical_history' %}" class="btn btn-primary btn-large">Add Medical History</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
