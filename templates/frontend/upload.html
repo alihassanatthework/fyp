@@ -8,7 +8,7 @@
         <h1 class="page-title">Upload Image for Analysis</h1>
         
         <div class="upload-card">
-            <form method="post" enctype="multipart/form-data" id="uploadForm" class="upload-form">
+            <form method="post" enctype="multipart/form-data" id="uploadForm" class="upload-form" action="{% url 'frontend:upload' %}">
                 {% csrf_token %}
                 
                 <div class="image-type-selection">

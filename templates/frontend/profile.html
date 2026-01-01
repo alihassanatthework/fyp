@@ -29,8 +29,44 @@
             <div class="profile-card">
                 <h2>Medical History</h2>
                 <div class="medical-info">
-                    <p class="info-placeholder">Medical history will be displayed here once configured.</p>
-                    <a href="#" class="btn btn-secondary">Edit Medical History</a>
+                    {% if medical_history %}
+                        <div class="medical-conditions">
+                            <h4>Active Conditions:</h4>
+                            {% if medical_history.get_active_conditions %}
+                                <div class="condition-tags">
+                                    {% for condition in medical_history.get_active_conditions %}
+                                        <span class="condition-tag">{{ condition }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="no-conditions">No medical conditions recorded.</p>
+                            {% endif %}
+                        </div>
+                        
+                        {% if medical_history.other_conditions %}
+                            <div class="info-item">
+                                <label>Other Conditions:</label>
+                                <span>{{ medical_history.other_conditions }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        {% if medical_history.current_medications %}
+                            <div class="info-item">
+                                <label>Current Medications:</label>
+                                <span>{{ medical_history.current_medications }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        {% if medical_history.known_allergens %}
+                            <div class="info-item">
+                                <label>Known Allergens:</label>
+                                <span>{{ medical_history.known_allergens }}</span>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="info-placeholder">No medical history recorded yet.</p>
+                    {% endif %}
+                    <a href="#" class="btn btn-secondary" style="margin-top: 1rem;">Edit Medical History</a>
                 </div>
             </div>
         </div>
@@ -42,4 +78,3 @@
     </div>
 </div>
 {% endblock %}
-
