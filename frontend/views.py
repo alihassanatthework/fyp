@@ -235,9 +235,11 @@ def analysis_results(request, analysis_id=None):
         ],
     }
     
-    # Try to get from session if available
+    # Try to get from session if available (from upload/analysis)
     if 'last_analysis' in request.session:
         context = request.session['last_analysis']
+        # Clear session after displaying
+        del request.session['last_analysis']
     
     return render(request, 'frontend/results.html', context)
 
