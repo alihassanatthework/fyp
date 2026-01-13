@@ -11,7 +11,7 @@ This package contains all AI model integrations:
 - AIAnalysisPipeline: Complete analysis pipeline
 """
 
-from .mediapipe_detector import MediapipeDetector
+from .mediapipe_detector import FaceScalpDetector
 from .unet_segmenter import UNetSegmenter
 from .efficientnet_classifier import EfficientNetClassifier
 from .yolo_detector import YOLODetector

@@ -21,6 +21,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -241,6 +242,13 @@ X_FRAME_OPTIONS = 'DENY'
 # File Upload Settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+
+# 2. Define Media Paths relative to that BASE_DIR
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'  # This syntax is safer on Mac
+
+# 3. Print the path to the console every time you save, so you know it worked
+print(f"✅ MEDIA SAVING TO: {MEDIA_ROOT}")
 
 # AI Model Settings
 MEDIAPIPE_MODEL_PATH = os.getenv('MEDIAPIPE_MODEL_PATH', '')

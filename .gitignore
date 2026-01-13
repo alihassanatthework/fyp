@@ -128,3 +128,9 @@ __pycache__/
 .dmypy.json
 dmypy.json
 
+#mediapipeline
+# Ignore uploaded media (Don't share your test photos on GitHub!)
+media/
+__pycache__/
+*.pyc
+.DS_Store

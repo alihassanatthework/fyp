@@ -9,7 +9,7 @@ This module orchestrates the complete AI analysis pipeline:
 5. LLM recommendation generation
 """
 
-from .mediapipe_detector import MediapipeDetector
+from .mediapipe_detector import FaceScalpDetector
 from .unet_segmenter import UNetSegmenter
 from .efficientnet_classifier import EfficientNetClassifier
 from .yolo_detector import YOLODetector
@@ -32,7 +32,7 @@ class AIAnalysisPipeline:
             model_configs: Dictionary of model configurations
         """
         # Initialize all models
-        self.mediapipe = MediapipeDetector()
+        self.detector = FaceScalpDetector()
         self.unet = UNetSegmenter(model_configs.get('unet_path') if model_configs else None)
         self.efficientnet = EfficientNetClassifier(
             model_configs.get('efficientnet_path') if model_configs else None
