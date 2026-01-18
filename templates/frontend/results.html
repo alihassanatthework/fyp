@@ -22,26 +22,111 @@
         </div>
 
         <div class="results-card" style="margin-bottom: 30px;">
-            <h2>📸 Visual Analysis</h2>
+            <h2>📸 Visual Analysis - {{ image_type|title }}</h2>
             <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px;">
                 
-                <div style="text-align: center;">
-                    <h3 style="font-size: 1rem; color: #666;">Original Upload</h3>
-                    <img src="{{ original_image }}" alt="Original Upload" 
-                         style="max-width: 100%; height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                <!-- Original Image -->
+                {% if original_image %}
+                <div style="text-align: center; min-width: 300px;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">1. Original Image</h3>
+                    <img src="{{ original_image }}" alt="Original Image" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <p style="display: none; color: red;">Image not found</p>
                 </div>
+                {% endif %}
 
-                <div style="text-align: center;">
-                    <h3 style="font-size: 1rem; color: #666;">Detected Face</h3>
-                    <img src="{{ face_url }}" alt="Detected Face" 
-                         style="max-width: 100%; height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                <!-- MediaPipe Face Detection -->
+                {% if face_crop or face_url %}
+                <div style="text-align: center; min-width: 300px;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">2. MediaPipe - Face Detection (256×256)</h3>
+                    <img src="{{ face_crop|default:face_url }}" alt="Detected Face" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #4CAF50; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <p style="display: none; color: red;">Face image not found</p>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Face region extracted by MediaPipe</p>
                 </div>
+                {% else %}
+                <div style="text-align: center; min-width: 300px; padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+                    <h3 style="font-size: 1rem; color: #999; margin-bottom: 10px;">2. MediaPipe - Face Detection</h3>
+                    <p style="color: #999; font-size: 0.9rem;">Face not detected in image</p>
+                </div>
+                {% endif %}
 
-                <div style="text-align: center;">
-                    <h3 style="font-size: 1rem; color: #666;">Detected Scalp</h3>
-                    <img src="{{ scalp_url }}" alt="Detected Scalp" 
-                         style="max-width: 100%; height: 200px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                <!-- MediaPipe Scalp Detection -->
+                {% if scalp_crop or scalp_url %}
+                <div style="text-align: center; min-width: 300px;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">3. MediaPipe - Scalp Detection (256×256)</h3>
+                    <img src="{{ scalp_crop|default:scalp_url }}" alt="Detected Scalp" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #4CAF50; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <p style="display: none; color: red;">Scalp image not found</p>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Scalp region extracted by MediaPipe</p>
                 </div>
+                {% else %}
+                <div style="text-align: center; min-width: 300px; padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+                    <h3 style="font-size: 1rem; color: #999; margin-bottom: 10px;">3. MediaPipe - Scalp Detection</h3>
+                    <p style="color: #999; font-size: 0.9rem;">Scalp not detected in image</p>
+                </div>
+                {% endif %}
+
+                <!-- U-Net Segmentation Mask -->
+                {% if segmentation_mask %}
+                <div style="text-align: center; min-width: 300px;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">4. U-Net Segmentation Mask</h3>
+                    <img src="{{ segmentation_mask }}" alt="Segmentation Mask" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #2196F3; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <p style="display: none; color: red;">Segmentation mask not found</p>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">🔴 Red/Yellow = Affected Areas | 🔵 Blue = Healthy</p>
+                </div>
+                {% else %}
+                <div style="text-align: center; min-width: 300px; padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+                    <h3 style="font-size: 1rem; color: #999; margin-bottom: 10px;">4. U-Net Segmentation Mask</h3>
+                    <p style="color: #999; font-size: 0.9rem;">Segmentation not available (model may need training)</p>
+                </div>
+                {% endif %}
+
+                <!-- EfficientNet Classification Visualization (Skin) -->
+                {% if efficientnet_visualization %}
+                <div style="text-align: center; min-width: 300px;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">4a. EfficientNet - Classification Scores</h3>
+                    <img src="{{ efficientnet_visualization }}" alt="EfficientNet Scores" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #3F51B5; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <p style="display: none; color: red;">EfficientNet visualization not found</p>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Top class probabilities for the detected ROI</p>
+                </div>
+                {% endif %}
+
+                <!-- YOLOv8 Detection Visualization (Scalp) -->
+                {% if yolo_visualization %}
+                <div style="text-align: center; min-width: 300px;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">4b. YOLOv8 - Detection Preview</h3>
+                    <img src="{{ yolo_visualization }}" alt="YOLO Detections" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #9C27B0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <p style="display: none; color: red;">YOLO visualization not found</p>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Bounding boxes and confidences from YOLOv8</p>
+                </div>
+                {% endif %}
+
+                <!-- Detected Conditions Visualization -->
+                {% if visualized_image %}
+                <div style="text-align: center; min-width: 300px;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">5. Detected Conditions ({{ image_type|title }})</h3>
+                    <img src="{{ visualized_image }}" alt="Detected Conditions" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #FF5722; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <p style="display: none; color: red;">Visualization not found</p>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">🟢 Green Box = ROI | Labels show conditions & severity</p>
+                </div>
+                {% else %}
+                <div style="text-align: center; min-width: 300px; padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+                    <h3 style="font-size: 1rem; color: #999; margin-bottom: 10px;">5. Detected Conditions</h3>
+                    <p style="color: #999; font-size: 0.9rem;">Visualization not available</p>
+                </div>
+                {% endif %}
             </div>
         </div>
 
@@ -64,8 +149,8 @@
                                 <span class="score-value">{{ condition.severity_score }}%</span>
                             </div>
                             <div class="severity-bar">
-                                <div class="severity-fill severity-{{ condition.severity_level|lower }}-fill" 
-                                     style="width: {{ condition.severity_score }}%"></div>
+                          <div class="severity-fill severity-{{ condition.severity_level|lower }}-fill" 
+                              style="width: {{ condition.severity_score|default:'0'|floatformat:0 }}%"></div>
                             </div>
                             <div class="severity-description">
                                 {% if condition.severity_score > 70 %}
