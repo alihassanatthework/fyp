@@ -23,6 +23,11 @@ from tqdm import tqdm
 import segmentation_models_pytorch as smp
 from typing import Tuple, List
 
+# Augmentations
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+import math
+
 
 class DiceLoss(nn.Module):
     """
@@ -69,6 +74,28 @@ class DiceLoss(nn.Module):
         
         # Return Dice loss (1 - Dice coefficient)
         return 1.0 - dice
+
+
+class BCEDiceLoss(nn.Module):
+    """
+    Combined BCEWithLogits + Dice loss (common for segmentation tasks).
+    """
+    def __init__(self, smooth: float = 1e-6):
+        super().__init__()
+        self.bce = nn.BCEWithLogitsLoss()
+        self.smooth = smooth
+
+    def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        # BCE on logits
+        bce_loss = self.bce(logits, targets)
+        # Dice on probabilities
+        probs = torch.sigmoid(logits)
+        probs_flat = probs.view(probs.size(0), -1)
+        targets_flat = targets.view(targets.size(0), -1)
+        intersection = (probs_flat * targets_flat).sum(1)
+        dice = (2.0 * intersection + self.smooth) / (probs_flat.sum(1) + targets_flat.sum(1) + self.smooth)
+        dice_loss = 1.0 - dice
+        return bce_loss + dice_loss.mean()
 
 
 class SegmentationDataset(Dataset):
@@ -124,6 +151,20 @@ class SegmentationDataset(Dataset):
             raise ValueError("No valid image-mask pairs found")
         
         print(f"Found {len(self.valid_pairs)} valid image-mask pairs")
+
+        # Build augmentations
+        self.train_transform = A.Compose([
+            A.HorizontalFlip(p=0.5),
+            A.ShiftScaleRotate(shift_limit=0.06, scale_limit=0.15, rotate_limit=20, p=0.5),
+            A.OneOf([
+                A.GaussNoise(var_limit=(10.0, 50.0), p=0.5),
+                A.MedianBlur(blur_limit=3, p=0.5),
+            ], p=0.3),
+            A.RandomBrightnessContrast(p=0.5),
+            A.HueSaturationValue(p=0.3),
+            A.ElasticTransform(alpha=1.0, sigma=50, alpha_affine=50, p=0.2),
+        ])
+        self.val_transform = A.Compose([])
     
     def __len__(self) -> int:
         """Return dataset size."""
@@ -153,28 +194,25 @@ class SegmentationDataset(Dataset):
         # Resize to target size
         image = cv2.resize(image, (self.image_size, self.image_size), interpolation=cv2.INTER_LINEAR)
         mask = cv2.resize(mask, (self.image_size, self.image_size), interpolation=cv2.INTER_NEAREST)
-        
-        # Data augmentation (if enabled)
-        if self.augment and np.random.random() > 0.5:
-            # Horizontal flip
-            image = cv2.flip(image, 1)
-            mask = cv2.flip(mask, 1)
+        # Data augmentation (albumentations)
+        if self.augment:
+            augmented = self.train_transform(image=image, mask=mask)
+            image = augmented['image']
+            mask = augmented['mask']
         
         # Normalize mask to binary (0 or 1)
         mask_binary = (mask > 127).astype(np.float32)
-        
-        # Convert to tensors
-        # Image: (H, W, C) -> (C, H, W), normalize to [0, 1]
-        image_tensor = torch.from_numpy(image).permute(2, 0, 1).float() / 255.0
-        
-        # Normalize with ImageNet statistics
-        mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
-        std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
-        image_tensor = (image_tensor - mean) / std
-        
+
+        # Convert to tensors and normalize using ImageNet stats
+        image = image.astype(np.float32) / 255.0
+        mean = np.array([0.485, 0.456, 0.406]).reshape(1, 1, 3)
+        std = np.array([0.229, 0.224, 0.225]).reshape(1, 1, 3)
+        image = (image - mean) / std
+        image_tensor = torch.from_numpy(image).permute(2, 0, 1).float()
+
         # Mask: (H, W) -> (1, H, W)
         mask_tensor = torch.from_numpy(mask_binary).unsqueeze(0).float()
-        
+
         return image_tensor, mask_tensor
 
 
@@ -183,7 +221,9 @@ def train_epoch(
     dataloader: DataLoader,
     criterion: nn.Module,
     optimizer: optim.Optimizer,
-    device: torch.device
+    device: torch.device,
+    scaler: torch.cuda.amp.GradScaler = None,
+    step_scheduler: callable = None,
 ) -> float:
     """
     Train for one epoch.
@@ -205,18 +245,28 @@ def train_epoch(
     for images, masks in tqdm(dataloader, desc="Training"):
         images = images.to(device)
         masks = masks.to(device)
-        
-        # Forward pass
+
         optimizer.zero_grad()
-        outputs = model(images)
-        
-        # Calculate loss
-        loss = criterion(outputs, masks)
-        
-        # Backward pass
-        loss.backward()
-        optimizer.step()
-        
+        if scaler is not None:
+            with torch.cuda.amp.autocast():
+                outputs = model(images)
+                loss = criterion(outputs, masks)
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
+        else:
+            outputs = model(images)
+            loss = criterion(outputs, masks)
+            loss.backward()
+            optimizer.step()
+
+        # Optionally step per-batch scheduler (OneCycleLR)
+        if step_scheduler is not None:
+            try:
+                step_scheduler.step()
+            except Exception:
+                pass
+
         total_loss += loss.item()
         num_batches += 1
     
@@ -249,13 +299,13 @@ def validate(
         for images, masks in tqdm(dataloader, desc="Validating"):
             images = images.to(device)
             masks = masks.to(device)
-            
+
             # Forward pass
             outputs = model(images)
-            
+
             # Calculate loss
             loss = criterion(outputs, masks)
-            
+
             total_loss += loss.item()
             num_batches += 1
     
@@ -278,12 +328,33 @@ def main():
     parser.add_argument('--val_split', type=float, default=0.2,
                         help='Validation split ratio')
     parser.add_argument('--device', type=str, default='cuda',
-                        help='Device for training (cuda or cpu)')
+                        help='Device for training (cuda or cpu or mps)')
+    parser.add_argument('--freeze_epochs', type=int, default=3,
+                        help='Number of initial epochs to freeze encoder weights for faster fine-tuning')
     
     args = parser.parse_args()
     
-    # Setup device
-    device = torch.device(args.device if torch.cuda.is_available() else 'cpu')
+    # Setup device: prefer CUDA, then Apple MPS, else CPU
+    preferred = args.device.lower() if args.device else 'auto'
+    if preferred in ('cuda', 'cpu', 'mps'):
+        # honor explicit request if possible
+        device = torch.device(preferred if preferred != 'auto' else 'cpu')
+    else:
+        device = None
+
+    if device is None:
+        if torch.cuda.is_available():
+            device = torch.device('cuda')
+        else:
+            # Apple Metal Performance Shaders (MPS) for Apple Silicon
+            try:
+                if getattr(torch.backends, 'mps', None) and torch.backends.mps.is_available():
+                    device = torch.device('mps')
+                else:
+                    device = torch.device('cpu')
+            except Exception:
+                device = torch.device('cpu')
+
     print(f"Using device: {device}")
     
     # Create output directory
@@ -315,60 +386,119 @@ def main():
         pin_memory=True
     )
     
-    # Initialize model
-    model = smp.Unet(
-        encoder_name="resnet34",
-        encoder_weights="imagenet",
-        in_channels=3,
-        classes=1,
-        activation=None
-    )
-    model.to(device)
-    
-    # Loss function (Dice Loss for class imbalance)
-    criterion = DiceLoss()
-    
+    # Initialize model (use a stronger encoder for better accuracy)
+    # Default to ResNet50 with attention gates for better accuracy & faster fine-tuning
+    encoder_name = os.getenv('UNET_ENCODER', 'resnet50')
+    try:
+        model = smp.Unet(
+            encoder_name=encoder_name,
+            encoder_weights="imagenet",
+            in_channels=3,
+            classes=1,
+            decoder_attention_type="scse",
+            activation=None
+        )
+        model.to(device)
+    except Exception as e:
+        print(f"⚠️ Failed to create UNet with encoder {encoder_name}: {e}. Falling back to resnet34 with attention.")
+        model = smp.Unet(
+            encoder_name="resnet34",
+            encoder_weights="imagenet",
+            decoder_attention_type="scse",
+            in_channels=3,
+            classes=1,
+            activation=None
+        )
+        model.to(device)
+
+    # Loss function (BCE + Dice)
+    criterion = BCEDiceLoss()
+
     # Optimizer
-    optimizer = optim.Adam(model.parameters(), lr=args.learning_rate)
+    optimizer = optim.AdamW(model.parameters(), lr=args.learning_rate)
+
+    # Scheduler: prefer OneCycleLR when training on GPU for faster convergence
+    use_onecycle = device.type == 'cuda'
+    if use_onecycle:
+        steps_per_epoch = max(1, len(train_loader))
+        scheduler = optim.lr_scheduler.OneCycleLR(
+            optimizer,
+            max_lr=args.learning_rate,
+            steps_per_epoch=steps_per_epoch,
+            epochs=args.epochs,
+            pct_start=0.1,
+            anneal_strategy='cos',
+            div_factor=10.0,
+            final_div_factor=100.0,
+        )
+        per_batch_scheduler = scheduler
+    else:
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, mode='min', factor=0.5, patience=5
+        )
+        per_batch_scheduler = None
     
-    # Learning rate scheduler
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=5, verbose=True
-    )
-    
+    # Optionally freeze encoder for a few initial epochs to train decoder faster
+    freeze_epochs = int(args.freeze_epochs)
+    if freeze_epochs > 0:
+        try:
+            for name, param in model.encoder.named_parameters():
+                param.requires_grad = False
+            print(f"🔒 Encoder parameters frozen for first {freeze_epochs} epochs (encoder={encoder_name})")
+        except Exception:
+            print("⚠️ Could not freeze encoder parameters (unexpected model structure)")
+
     # Training loop
     best_val_loss = float('inf')
-    
+
+    # Mixed precision scaler (only used if CUDA)
+    scaler = torch.cuda.amp.GradScaler() if device.type == 'cuda' else None
+
     for epoch in range(args.epochs):
         print(f"\nEpoch {epoch + 1}/{args.epochs}")
         print("-" * 50)
-        
-        # Train
-        train_loss = train_epoch(model, train_loader, criterion, optimizer, device)
-        
+
+        # Unfreeze the encoder after the initial freeze period to fine-tune whole model
+        if freeze_epochs > 0 and epoch == freeze_epochs:
+            try:
+                for name, param in model.encoder.named_parameters():
+                    param.requires_grad = True
+                print(f"🔓 Encoder unfrozen at epoch {epoch} — full fine-tuning now")
+            except Exception:
+                print("⚠️ Could not unfreeze encoder parameters (unexpected model structure)")
+
+        # Train (pass scaler and per-batch scheduler when available)
+        train_loss = train_epoch(model, train_loader, criterion, optimizer, device, scaler=scaler, step_scheduler=per_batch_scheduler)
+
         # Validate
         val_loss = validate(model, val_loader, criterion, device)
-        
-        # Update learning rate
-        scheduler.step(val_loss)
-        
+
+        # Update learning rate for epoch-level scheduler
+        if not use_onecycle:
+            try:
+                scheduler.step(val_loss)
+            except Exception:
+                pass
+
         print(f"Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
-        
+
         # Save best model
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            checkpoint_path = os.path.join(args.output_dir, 'best_model.pth')
+            # Save under a distinct name to avoid overwriting baseline checkpoints
+            checkpoint_path = os.path.join(args.output_dir, 'resnet_unet_best.pth')
             torch.save({
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'val_loss': val_loss,
+                'encoder': encoder_name,
             }, checkpoint_path)
             print(f"Saved best model to {checkpoint_path}")
-        
+
         # Save periodic checkpoints
         if (epoch + 1) % 10 == 0:
-            checkpoint_path = os.path.join(args.output_dir, f'checkpoint_epoch_{epoch + 1}.pth')
+            checkpoint_path = os.path.join(args.output_dir, f'resnet_unet_checkpoint_epoch_{epoch + 1}.pth')
             torch.save({
                 'epoch': epoch,
                 'model_state_dict': model.state_dict(),

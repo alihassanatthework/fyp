@@ -326,6 +326,30 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
     """
     global _pipeline_instance
     
+    # If no model_configs provided, try sensible defaults: look for a trained
+    # U-Net checkpoint under `core/models/unet_checkpoints/` or `core/models/unet_checkpoints/eczema_pseudo/best_model.pth`.
+    if model_configs is None:
+        model_configs = {}
+        # prefer specific eczema pseudo checkpoint if present
+        possible_paths = [
+            'core/models/unet_checkpoints/eczema_pseudo/best_model.pth',
+            'core/models/unet_checkpoints/best_model.pth'
+        ]
+        for p in possible_paths:
+            try:
+                from pathlib import Path
+                if Path(p).exists():
+                    model_configs['unet_path'] = p
+                    break
+            except Exception:
+                pass
+        # set device to cuda if available
+        try:
+            import torch
+            model_configs['device'] = 'cuda' if torch.cuda.is_available() else 'cpu'
+        except Exception:
+            model_configs['device'] = 'cpu'
+
     if _pipeline_instance is None:
         with _pipeline_lock:
             if _pipeline_instance is None:

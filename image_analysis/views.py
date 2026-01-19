@@ -10,6 +10,8 @@ import cv2
 
 # Import your AI Logic
 from core.ai_models.mediapipe_detector import FaceScalpDetector
+from core.ai_models import process_image
+import numpy as np
 
 class AnalyzeImageView(APIView):
     # 1. Allow anyone to access this page (No login required for now)
@@ -138,7 +140,98 @@ class AnalyzeImageView(APIView):
                 ]
             }
 
-            # 5. Render the HTML Page with the Data
+            # 5. Try to run the AI pipeline to produce a segmentation mask and
+            # an overlay visualization so the results page can show UNet output.
+            try:
+                img = cv2.imread(file_path)
+                if img is not None:
+                    pipeline_result = process_image(img, analysis_type=image_type)
+                    # segmentation_mask will be a list in the result; convert
+                    if 'segmentation_mask' in pipeline_result:
+                        seg = np.array(pipeline_result['segmentation_mask'], dtype=np.uint8)
+                        if seg.max() <= 1:
+                            seg = (seg * 255).astype(np.uint8)
+
+                        # Save colored mask
+                        mask_name = f"mask_{unique_name}.jpg"
+                        mask_path = os.path.join(processed_dir, mask_name)
+                        colored = cv2.applyColorMap(seg, cv2.COLORMAP_JET)
+                        cv2.imwrite(mask_path, colored)
+                        context['segmentation_mask'] = f"/media/processed/{mask_name}"
+
+                        # Create overlay using available crop or resize
+                        try:
+                            if image_type == 'skin':
+                                # face_crop may exist from earlier detection
+                                overlay_crop = locals().get('face_crop')
+                            else:
+                                overlay_crop = locals().get('scalp_crop')
+                        except Exception:
+                            overlay_crop = None
+
+                        if overlay_crop is None:
+                            overlay_crop = cv2.resize(img, (256, 256), interpolation=cv2.INTER_LINEAR)
+
+                        seg_resized = cv2.resize(seg, (overlay_crop.shape[1], overlay_crop.shape[0]), interpolation=cv2.INTER_NEAREST)
+                        colored_seg = cv2.applyColorMap(seg_resized, cv2.COLORMAP_JET)
+                        overlay = cv2.addWeighted(overlay_crop, 0.6, colored_seg, 0.4, 0)
+
+                        vis_name = f"vis_{unique_name}.jpg"
+                        vis_path = os.path.join(processed_dir, vis_name)
+                        cv2.imwrite(vis_path, cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
+                        # store overlay under visualizations for consistency
+                        vis_public = f"/media/visualizations/{vis_name}"
+                        # move file into visualizations directory
+                        viz_dir = os.path.join(settings.MEDIA_ROOT, 'visualizations')
+                        os.makedirs(viz_dir, exist_ok=True)
+                        final_vis_path = os.path.join(viz_dir, vis_name)
+                        try:
+                            os.replace(vis_path, final_vis_path)
+                            context['visualized_image'] = vis_public
+                        except Exception:
+                            # fallback: keep in processed if move failed
+                            context['visualized_image'] = f"/media/processed/{vis_name}"
+
+                    # replace placeholder conditions/severity with pipeline outputs if available
+                    if 'detected_conditions' in pipeline_result:
+                        # Convert to template-friendly structure
+                        formatted = []
+                        sev = pipeline_result.get('severity_scores', {})
+                        for c in pipeline_result.get('detected_conditions', []):
+                            name = c.get('name', 'normal')
+                            s = sev.get(name, {'score': 0, 'level': 'Mild'})
+                            try:
+                                score_int = int(s.get('score', 0))
+                            except Exception:
+                                score_int = 0
+                            formatted.append({'name': name.replace('_', ' ').title(), 'severity_level': s.get('level', 'Mild'), 'severity_score': score_int})
+                        if formatted:
+                            context['conditions'] = formatted
+                    if 'severity_scores' in pipeline_result:
+                        # compute max severity
+                        context['max_severity'] = max([v.get('score', 0) for v in pipeline_result.get('severity_scores', {}).values()])
+
+                    # Store last analysis for results view and later debugging
+                    try:
+                        request.session['last_analysis'] = {
+                            'analysis_id': context.get('analysis_id'),
+                            'image_type': image_type,
+                            'original_image': context.get('original_image'),
+                            'face_crop': context.get('face_url'),
+                            'scalp_crop': context.get('scalp_url'),
+                            'segmentation_mask': context.get('segmentation_mask', ''),
+                            'visualized_image': context.get('visualized_image', ''),
+                            'conditions': context.get('conditions', []),
+                            'recommendations': context.get('recommendations', []),
+                            'recommend_dermatologist': context.get('recommend_dermatologist', False),
+                            'max_severity': context.get('max_severity', 0),
+                        }
+                    except Exception:
+                        pass
+            except Exception as e:
+                print(f"[PIPELINE-ERROR] Failed to run pipeline during upload: {e}")
+
+            # 6. Render the HTML Page with the Data
             return render(request, 'frontend/results.html', context)
 
         except Exception as e:

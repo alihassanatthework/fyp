@@ -70,22 +70,50 @@
                 </div>
                 {% endif %}
 
-                <!-- U-Net Segmentation Mask -->
-                {% if segmentation_mask %}
+                <!-- U-Net Segmentation: Raw Mask + Overlay -->
                 <div style="text-align: center; min-width: 300px;">
-                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">4. U-Net Segmentation Mask</h3>
-                    <img src="{{ segmentation_mask }}" alt="Segmentation Mask" 
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #2196F3; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <p style="display: none; color: red;">Segmentation mask not found</p>
-                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">🔴 Red/Yellow = Affected Areas | 🔵 Blue = Healthy</p>
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">4. U-Net Segmentation</h3>
+                    {% if segmentation_mask and visualized_image %}
+                    <div style="display:flex; gap:12px; justify-content:center; align-items:flex-start;">
+                        <div style="text-align:center;">
+                            <div style="font-size:0.9rem; color:#666; margin-bottom:6px;">Raw Segmentation Mask</div>
+                            <img src="{{ segmentation_mask }}" alt="Segmentation Mask"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                                 style="max-width: 260px; max-height: 260px; object-fit: contain; border-radius: 8px; border: 2px solid #2196F3; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <p style="display: none; color: red;">Segmentation mask not found</p>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-size:0.9rem; color:#666; margin-bottom:6px;">Overlay Visualization</div>
+                            <img src="{{ visualized_image }}" alt="Segmentation Overlay"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                                 style="max-width: 260px; max-height: 260px; object-fit: contain; border-radius: 8px; border: 2px solid #FF5722; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <p style="display: none; color: red;">Overlay not found</p>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 8px;">🔴 Red/Yellow = Affected Areas | 🔵 Blue = Healthy</p>
+                    {% elif segmentation_mask %}
+                    <div style="text-align:center;">
+                        <img src="{{ segmentation_mask }}" alt="Segmentation Mask"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                             style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #2196F3; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="display: none; color: red;">Segmentation mask not found</p>
+                        <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">🔴 Red/Yellow = Affected Areas | 🔵 Blue = Healthy</p>
+                    </div>
+                    {% elif visualized_image %}
+                    <div style="text-align:center;">
+                        <img src="{{ visualized_image }}" alt="Segmentation Overlay"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                             style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #FF5722; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="display: none; color: red;">Overlay not found</p>
+                        <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Overlay visualization available</p>
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; min-width: 300px; padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+                        <h3 style="font-size: 1rem; color: #999; margin-bottom: 10px;">4. U-Net Segmentation</h3>
+                        <p style="color: #999; font-size: 0.9rem;">Segmentation not available yet. If you've just uploaded, wait a moment or check server logs.</p>
+                    </div>
+                    {% endif %}
                 </div>
-                {% else %}
-                <div style="text-align: center; min-width: 300px; padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
-                    <h3 style="font-size: 1rem; color: #999; margin-bottom: 10px;">4. U-Net Segmentation Mask</h3>
-                    <p style="color: #999; font-size: 0.9rem;">Segmentation not available (model may need training)</p>
-                </div>
-                {% endif %}
 
                 <!-- EfficientNet Classification Visualization (Skin) -->
                 {% if efficientnet_visualization %}

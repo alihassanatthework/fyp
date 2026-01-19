@@ -385,8 +385,75 @@ def upload_image(request):
                 session_data['efficientnet_visualization'] = f"/media/visualizations/{efficient_vis_filename}"
             if yolo_vis_filename:
                 session_data['yolo_visualization'] = f"/media/visualizations/{yolo_vis_filename}"
-            
+            # If no segmentation mask was saved for this analysis, attach the
+            # most recent UNet inference visualization (if available) so the
+            # results page shows something immediately.
+            try:
+                if 'segmentation_mask' not in session_data or not session_data.get('segmentation_mask'):
+                    viz_dir = os.path.join(settings.MEDIA_ROOT, 'visualizations', 'eczema_predictions')
+                    if os.path.isdir(viz_dir):
+                        files = sorted([f for f in os.listdir(viz_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
+                        if files:
+                            latest = files[-1]
+                            session_data['segmentation_mask'] = f"/media/visualizations/eczema_predictions/{latest}"
+                            # set visualized_image if not present
+                            if not session_data.get('visualized_image'):
+                                session_data['visualized_image'] = session_data['segmentation_mask']
+            except Exception as e:
+                print('[WARN] failed to attach fallback viz to session:', e)
+
+            # If segmentation was not produced during processing above, run a
+            # light on-demand inference now (synchronous) so the results page
+            # will always have a per-analysis mask and visualization to show.
+            try:
+                if not session_data.get('segmentation_mask') and os.path.exists(original_path):
+                    print('[ON-DEMAND] No segmentation in session, running quick on-demand inference for this upload...')
+                    img_od = cv2.imread(original_path)
+                    if img_od is not None:
+                        pipeline_result_od = process_image(img_od, analysis_type=image_type)
+                        seg_mask_od = None
+                        if 'segmentation_mask' in pipeline_result_od:
+                            seg_mask_od = np.array(pipeline_result_od['segmentation_mask'], dtype=np.uint8)
+                            if seg_mask_od.max() <= 1:
+                                seg_mask_od = (seg_mask_od * 255).astype(np.uint8)
+
+                        if seg_mask_od is not None:
+                            mask_filename_od = f"mask_{unique_id}.jpg"
+                            mask_path_od = os.path.join(processed_dir, mask_filename_od)
+                            mask_colored_od = cv2.applyColorMap(seg_mask_od, cv2.COLORMAP_JET)
+                            cv2.imwrite(mask_path_od, mask_colored_od)
+                            session_data['segmentation_mask'] = f"/media/processed/{mask_filename_od}"
+                            print(f"[ON-DEMAND] Saved segmentation mask: {mask_path_od}")
+
+                            # Create overlay visualization
+                            try:
+                                from core.ai_models.mediapipe_detector import FaceScalpDetector
+                                detector = FaceScalpDetector()
+                                if image_type == 'skin':
+                                    crop = detector.detect_and_crop_face(img_od)
+                                else:
+                                    crop = detector.detect_and_crop_scalp(img_od)
+                            except Exception:
+                                crop = None
+
+                            if crop is None:
+                                crop = cv2.resize(img_od, (256, 256), interpolation=cv2.INTER_LINEAR)
+
+                            seg_resized = cv2.resize(seg_mask_od, (crop.shape[1], crop.shape[0]), interpolation=cv2.INTER_NEAREST)
+                            colored = cv2.applyColorMap(seg_resized, cv2.COLORMAP_JET)
+                            overlay = cv2.addWeighted(crop, 0.6, colored, 0.4, 0)
+
+                            vis_filename_od = f"vis_{unique_id}.jpg"
+                            vis_path_od = os.path.join(visualization_dir, vis_filename_od)
+                            cv2.imwrite(vis_path_od, cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
+                            session_data['visualized_image'] = f"/media/visualizations/{vis_filename_od}"
+                            print(f"[ON-DEMAND] Saved visualization: {vis_path_od}")
+            except Exception as e:
+                print('[ON-DEMAND] on-demand inference failed:', e)
+
             print(f"📦 Session data keys: {session_data.keys()}")
+            print(f"📦 Session segmentation_mask value: {session_data.get('segmentation_mask')}")
+            print(f"📦 Session visualized_image value: {session_data.get('visualized_image')}")
             request.session['last_analysis'] = session_data
             
             # Redirect to results page
@@ -545,6 +612,11 @@ def analysis_results(request, analysis_id=None):
         return redirect('frontend:upload')
     
     session_data = request.session['last_analysis']
+    # Debug: print session_data keys so we can trace why segmentation may be missing
+    try:
+        print('[DEBUG] analysis_results session keys:', list(session_data.keys()))
+    except Exception:
+        print('[DEBUG] analysis_results: no session_data available')
     
     # Build context with all visualization data
     context = {
@@ -563,10 +635,110 @@ def analysis_results(request, analysis_id=None):
         'recommend_dermatologist': session_data.get('recommend_dermatologist', False),
         'max_severity': session_data.get('max_severity', 0),
     }
+
+    # Fallback: if segmentation_mask wasn't produced in session (old analysis),
+    # try to show a recent UNet inference visualization if available. This helps
+    # when a model was trained after the user performed an analysis.
+    try:
+        viz_dir = os.path.join(settings.MEDIA_ROOT, 'visualizations', 'eczema_predictions')
+        if os.path.isdir(viz_dir):
+            files = sorted([f for f in os.listdir(viz_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
+            if files:
+                latest = files[-1]
+                latest_url = f"/media/visualizations/eczema_predictions/{latest}"
+                if not context.get('segmentation_mask'):
+                    # Show the most recent prediction when no per-analysis mask exists
+                    print(f"[DEBUG] No session segmentation_mask; using latest viz {latest_url}")
+                    context['segmentation_mask'] = latest_url
+                if not context.get('visualized_image'):
+                    context['visualized_image'] = latest_url
+                # Also log whether the file actually exists on disk for troubleshooting
+                latest_path = os.path.join(viz_dir, latest)
+                print(f"[DEBUG] Latest viz path exists: {os.path.exists(latest_path)} -> {latest_path}")
+    except Exception as e:
+        print(f"[DEBUG] Error while locating viz dir: {e}")
     
     # Clear session after displaying (optional - you may want to keep it for history)
     # del request.session['last_analysis']
-    
+
+    # If no segmentation mask exists in the session (old analysis), try to run
+    # the pipeline on the original image now (safely) and attach results so
+    # the results page shows a real per-image segmentation instead of the
+    # placeholder/fallback. This is kept light and wrapped in a top-level
+    # try/except to avoid breaking page rendering.
+    try:
+        if not context.get('segmentation_mask') and context.get('original_image'):
+            print('[AUTO-INFER] No segmentation in session, attempting on-demand inference...')
+            print(f"[AUTO-INFER] image_type={context.get('image_type')} analysis_id={context.get('analysis_id')}")
+            orig_url = context.get('original_image')
+            rel_path = orig_url[len('/media/'):] if orig_url.startswith('/media/') else orig_url.lstrip('/')
+            orig_path = os.path.join(settings.MEDIA_ROOT, rel_path)
+
+            if os.path.exists(orig_path):
+                print(f"[AUTO-INFER] Found original image on disk: {orig_path}")
+                img = cv2.imread(orig_path)
+                if img is not None:
+                    # Run pipeline (uses trained UNet if available)
+                    print('[AUTO-INFER] Running process_image pipeline...')
+                    pipeline_result = process_image(img, analysis_type=context.get('image_type', 'skin'))
+                    print(f"[AUTO-INFER] pipeline_result keys: {list(pipeline_result.keys())}")
+
+                    # Extract segmentation mask and normalize
+                    seg_mask = None
+                    if 'segmentation_mask' in pipeline_result:
+                        import numpy as _np
+                        seg_mask = _np.array(pipeline_result['segmentation_mask'], dtype=_np.uint8)
+                        if seg_mask.max() <= 1:
+                            seg_mask = (seg_mask * 255).astype(_np.uint8)
+
+                    if seg_mask is not None:
+                        print(f"[AUTO-INFER] seg_mask stats: shape={seg_mask.shape} max={seg_mask.max()}")
+                        processed_dir = os.path.join(settings.MEDIA_ROOT, 'processed')
+                        visualization_dir = os.path.join(settings.MEDIA_ROOT, 'visualizations')
+                        os.makedirs(processed_dir, exist_ok=True)
+                        os.makedirs(visualization_dir, exist_ok=True)
+
+                        # Save colored mask
+                        mask_filename = f"mask_auto_{context.get('analysis_id') or 'auto'}.jpg"
+                        mask_path = os.path.join(processed_dir, mask_filename)
+                        mask_colored = cv2.applyColorMap(seg_mask, cv2.COLORMAP_JET)
+                        cv2.imwrite(mask_path, mask_colored)
+                        context['segmentation_mask'] = f"/media/processed/{mask_filename}"
+                        print(f"[AUTO-INFER] Saved mask to {mask_path} -> will expose as {context['segmentation_mask']}")
+
+                        # Create overlay visualization using detected crop if possible
+                        try:
+                            from core.ai_models.mediapipe_detector import FaceScalpDetector
+                            detector = FaceScalpDetector()
+                            if context.get('image_type') == 'skin':
+                                crop = detector.detect_and_crop_face(img)
+                            else:
+                                crop = detector.detect_and_crop_scalp(img)
+                        except Exception:
+                            crop = None
+
+                        if crop is None:
+                            crop = cv2.resize(img, (256, 256), interpolation=cv2.INTER_LINEAR)
+
+                        seg_resized = cv2.resize(seg_mask, (crop.shape[1], crop.shape[0]), interpolation=cv2.INTER_NEAREST)
+                        colored = cv2.applyColorMap(seg_resized, cv2.COLORMAP_JET)
+                        overlay = cv2.addWeighted(crop, 0.6, colored, 0.4, 0)
+
+                        vis_filename = f"vis_auto_{context.get('analysis_id') or 'auto'}.jpg"
+                        vis_path = os.path.join(visualization_dir, vis_filename)
+                        cv2.imwrite(vis_path, cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
+                        context['visualized_image'] = f"/media/visualizations/{vis_filename}"
+                        print(f"[AUTO-INFER] Saved visualization to {vis_path} -> will expose as {context['visualized_image']}")
+
+                        # Persist into session
+                        session_data['segmentation_mask'] = context['segmentation_mask']
+                        session_data['visualized_image'] = context.get('visualized_image', session_data.get('visualized_image'))
+                        request.session['last_analysis'] = session_data
+    except Exception:
+        # Don't block page render on any inference error
+        import traceback
+        traceback.print_exc()
+
     return render(request, 'frontend/results.html', context)
 
 
