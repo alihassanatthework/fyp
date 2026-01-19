@@ -1,0 +1,5 @@
+# Track UNet checkpoint files with Git LFS
+core/models/unet_checkpoints/**.pth filter=lfs diff=lfs merge=lfs -text
+
+# If you add other large model files, add them here too, e.g.:
+# models/**/*.pt filter=lfs diff=lfs merge=lfs -text

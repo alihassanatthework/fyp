@@ -134,3 +134,13 @@ media/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Dataset and training artifacts (keep local)
+dataset/
+data_eczema/
+data/
+core/models/unet_checkpoints/
+core/models/**/unet_checkpoints/
+# Allow committing the UNet checkpoints (they should be tracked with Git LFS)
+!core/models/unet_checkpoints/
+!core/models/unet_checkpoints/**
