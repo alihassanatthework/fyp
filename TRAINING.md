@@ -47,3 +47,22 @@ Notes and troubleshooting
 - If the remote repository does not have Git LFS enabled, pushing LFS objects will fail. On GitHub, LFS is supported for repositories but large storage may incur usage limits.
 - If you cloned this repo and want to fetch LFS files, run `git lfs pull` after `git clone` (or `git clone` will fetch LFS objects automatically if Git LFS is installed).
 - If you prefer not to use Git LFS, consider uploading your checkpoints to a release, S3 bucket or Google Drive and adding small download scripts (not covered here).
+ - If you prefer not to use Git LFS, consider uploading your checkpoints to a release, S3 bucket or Google Drive and adding small download scripts (not covered here).
+
+3) New flags
+
+- `--encoder`: You can now explicitly choose the SMP encoder used inside the U-Net. Example values: `resnet50`, `resnet34`.
+
+  Example: to run training with a ResNet-50 encoder (recommended for transfer learning):
+
+  python core/ai_models/train_unet.py \
+    --data_dir data_eczema \
+    --output_dir core/models/unet_checkpoints/eczema_resnet50_scse \
+    --encoder resnet50 \
+    --freeze_epochs 3 \
+    --epochs 30 \
+    --batch_size 8 \
+    --learning_rate 1e-4 \
+    --device mps
+
+  (The script will still accept the `UNET_ENCODER` environment variable if you prefer to configure that way.)
