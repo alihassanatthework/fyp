@@ -42,7 +42,7 @@ def main():
 
     # Load dataset
     ds = SegmentationDataset(args.data_dir, image_size=256, augment=False)
-    loader = DataLoader(ds, batch_size=args.batch_size, shuffle=False, num_workers=4)
+    loader = DataLoader(ds, batch_size=args.batch_size, shuffle=False, num_workers=0)
 
     # Build model (assume resnet50+scse since our checkpoints use that)
     model = smp.Unet(encoder_name='resnet50', encoder_weights=None, in_channels=3, classes=1, decoder_attention_type='scse', activation=None)

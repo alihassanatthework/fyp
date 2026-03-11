@@ -30,6 +30,7 @@ class FaceScalpDetector:
             min_detection_confidence=0.3
         )
     
+    
     def detect_and_crop_face(self, image: np.ndarray) -> np.ndarray:
         """
         Detect face region and return 256×256 crop.
@@ -132,27 +133,8 @@ class FaceScalpDetector:
             scalp_crop = rgb_image[scalp_y1:scalp_y2, scalp_x1:scalp_x2]
 
         else:
-            # No face detected — fall back to a top-center crop (best-effort scalp region)
-            top_frac = 0.40  # take top 40% of image
-            side_margin = 0.15  # leave 15% margin on each side
-            y1 = 0
-            y2 = max(1, int(h * top_frac))
-            x1 = int(w * side_margin)
-            x2 = max(x1 + 1, int(w * (1.0 - side_margin)))
-
-            scalp_crop = rgb_image[y1:y2, x1:x2]
-
-            # If that fails, try a small top-center fallback crop
-            if scalp_crop.size == 0:
-                min_side = min(h, w)
-                cx = w // 2
-                cy = max(0, h // 8)
-                half = max(1, min_side // 6)
-                sx1 = max(0, cx - half)
-                sx2 = min(w, cx + half)
-                sy1 = max(0, cy - half)
-                sy2 = min(h, cy + half)
-                scalp_crop = rgb_image[sy1:sy2, sx1:sx2]
+            # If no face landmarks are detected, we cannot locate the scalp reliably
+            raise ValueError("No scalp detected (no face landmarks found)")
 
         # If we still have no crop or crop is empty, consider scalp not found
         if scalp_crop is None or scalp_crop.size == 0:
@@ -162,21 +144,37 @@ class FaceScalpDetector:
         def _is_scalp_present(crop: np.ndarray) -> bool:
             try:
                 gray = cv2.cvtColor(crop, cv2.COLOR_RGB2GRAY)
+                hsv = cv2.cvtColor(crop, cv2.COLOR_RGB2HSV)
+
                 h_c, w_c = gray.shape[:2]
                 if h_c * w_c == 0:
                     return False
 
-                # Edge density: hair/scalp often has higher edge texture than plain background
                 edges = cv2.Canny(gray, 50, 150)
-                edge_density = (edges > 0).sum() / (h_c * w_c)
+                edge_density = float((edges > 0).sum()) / float(h_c * w_c)
 
-                # Contrast/variance check
                 variance = float(gray.var()) / 255.0
 
-                # Heuristic thresholds (conservative)
-                if edge_density > 0.005 or variance > 0.02:
-                    return True
-                return False
+                dark_ratio = float((gray < 90).sum()) / float(h_c * w_c)
+
+                lower_skin = np.array([0, 30, 60], dtype=np.uint8)
+                upper_skin = np.array([20, 170, 255], dtype=np.uint8)
+
+                skin_mask = cv2.inRange(hsv, lower_skin, upper_skin)
+                skin_ratio = float((skin_mask > 0).sum()) / float(h_c * w_c)
+
+                mean_brightness = float(gray.mean()) / 255.0
+
+                # Reject bright flat objects like whiteboards
+                if mean_brightness > 0.82 and edge_density < 0.02:
+                    return False
+
+                hairy_scalp = (dark_ratio > 0.08 and edge_density > 0.01 and variance > 0.03)
+
+                bald_scalp = (skin_ratio > 0.08 and edge_density > 0.008 and variance > 0.025)
+
+                return bool(hairy_scalp or bald_scalp)
+
             except Exception:
                 return False
 
@@ -188,6 +186,34 @@ class FaceScalpDetector:
         scalp_resized = cv2.resize(scalp_crop, (self.TARGET_SIZE, self.TARGET_SIZE), interpolation=cv2.INTER_LINEAR)
 
         return scalp_resized
+    
+    def detect_skin_presence(self, image: np.ndarray) -> bool:
+        """
+        Detect if human skin is present in the image.
+
+        Args:
+            image: Input image (BGR)
+
+        Returns:
+            True if skin detected, False otherwise
+        """
+
+        try:
+            hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+            # Skin color range in HSV
+            lower_skin = np.array([0, 30, 60], dtype=np.uint8)
+            upper_skin = np.array([20, 170, 255], dtype=np.uint8)
+
+            skin_mask = cv2.inRange(hsv, lower_skin, upper_skin)
+
+            skin_ratio = float((skin_mask > 0).sum()) / float(image.shape[0] * image.shape[1])
+
+            # Require minimum skin pixels
+            return skin_ratio > 0.05
+
+        except Exception:
+            return False
     
     def process_and_crop(self, image_path: str, output_dir: str) -> Tuple[str, str]:
         """

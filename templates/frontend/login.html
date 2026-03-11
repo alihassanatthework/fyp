@@ -6,7 +6,14 @@
 <div class="auth-container">
     <div class="auth-card">
         <h2>Login</h2>
-        <form method="post" class="auth-form">
+        {% if messages %}
+            <div class="form-errors">
+                {% for message in messages %}
+                    <div class="error">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" action="{% url 'frontend:login' %}" class="auth-form">
             {% csrf_token %}
             <div class="form-group">
                 <label for="username">Username</label>

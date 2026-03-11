@@ -29,9 +29,13 @@ opencv-python==4.8.1.78
 xgboost==2.0.3  # For severity classification
 ultralytics==8.0.196  # YOLOv8
 efficientnet-pytorch==0.7.1  # EfficientNet-B4
-segmentation-models-pytorch==0.3.3  # U-Net with ResNet-34 backbone
+segmentation-models-pytorch==0.3.3  # U-Net with ResNet-50 backbone + SCSE attention
 transformers==4.35.0  # For LLM integration (optional, if using local models)
 openai==1.3.0  # For LLM API integration (optional)
+
+# Data Augmentation (for training)
+albumentations==1.3.1
+tqdm==4.66.1  # Progress bars for training
 
 # Encryption & Security
 cryptography==41.0.7

@@ -21,6 +21,8 @@ from .unet_segmenter import UNetSegmenter
 from .roi_extractor import extract_roi_from_mask
 from .efficientnet_classifier import EfficientNetClassifier
 from .yolo_detector import YOLODetector
+from .xgboost_severity import XGBoostSeverityClassifier
+from .llm_recommender import LLMRecommender
 
 
 class AIAnalysisPipeline:
@@ -82,6 +84,14 @@ class AIAnalysisPipeline:
             self.yolo = YOLODetector(
                 model_path=model_configs.get('yolo_path')
             )
+            self.xgboost_severity = XGBoostSeverityClassifier(
+            model_path=model_configs.get('xgboost_path')
+            )
+            self.llm_recommender = LLMRecommender(
+                model_path=model_configs.get('llm_path'),
+                api_key=model_configs.get('llm_api_key'),
+                use_api=model_configs.get('llm_use_api', False)
+            )
             
             self._initialized = True
     
@@ -123,17 +133,21 @@ class AIAnalysisPipeline:
         if analysis_type not in ['skin', 'scalp']:
             raise ValueError(f"analysis_type must be 'skin' or 'scalp', got '{analysis_type}'")
         
-        # Step 1: MediaPipe detection → 256×256 crop
-        if analysis_type == 'skin':
-            normalized_crop = self.detector.detect_and_crop_face(image)
-        else:
-            normalized_crop = self.detector.detect_and_crop_scalp(image)
-        
-        # Validate crop size
-        if normalized_crop.shape != (256, 256, 3):
-            raise ValueError(
-                f"MediaPipe crop must be 256×256×3, got {normalized_crop.shape}"
-            )
+        # Step 1: use provided image directly if already cropped/resized by the caller.
+        # views.py now passes face/scalp crop when available, otherwise a skin fallback crop.
+        normalized_crop = image
+
+        # If caller passed BGR/RGB image with unexpected size, normalize it here.
+        if not isinstance(normalized_crop, np.ndarray):
+            raise ValueError("Input image must be a numpy array after loading")
+
+        if normalized_crop.ndim != 3 or normalized_crop.shape[2] != 3:
+            raise ValueError(f"Expected HxWx3 image, got {normalized_crop.shape}")
+
+        if normalized_crop.shape[:2] != (256, 256):
+            normalized_crop = cv2.resize(normalized_crop, (256, 256), interpolation=cv2.INTER_LINEAR)
+
+        normalized_crop = normalized_crop.astype(np.uint8)
         
         # Step 2: U-Net segmentation → binary mask
         try:
@@ -327,11 +341,18 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
     global _pipeline_instance
     
     # If no model_configs provided, try sensible defaults: look for a trained
-    # U-Net checkpoint under `core/models/unet_checkpoints/` or `core/models/unet_checkpoints/eczema_pseudo/best_model.pth`.
+    # U-Net checkpoint under `core/models/unet_checkpoints/`.
+    # Priority order:
+    # 1. ResNet-50 + SCSE transfer learning model (resnet_unet_best.pth) - better accuracy
+    # 2. Baseline models (best_model.pth)
     if model_configs is None:
         model_configs = {}
-        # prefer specific eczema pseudo checkpoint if present
+        # prefer ResNet-50 + SCSE checkpoint (transfer learning) for better accuracy
         possible_paths = [
+            # Transfer learning models (ResNet-50 + SCSE attention) - higher priority
+            'core/models/unet_checkpoints/eczema_resnet50_scse/resnet_unet_best.pth',
+            'core/models/unet_checkpoints/resnet_unet_best.pth',
+            # Baseline models (ResNet-34, no attention) - fallback
             'core/models/unet_checkpoints/eczema_pseudo/best_model.pth',
             'core/models/unet_checkpoints/best_model.pth'
         ]

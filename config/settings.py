@@ -231,6 +231,11 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+# Auth (session login for frontend)
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 # Security Settings
 SECURE_SSL_REDIRECT = False  # Set to True in production with HTTPS
 SESSION_COOKIE_SECURE = False  # Set to True in production

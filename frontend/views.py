@@ -1,3 +1,4 @@
+from urllib import request
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -121,53 +122,66 @@ def upload_image(request):
                 image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
             
             # Get normalized crops from MediaPipe for visualization (both face and scalp)
+            # Get normalized crops from MediaPipe
             detector = FaceScalpDetector()
-            
-            # Always detect both face and scalp for display
+
+            face_crop = None
+            scalp_crop = None
+
+            # Try face detection
             try:
                 face_crop = detector.detect_and_crop_face(image)
-                print(f"✅ Face crop shape: {face_crop.shape}")
+                if face_crop is not None:
+                    print(f"✅ Face crop shape: {face_crop.shape}")
             except Exception as e:
-                print(f"❌ Face detection failed: {e}")
-                import traceback
-                traceback.print_exc()
-                face_crop = None
-            
+                print(f"Face not detected: {e}")
+
+            # Try scalp detection
             try:
                 scalp_crop = detector.detect_and_crop_scalp(image)
-                print(f"✅ Scalp crop shape: {scalp_crop.shape}")
+                if scalp_crop is not None:
+                    print(f"✅ Scalp crop shape: {scalp_crop.shape}")
             except Exception as e:
-                print(f"❌ Scalp detection failed: {e}")
-                import traceback
-                traceback.print_exc()
-                scalp_crop = None
-            
-            # Get the crop for the selected analysis type
-            if image_type == 'skin':
-                normalized_crop = face_crop
-            else:
+                print(f"Scalp not detected: {e}")
+
+            # Simple skin presence check
+            skin_present = detector.detect_skin_presence(image)
+            print("DEBUG VALUES:", face_crop is not None, scalp_crop is not None, skin_present)
+
+            # =========================
+            # VALIDATION LOGIC
+            # =========================
+
+            if image_type == "skin":
+
+                # allow face OR scalp OR skin
+                if face_crop is None and scalp_crop is None and not skin_present:
+                    messages.error(request, "No skin detected in image.")
+                    return render(request, "frontend/upload.html")
+
+                # choose best crop
+                if face_crop is not None:
+                    normalized_crop = face_crop
+
+                elif scalp_crop is not None:
+                    normalized_crop = scalp_crop
+
+                else:
+                    normalized_crop = cv2.resize(image, (256,256), interpolation=cv2.INTER_LINEAR)
+
+
+            elif image_type == "scalp":
+
+                # scalp mode requires scalp
+                if scalp_crop is None:
+                    messages.error(request, "Scalp not detected.")
+                    return render(request, "frontend/upload.html")
+
                 normalized_crop = scalp_crop
-
-            # Enforce mandatory detection depending on treatment type
-            if image_type == 'skin' and face_crop is None:
-                messages.error(request, 'Face not detected. For skin/face treatment please upload a clear image containing a human face.')
-                return render(request, 'frontend/upload.html')
-
-            if image_type == 'scalp' and scalp_crop is None:
-                messages.error(request, 'Scalp not detected. For scalp treatment please upload a clear image showing the scalp.')
-                return render(request, 'frontend/upload.html')
-            
-            # Process through AI pipeline (with fallback if it fails)
-            pipeline_result = None
-            segmentation_mask = None
-            visualized_image = None
-            detected_conditions = []
-            severity_scores = {}
-            roi_bbox = (0, 0, 256, 256)  # Default ROI
             
             try:
                 if normalized_crop is not None:
-                    pipeline_result = process_image(image, analysis_type=image_type)
+                    pipeline_result = process_image(normalized_crop, analysis_type=image_type)
                     print(f"✅ Pipeline result keys: {pipeline_result.keys()}")
                     
                     # Convert segmentation mask back to numpy array

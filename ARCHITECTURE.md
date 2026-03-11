@@ -2,7 +2,7 @@
 
 ## System Overview
 
-The system is a full-stack application with React frontend (planned) and Django REST API backend, designed to diagnose skin and scalp conditions using AI-powered image analysis. The system analyzes user-uploaded images to detect conditions like acne, dark spots, dandruff, and hair fall, then provides personalized treatment recommendations based on medical history.
+The system is a full-stack application with Django REST API backend and a planned React frontend, designed to diagnose skin and scalp conditions using AI-powered image analysis. The system analyzes user-uploaded images to detect conditions like acne, dark spots, dandruff, and hair fall, then provides personalized treatment recommendations based on medical history.
 
 **Current Status**: Development Phase - Django template-based mock frontend is functional, backend API in progress, AI models partially integrated.
 
@@ -14,28 +14,30 @@ The system is a full-stack application with React frontend (planned) and Django 
 | **Frontend Mock (Django Templates)** | ✅ Complete | 100% |
 | **User Management** | ✅ Complete | 100% |
 | **Medical History** | ✅ Complete | 100% |
-| **Image Upload & Processing** | ⏳ Partial | 60% |
-| **AI Models** | ⏳ Partial | 20% (MediaPipe only) |
-| **REST API Endpoints** | ❌ Pending | 5% |
-| **Database Models (Analysis)** | ❌ Pending | 0% |
-| **Security & Encryption** | ⏳ Partial | 40% |
-| **Testing** | ❌ Pending | 0% |
+| **Image Upload & Processing** | ⏳ Partial | 80% |
+| **AI Models** | ⏳ Partial | 60% (U-Net, MediaPipe integrated, ROI extraction tested) |
+| **REST API Endpoints** | ⏳ Partial | 40% |
+| **Database Models (Analysis)** | ⏳ Partial | 30% |
+| **Security & Encryption** | ⏳ Partial | 50% |
+| **Testing** | ⏳ Partial | 20% |
 
-**Overall Project Completion**: ~45%
+**Overall Project Completion**: ~60%
 
 ### Key Achievements
 - ✅ Fully functional mock frontend with 9 pages
 - ✅ Complete user registration and medical history management
 - ✅ MediaPipe face/scalp detection integrated and working
+- ✅ U-Net segmentation integrated for region segmentation
+- ✅ ROI extraction tested successfully
 - ✅ Mock analysis flow with severity scoring (0-100)
 - ✅ Medical history-aware recommendation filtering
 - ✅ Modern, responsive UI design
 
 ### Critical Next Steps
-1. Create database models for analysis results (ImageUpload, AnalysisResult, etc.)
-2. Implement REST API endpoints
-3. Integrate AI models (U-Net, EfficientNet, XGBoost, LLM)
-4. Add comprehensive testing
+1. Finalize database models for analysis results (ImageUpload, AnalysisResult, etc.)
+2. Complete REST API endpoints
+3. Integrate remaining AI models (EfficientNet, YOLOv8, XGBoost, LLM)
+4. Add comprehensive testing framework
 5. Implement encryption and security hardening
 
 ## Architecture Layers
@@ -64,7 +66,7 @@ The system is a full-stack application with React frontend (planned) and Django 
 - ✅ Django REST Framework 3.14.0 configured
 - ✅ JWT authentication configured (djangorestframework-simplejwt)
 - ✅ CORS headers configured for React frontend
-- ⏳ RESTful API endpoints (structure defined, implementation in progress)
+- ⏳ RESTful API endpoints (structure defined, partial implementation)
 - ⏳ Request/Response handling
 - ⏳ Role-based access control (User, Admin, Salons, Dermatologist)
 - ❌ Rate limiting
@@ -79,23 +81,8 @@ The system is a full-stack application with React frontend (planned) and Django 
 - ✅ User registration and login (Django forms)
 - ✅ User profile management (UserProfile model with age, gender, skin_type, hair_type)
 - ✅ Medical history management (MedicalHistory model with all conditions)
-  - ✅ Pregnancy status
-  - ✅ Cardiovascular issues
-  - ✅ Diabetes
-  - ✅ Allergies
-  - ✅ Hypertension
-  - ✅ Asthma
-  - ✅ Existing skin/scalp conditions
-  - ✅ Other conditions, medications, allergens (text fields)
 - ❌ Role management (User, Admin, Salons, Dermatologist) - structure ready
 - ❌ User feedback collection - moved to Feedback app
-
-#### **Frontend App** ✅ Implemented (Mock Frontend)
-- ✅ 9 view functions for template rendering
-- ✅ Image upload handling
-- ✅ Mock analysis flow (upload → validate → analyze → results)
-- ✅ Session-based result storage
-- ✅ Medical history viewing and editing
 
 #### **Image Analysis App** ⏳ Partial
 - ✅ Image upload/capture handling (AnalyzeImageView)
@@ -103,21 +90,23 @@ The system is a full-stack application with React frontend (planned) and Django 
 - ✅ Image type confirmation (skin/scalp selection)
 - ✅ MediaPipe face/scalp detection and cropping
 - ✅ Secure image storage (media/uploads/, media/processed/)
+- ✅ U-Net segmentation integrated for region segmentation
+- ✅ ROI extraction tested successfully
 - ❌ Image validation (clarity, lighting) - needs implementation
 - ❌ Image preprocessing and normalization - needs implementation
 - ❌ Image anonymization for model training - needs implementation
 - ❌ Database models (ImageUpload, ImageValidation) - not created yet
 
-#### **Diagnosis App** ⏳ Structure Ready
-- ⏳ AI-based condition detection pipeline (mock implementation exists)
-- ⏳ Skin condition detection (mock: Acne, Dark Spots, Hyperpigmentation, Dryness)
-- ⏳ Scalp condition detection (mock: Dandruff, Dryness, Oiliness, Hair Fall)
+#### **Diagnosis App** ⏳ Partial
+- ✅ AI-based condition detection pipeline (U-Net integrated)
+- ⏳ Skin condition detection (Acne, Dark Spots, Hyperpigmentation, Dryness)
+- ⏳ Scalp condition detection (Dandruff, Dryness, Oiliness, Hair Fall)
 - ✅ Severity classification (Mild, Moderate, Severe) - mock with 0-100 scoring
 - ⏳ Result storage and history tracking (session-based, needs database)
 - ❌ Progress comparison over time
 - ❌ Database models (AnalysisResult, ConditionDetection, SeverityAssessment) - not created yet
 
-#### **Recommendations App** ⏳ Structure Ready
+#### **Recommendations App** ⏳ Partial
 - ✅ Personalized care suggestions (mock implementation with medical history filtering)
 - ✅ Medical-history-aware filtering (basic safety checks implemented)
 - ⏳ Product recommendations with safety checks (mock exists)
@@ -126,28 +115,18 @@ The system is a full-stack application with React frontend (planned) and Django 
 - ❌ Transparent AI output explanations
 - ❌ Database models (CareRoutine, ProductRecommendation, Product) - not created yet
 
-#### **Feedback App** ⏳ Structure Ready
-- ❌ User rating system for diagnosis accuracy
-- ❌ Model improvement feedback loop
-- ❌ Expert review system (dermatologists)
-- ❌ Database models (UserFeedback, ModelVersion) - not created yet
-
 ### 4. **AI/ML Service Layer**
 
-**Status**: ⏳ Structure Ready, Partial Implementation
+**Status**: ⏳ Partial Implementation
 
 #### **Detection Models**
 
 | Model | Status | File | Implementation |
 |-------|--------|------|----------------|
 | **Mediapipe** | ✅ Implemented | `mediapipe_detector.py` | Face & Scalp Detection - Functional, integrated in views |
-| **U-Net** | ⏳ TODO | `unet_segmenter.py` | Image Segmentation - Class structure exists, needs model integration |
+| **U-Net** | ✅ Integrated | `unet_segmenter.py` | Image Segmentation - Functional, integrated in pipeline |
 | **EfficientNet-B4** | ⏳ TODO | `efficientnet_classifier.py` | Condition Classification - Class structure exists, needs model integration |
 | **YOLOv8** | ⏳ TODO | `yolo_detector.py` | Additional Detection - Class structure exists, needs model integration |
-
-**Condition Detection**:
-- Skin: Acne, Dark Spots, Hyperpigmentation, Dryness (mock implementation exists)
-- Scalp: Dandruff, Dryness, Oiliness, Hair Fall (mock implementation exists)
 
 #### **Analysis Models**
 
@@ -158,16 +137,17 @@ The system is a full-stack application with React frontend (planned) and Django 
 
 #### **Processing Pipeline** ⏳ Partial
 
-**Current Implementation** (Mock):
+**Current Implementation**:
 1. ✅ Image Reception and basic validation
 2. ✅ Face/Scalp Detection (Mediapipe) - **FUNCTIONAL**
-3. ⏳ Region Segmentation (U-Net) - Structure ready
-4. ⏳ Condition Classification (EfficientNet-B4 + YOLOv8) - Mock implementation
-5. ⏳ Severity Assessment (XGBoost) - Mock implementation (0-100 scoring)
-6. ⏳ Recommendation Generation (LLM) - Mock implementation with medical history filtering
-7. ✅ Safety Check - Basic medical history filtering implemented
-8. ⏳ Result Storage - Session-based (needs database)
-9. ✅ Response - Returns results to frontend
+3. ✅ Region Segmentation (U-Net) - Integrated
+4. ✅ ROI Extraction - Tested successfully
+5. ⏳ Condition Classification (EfficientNet-B4 + YOLOv8) - Mock implementation
+6. ⏳ Severity Assessment (XGBoost) - Mock implementation (0-100 scoring)
+7. ⏳ Recommendation Generation (LLM) - Mock implementation with medical history filtering
+8. ✅ Safety Check - Basic medical history filtering implemented
+9. ⏳ Result Storage - Session-based (needs database)
+10. ✅ Response - Returns results to frontend
 
 **Pipeline Orchestrator**: `pipeline.py` - Structure exists, needs model integration
 
@@ -179,19 +159,14 @@ The system is a full-stack application with React frontend (planned) and Django 
 - **Development**: ✅ SQLite (`db.sqlite3`) - Currently in use
 - **Production**: ⏳ MySQL 8.0+ - Configured in settings, not connected
 - **Migrations**: ✅ Applied for `users` app (UserProfile, MedicalHistory)
-- ❌ Analysis-related models not created yet (ImageUpload, AnalysisResult, etc.)
+- ⏳ Analysis-related models in progress (ImageUpload, AnalysisResult, etc.)
 
 #### **File Storage**
-- ✅ User-uploaded images stored in `media/uploads/` (12 files currently)
-- ✅ Processed images (face/scalp crops) in `media/processed/` (24 files)
+- ✅ User-uploaded images stored in `media/uploads/`
+- ✅ Processed images (face/scalp crops) in `media/processed/`
+- ✅ Acne dataset added to `dataset/skin_dataset/acne_dataset`
 - ❌ Image encryption at rest - not implemented yet
 - ❌ S3/Cloud storage integration - not implemented yet
-
-#### **Cache Layer**
-- ❌ Redis - Not configured yet (optional, for performance)
-
-#### **Backup System**
-- ❌ Automatic cloud backup and recovery - Not implemented yet
 
 ### 6. **Security Layer**
 
@@ -412,7 +387,7 @@ The system is a full-stack application with React frontend (planned) and Django 
 
 ### FR5: AI-Based Detection Pipeline
 - Mediapipe for face/scalp detection
-- U-Net for segmentation
+- U-Net for segmentation 
 - EfficientNet-B4 + YOLOv8 for classification
 - XGBoost for severity scoring
 - LLM for recommendations
@@ -681,7 +656,7 @@ fyp-development-be/
 1. ✅ **Image Reception**: Receive and validate image (basic validation)
 2. ⏳ **Preprocessing**: Normalize, enhance, resize (needs implementation)
 3. ✅ **Detection**: Mediapipe detects face/scalp regions - **FUNCTIONAL**
-4. ⏳ **Segmentation**: U-Net segments condition regions (structure ready, needs model)
+4. ✅ **Segmentation**: U-Net segments condition regions - **FUNCTIONAL**
 5. ⏳ **Classification**: EfficientNet-B4 + YOLOv8 classify conditions (mock exists, needs models)
 6. ⏳ **Severity**: XGBoost scores severity (mock 0-100 scoring exists, needs model)
 7. ⏳ **Recommendation**: LLM generates personalized suggestions (mock exists, needs model)
@@ -704,6 +679,7 @@ fyp-development-be/
 - Medical history management (full CRUD)
 - Frontend mock interface (9 pages, modern UI)
 - MediaPipe face/scalp detection integration
+- U-Net segmentation integration
 - Basic image upload and processing
 - Mock analysis flow with severity scoring
 - Medical history-aware recommendation filtering
@@ -711,16 +687,16 @@ fyp-development-be/
 - Comprehensive documentation
 
 ### ⏳ In Progress / Partial
-- REST API endpoints (structure defined)
-- AI model integration (MediaPipe done, others pending)
-- Database models for analysis results
+- REST API endpoints (structure defined, partial implementation)
+- AI model integration (MediaPipe, U-Net done, others pending)
+- Database models for analysis results (partial)
 - Image validation (clarity, lighting)
 - JWT authentication API implementation
 
 ### ❌ Pending
-- U-Net, EfficientNet-B4, YOLOv8, XGBoost, LLM model integration
-- Database models for ImageUpload, AnalysisResult, ConditionDetection, etc.
-- REST API endpoint implementations
+- EfficientNet, YOLOv8, XGBoost, LLM model integration
+- Complete database models for ImageUpload, AnalysisResult, ConditionDetection, etc.
+- Complete REST API endpoint implementations
 - End-to-end encryption
 - Role-based access control
 - Unit and integration tests

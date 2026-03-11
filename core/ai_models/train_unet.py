@@ -194,7 +194,7 @@ class SegmentationDataset(Dataset):
         # Resize to target size
         image = cv2.resize(image, (self.image_size, self.image_size), interpolation=cv2.INTER_LINEAR)
         mask = cv2.resize(mask, (self.image_size, self.image_size), interpolation=cv2.INTER_NEAREST)
-        # Data augmentation (albumentations)
+     # Data augmentation (albumentations)
         if self.augment:
             augmented = self.train_transform(image=image, mask=mask)
             image = augmented['image']
@@ -325,6 +325,8 @@ def main():
                         help='Batch size for training')
     parser.add_argument('--learning_rate', type=float, default=1e-4,
                         help='Learning rate')
+    parser.add_argument('--encoder', type=str, default='resnet50',
+                        help='Encoder name for SMP Unet (e.g. resnet50, resnet34)')
     parser.add_argument('--val_split', type=float, default=0.2,
                         help='Validation split ratio')
     parser.add_argument('--device', type=str, default='cuda',
@@ -388,10 +390,11 @@ def main():
     
     # Initialize model (use a stronger encoder for better accuracy)
     # Default to ResNet50 with attention gates for better accuracy & faster fine-tuning
-    encoder_name = os.getenv('UNET_ENCODER', 'resnet50')
+    encoder_name = args.encoder or os.getenv('UNET_ENCODER', 'resnet50')
     try:
         model = smp.Unet(
             encoder_name=encoder_name,
+            # Transfer learning: use ImageNet pretrained weights
             encoder_weights="imagenet",
             in_channels=3,
             classes=1,
@@ -414,11 +417,23 @@ def main():
     # Loss function (BCE + Dice)
     criterion = BCEDiceLoss()
 
-    # Optimizer
-    optimizer = optim.AdamW(model.parameters(), lr=args.learning_rate)
+    # Optionally freeze encoder for a few initial epochs to train decoder faster.
+    # We perform freezing BEFORE creating the optimizer so frozen params are
+    # not included in optimizer param groups (safer for transfer learning).
+    freeze_epochs = int(args.freeze_epochs)
+    if freeze_epochs > 0:
+        try:
+            for name, param in model.encoder.named_parameters():
+                param.requires_grad = False
+            print(f"🔒 Encoder parameters frozen for first {freeze_epochs} epochs (encoder={encoder_name})")
+        except Exception:
+            print("⚠️ Could not freeze encoder parameters (unexpected model structure)")
 
-    # Scheduler: prefer OneCycleLR when training on GPU for faster convergence
-    use_onecycle = device.type == 'cuda'
+    # Optimizer (create after freezing so frozen params aren't optimized)
+    optimizer = optim.AdamW(filter(lambda p: p.requires_grad, model.parameters()), lr=args.learning_rate)
+
+    # Scheduler: prefer OneCycleLR when training on accelerators (CUDA or Apple MPS)
+    use_onecycle = device.type in ('cuda', 'mps')
     if use_onecycle:
         steps_per_epoch = max(1, len(train_loader))
         scheduler = optim.lr_scheduler.OneCycleLR(
@@ -437,16 +452,6 @@ def main():
             optimizer, mode='min', factor=0.5, patience=5
         )
         per_batch_scheduler = None
-    
-    # Optionally freeze encoder for a few initial epochs to train decoder faster
-    freeze_epochs = int(args.freeze_epochs)
-    if freeze_epochs > 0:
-        try:
-            for name, param in model.encoder.named_parameters():
-                param.requires_grad = False
-            print(f"🔒 Encoder parameters frozen for first {freeze_epochs} epochs (encoder={encoder_name})")
-        except Exception:
-            print("⚠️ Could not freeze encoder parameters (unexpected model structure)")
 
     # Training loop
     best_val_loss = float('inf')

@@ -2,7 +2,11 @@
 U-Net-based image segmentation module.
 
 This module provides functionality for segmenting skin and scalp regions
-to localize conditions using U-Net architecture with ResNet-34 backbone.
+to localize conditions using U-Net architecture.
+
+Supports two model variants:
+1. Baseline: ResNet-34 backbone without attention (best_model.pth)
+2. Transfer Learning: ResNet-50 backbone with SCSE attention (resnet_unet_best.pth)
 """
 
 import torch
@@ -18,50 +22,141 @@ class UNetSegmenter:
     """
     U-Net-based segmenter for condition localization.
     
-    Uses segmentation-models-pytorch with ResNet-34 backbone
-    initialized with ImageNet weights.
+    Uses segmentation-models-pytorch with configurable backbone:
+    - ResNet-34 (baseline, no attention)
+    - ResNet-50 with SCSE attention (transfer learning variant)
     
     Attributes:
         model: Loaded U-Net model
-        device: Device for inference (cuda or cpu)
+        device: Device for inference (cuda, mps, or cpu)
         threshold: Threshold for binary mask (default: 0.5)
+        encoder_name: Name of the encoder backbone used
     """
     
-    def __init__(self, model_path: Optional[str] = None, device: str = 'cpu'):
+    # Model architecture configurations
+    MODEL_CONFIGS = {
+        'baseline': {
+            'encoder_name': 'resnet34',
+            'decoder_attention_type': None,
+        },
+        'resnet50_scse': {
+            'encoder_name': 'resnet50',
+            'decoder_attention_type': 'scse',
+        }
+    }
+    
+    def __init__(
+        self, 
+        model_path: Optional[str] = None, 
+        device: str = 'cpu',
+        encoder_name: Optional[str] = None,
+        decoder_attention_type: Optional[str] = None,
+    ):
         """
         Initialize the U-Net segmenter.
         
         Args:
-            model_path: Path to pre-trained U-Net model weights (.pth file)
-            device: Device for inference ('cuda' or 'cpu')
+            model_path: Path to pre-trained U-Net model weights (.pth file).
+                        If filename contains 'resnet_unet', automatically uses
+                        ResNet-50 + SCSE configuration.
+            device: Device for inference ('cuda', 'mps', or 'cpu')
+            encoder_name: Override encoder backbone (e.g., 'resnet34', 'resnet50')
+            decoder_attention_type: Override attention type (e.g., None, 'scse')
         """
-        self.device = torch.device(device if torch.cuda.is_available() else 'cpu')
-        self.threshold = 0.5
+        # Setup device: prefer CUDA, then Apple MPS, else CPU
+        if device.lower() == 'cuda' and torch.cuda.is_available():
+            self.device = torch.device('cuda')
+        elif device.lower() == 'mps':
+            try:
+                if getattr(torch.backends, 'mps', None) and torch.backends.mps.is_available():
+                    self.device = torch.device('mps')
+                else:
+                    self.device = torch.device('cpu')
+            except Exception:
+                self.device = torch.device('cpu')
+        else:
+            self.device = torch.device('cpu')
         
-        # Initialize U-Net with ResNet-34 backbone and ImageNet weights
+        self.threshold = 0.5
+        self.model = None
+        self._init_failed = False
+        
+        # Determine architecture from model_path or explicit parameters
+        self.encoder_name = encoder_name
+        self.decoder_attention_type = decoder_attention_type
+        
+        # Auto-detect architecture from checkpoint filename
+        if model_path and self.encoder_name is None:
+            self._auto_detect_architecture(model_path)
+        
+        # Default to baseline if not specified
+        if self.encoder_name is None:
+            self.encoder_name = 'resnet34'
+            self.decoder_attention_type = None
+        
+        # Initialize the model
+        self._init_model()
+        
+        # Load weights if provided
+        if model_path:
+            self.load_model(model_path)
+    
+    def _auto_detect_architecture(self, model_path: str):
+        """
+        Auto-detect model architecture from checkpoint file.
+        
+        Args:
+            model_path: Path to the checkpoint file
+        """
+        import os
+        filename = os.path.basename(model_path).lower()
+        
+        # Check if this is a ResNet-50 + SCSE checkpoint
+        if 'resnet_unet' in filename or 'resnet50' in filename:
+            self.encoder_name = 'resnet50'
+            self.decoder_attention_type = 'scse'
+            print(f"🔍 Auto-detected ResNet-50 + SCSE architecture from: {filename}")
+        else:
+            # Try to load checkpoint metadata to detect encoder
+            try:
+                checkpoint = torch.load(model_path, map_location='cpu')
+                if isinstance(checkpoint, dict) and 'encoder' in checkpoint:
+                    encoder = checkpoint['encoder']
+                    self.encoder_name = encoder
+                    # If encoder is resnet50, assume SCSE attention was used
+                    if 'resnet50' in encoder.lower():
+                        self.decoder_attention_type = 'scse'
+                        print(f"🔍 Auto-detected {encoder} + SCSE from checkpoint metadata")
+                    else:
+                        self.decoder_attention_type = None
+                        print(f"🔍 Auto-detected {encoder} (baseline) from checkpoint metadata")
+            except Exception:
+                # Fall back to baseline
+                pass
+    
+    def _init_model(self):
+        """Initialize the U-Net model with the configured architecture."""
         try:
             self.model = smp.Unet(
-                encoder_name="resnet34",
+                encoder_name=self.encoder_name,
                 encoder_weights="imagenet",
                 in_channels=3,
                 classes=1,  # Binary segmentation (healthy vs affected)
+                decoder_attention_type=self.decoder_attention_type,
                 activation=None  # We'll apply sigmoid manually
             )
             
             # Move model to device
             self.model.to(self.device)
             self.model.eval()
-            print(f"✅ U-Net model initialized on {self.device}")
+            
+            attention_str = f" + {self.decoder_attention_type.upper()} attention" if self.decoder_attention_type else ""
+            print(f"✅ U-Net model initialized ({self.encoder_name}{attention_str}) on {self.device}")
+            
         except Exception as e:
             print(f"⚠️ U-Net initialization failed: {e}")
-            # Create a dummy model that returns zeros
-            import torch.nn as nn
             self.model = None
             self._init_failed = True
-        
-        # Load weights if provided
-        if model_path:
-            self.load_model(model_path)
     
     def load_model(self, model_path: str):
         """
@@ -95,7 +190,7 @@ class UNetSegmenter:
             raise ValueError(f"Input image must be 256x256x3, got {image.shape}")
         
         # If model failed to initialize, return empty mask
-        if self.model is None or hasattr(self, '_init_failed'):
+        if self.model is None or self._init_failed:
             print("⚠️ U-Net model not available, returning empty mask")
             return np.zeros((256, 256), dtype=np.uint8)
         
