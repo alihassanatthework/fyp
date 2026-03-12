@@ -7,6 +7,10 @@ from django.shortcuts import render
 import os
 import uuid
 import cv2
+import matplotlib
+matplotlib.use("Agg")
+
+import matplotlib.pyplot as plt
 
 # Import your AI Logic
 from core.ai_models.mediapipe_detector import FaceScalpDetector
@@ -174,6 +178,32 @@ class AnalyzeImageView(APIView):
         # 5. Try to run the AI pipeline to produce a segmentation mask and overlay
         try:
             pipeline_result = process_image(normalized_crop, analysis_type=image_type)
+            print(f"✅ Pipeline result keys: {pipeline_result.keys()}")
+            
+
+            # Add EfficientNet classification scores
+            if 'efficientnet_scores' in pipeline_result:
+
+                scores = pipeline_result['efficientnet_scores']
+
+                context['classification'] = scores
+
+                labels = list(scores.keys())
+                values = [round(v*100,2) for v in scores.values()]
+                plt.ylabel("Probability (%)")
+
+                plt.figure(figsize=(4,3))
+                plt.bar(labels, values)
+                plt.title("EfficientNet Classification")
+                plt.ylabel("Probability")
+
+                viz_name = f"efficientnet_{unique_name}.png"
+                viz_path = os.path.join(processed_dir, viz_name)
+
+                plt.savefig(viz_path)
+                plt.close()
+
+                context['efficientnet_visualization'] = f"/media/processed/{viz_name}"
 
             if 'segmentation_mask' in pipeline_result:
                 seg = np.array(pipeline_result['segmentation_mask'], dtype=np.uint8)

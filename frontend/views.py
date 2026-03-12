@@ -1,3 +1,4 @@
+from multiprocessing import context
 from urllib import request
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -183,6 +184,27 @@ def upload_image(request):
                 if normalized_crop is not None:
                     pipeline_result = process_image(normalized_crop, analysis_type=image_type)
                     print(f"✅ Pipeline result keys: {pipeline_result.keys()}")
+                    if 'classification_scores' in pipeline_result:
+                        context['classification'] = pipeline_result['classification_scores']
+                        import matplotlib.pyplot as plt
+
+                        scores = pipeline_result['classification_scores']
+
+                        labels = list(scores.keys())
+                        values = list(scores.values())
+
+                        plt.figure(figsize=(4,3))
+                        plt.bar(labels, values)
+                        plt.title("EfficientNet Classification")
+                        plt.ylabel("Probability")
+
+                        viz_name = f"efficientnet_{unique_name}.png"
+                        viz_path = os.path.join(processed_dir, viz_name)
+
+                        plt.savefig(viz_path)
+                        plt.close()
+
+                        context['efficientnet_visualization'] = f"/media/processed/{viz_name}"
                     
                     # Convert segmentation mask back to numpy array
                     if 'segmentation_mask' in pipeline_result:

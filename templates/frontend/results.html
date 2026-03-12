@@ -115,15 +115,35 @@
                     {% endif %}
                 </div>
 
-                <!-- EfficientNet Classification Visualization (Skin) -->
-                {% if efficientnet_visualization %}
+                <!-- EfficientNet Classification (Skin) -->
+                {% if classification %}
                 <div style="text-align: center; min-width: 300px;">
-                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">4a. EfficientNet - Classification Scores</h3>
-                    <img src="{{ efficientnet_visualization }}" alt="EfficientNet Scores" 
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #3F51B5; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <p style="display: none; color: red;">EfficientNet visualization not found</p>
-                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Top class probabilities for the detected ROI</p>
+                    
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">
+                        4a. EfficientNet - Skin Classification
+                    </h3>
+
+                    {% if efficientnet_visualization %}
+                    <img src="{{ efficientnet_visualization }}"
+                        alt="EfficientNet Scores"
+                        onerror="this.style.display='none';"
+                        style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #3F51B5; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    {% endif %}
+
+                    <div style="margin-top:10px; text-align:left;">
+                        <ul style="list-style:none; padding:0;">
+                        {% for label, score in classification.items %}
+                            <li style="margin-bottom:4px;">
+                                <strong>{{ label|title }}</strong> : {{ score|floatformat:2 }}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+
+                    <p style="font-size:0.85rem; color:#888;">
+                        Probabilities predicted by EfficientNet-B4 classifier
+                    </p>
+
                 </div>
                 {% endif %}
 

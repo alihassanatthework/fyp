@@ -174,9 +174,24 @@ class AIAnalysisPipeline:
         # Step 4: Task-specific classification
         try:
             if analysis_type == 'skin':
-                # EfficientNet classification (ROI resized to 380×380 internally)
-                condition_scores = self.efficientnet.classify(roi_image)
-                # Keep raw scores in result for visualization
+
+                # Apply segmentation mask before classification
+                if binary_mask is not None:
+
+                    mask = (binary_mask > 0).astype("uint8")
+                    mask = cv2.resize(mask, (roi_image.shape[1], roi_image.shape[0]))
+
+                    masked_roi = roi_image.copy()
+                    masked_roi[mask == 0] = 0
+
+                    roi_for_classification = masked_roi
+
+                else:
+                    roi_for_classification = roi_image
+
+                # EfficientNet classification
+                condition_scores = self.efficientnet.classify(roi_for_classification)
+
                 raw_scores = condition_scores
                 detected_conditions = self._process_skin_conditions(condition_scores)
             else:
@@ -200,6 +215,7 @@ class AIAnalysisPipeline:
             'severity_scores': severity_scores,
             'roi_bbox': roi_bbox,
             'segmentation_mask': binary_mask.tolist(),  # Convert to list for JSON serialization
+            'classification_scores': raw_scores, 
             'processing_metadata': {
                 'normalized_crop_size': (256, 256),
                 'roi_size': roi_image.shape[:2],
@@ -356,6 +372,7 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
             'core/models/unet_checkpoints/eczema_pseudo/best_model.pth',
             'core/models/unet_checkpoints/best_model.pth'
         ]
+        model_configs["efficientnet_path"] = "core/ai_models/efficientnet_b4_skin.pth"
         for p in possible_paths:
             try:
                 from pathlib import Path
