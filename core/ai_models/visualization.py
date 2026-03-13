@@ -254,7 +254,23 @@ def visualize_yolo_detections(
     Draw YOLO detections (bounding boxes + labels) on the ROI image and return it.
     """
     vis = roi_image.copy()
+
     try:
+        # ✅ CASE 1: Nothing detected → show NORMAL
+        if not detections:
+            cv2.putText(
+                vis,
+                "Normal - No Scalp Condition Detected",
+                (20, 30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (0, 255, 0),
+                2,
+                cv2.LINE_AA
+            )
+            return vis
+
+        # ✅ CASE 2: Draw detections normally
         for det in detections:
             bbox = det.get('bbox')
             confidence = det.get('confidence', 0)
@@ -264,12 +280,26 @@ def visualize_yolo_detections(
                 continue
 
             x1, y1, x2, y2 = bbox
+
             color = (0, 165, 255) if confidence >= 0.3 else (200, 200, 200)
+
             cv2.rectangle(vis, (x1, y1), (x2, y2), color, 2)
+
             label = f"{name} {int(confidence*100)}%"
-            cv2.putText(vis, label, (x1, max(10, y1 - 6)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+
+            cv2.putText(
+                vis,
+                label,
+                (x1, max(10, y1 - 6)),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                color,
+                2
+            )
 
         return vis
+
     except Exception as e:
         print(f"⚠️ Failed to draw YOLO detections: {e}")
         return roi_image
+

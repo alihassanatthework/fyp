@@ -90,7 +90,20 @@
                             <p style="display: none; color: red;">Overlay not found</p>
                         </div>
                     </div>
-                    <p style="font-size: 0.85rem; color: #888; margin-top: 8px;">🔴 Red/Yellow = Affected Areas | 🔵 Blue = Healthy</p>
+                   <p style="font-size: 0.85rem; color: #888; margin-top: 8px;">
+                    🔴 Red/Yellow = Affected Areas | 🔵 Blue = Healthy
+                    </p>
+
+                    <div style="text-align:center;margin-top:5px;font-size:12px;color:#bbb;">
+                    🔵 Healthy &nbsp;&nbsp; 🟢 Mild &nbsp;&nbsp; 🟡 Moderate &nbsp;&nbsp; 🔴 Severe
+                    </div>
+                    {% if segmentation_severity %}
+                    <p style="font-size:13px;color:#555;margin-top:6px;">
+                    Affected Area: <strong>{{ segmentation_severity }}%</strong>
+                    </p>
+                    {% endif %}
+
+
                     {% elif segmentation_mask %}
                     <div style="text-align:center;">
                         <img src="{{ segmentation_mask }}" alt="Segmentation Mask"
@@ -114,6 +127,22 @@
                     </div>
                     {% endif %}
                 </div>
+                <!-- Detected Conditions Visualization -->
+                {% if visualized_image %}
+                <div style="text-align: center; min-width: 300px;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">5. Detected Conditions ({{ image_type|title }})</h3>
+                    <img src="{{ visualized_image }}" alt="Detected Conditions" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #FF5722; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <p style="display: none; color: red;">Visualization not found</p>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">🟢 Green Box = ROI | Labels show conditions & severity</p>
+                </div>
+                {% else %}
+                <div style="text-align: center; min-width: 300px; padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
+                    <h3 style="font-size: 1rem; color: #999; margin-bottom: 10px;">5. Detected Conditions</h3>
+                    <p style="color: #999; font-size: 0.9rem;">Visualization not available</p>
+                </div>
+                {% endif %}
 
                 <!-- EfficientNet Classification (Skin) -->
                 {% if classification %}
@@ -123,7 +152,8 @@
                         4a. EfficientNet - Skin Classification
                     </h3>
 
-                    {% if efficientnet_visualization %}
+                    {% if efficientnet_visualization and analysis_type == "skin" %}
+                    
                     <img src="{{ efficientnet_visualization }}"
                         alt="EfficientNet Scores"
                         onerror="this.style.display='none';"
@@ -151,30 +181,46 @@
                 {% if yolo_visualization %}
                 <div style="text-align: center; min-width: 300px;">
                     <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">4b. YOLOv8 - Detection Preview</h3>
-                    <img src="{{ yolo_visualization }}" alt="YOLO Detections" 
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #9C27B0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <img src="{{ yolo_visualization }}" alt="YOLO Detections"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                        style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #9C27B0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <p style="display: none; color: red;">YOLO visualization not found</p>
                     <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Bounding boxes and confidences from YOLOv8</p>
                 </div>
                 {% endif %}
 
-                <!-- Detected Conditions Visualization -->
-                {% if visualized_image %}
-                <div style="text-align: center; min-width: 300px;">
-                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 10px;">5. Detected Conditions ({{ image_type|title }})</h3>
-                    <img src="{{ visualized_image }}" alt="Detected Conditions" 
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 8px; border: 2px solid #FF5722; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <p style="display: none; color: red;">Visualization not found</p>
-                    <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">🟢 Green Box = ROI | Labels show conditions & severity</p>
-                </div>
-                {% else %}
-                <div style="text-align: center; min-width: 300px; padding: 20px; border: 2px dashed #ccc; border-radius: 8px;">
-                    <h3 style="font-size: 1rem; color: #999; margin-bottom: 10px;">5. Detected Conditions</h3>
-                    <p style="color: #999; font-size: 0.9rem;">Visualization not available</p>
+                {% if yolo_chart %}
+                <div style="display:flex;gap:40px;align-items:flex-start;margin-top:20px;">
+
+                    <div>
+                        <h3>YOLO Detection Confidence</h3>
+                        <img src="{{ yolo_chart }}" style="max-width:300px;border-radius:8px;">
+                    </div>
+
+                    {% if conditions %}
+                    <div>
+                        <h3>Detected Conditions</h3>
+
+                        {% for cond in conditions %}
+                        <p>
+                            <strong>{{ cond.name }}</strong><br>
+                            Severity: {{ cond.severity_level }}<br>
+                            Score: {{ cond.severity_score }}%
+
+                            {% if cond.coverage %}
+                            <br>Coverage: {{ cond.coverage }}%
+                            {% endif %}
+
+
+                        </p>
+                        {% endfor %}
+
+                    </div>
+                    {% endif %}
+
                 </div>
                 {% endif %}
+
             </div>
         </div>
 

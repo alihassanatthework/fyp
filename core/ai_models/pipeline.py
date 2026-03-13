@@ -172,6 +172,8 @@ class AIAnalysisPipeline:
         )
         
         # Step 4: Task-specific classification
+        raw_scores = None
+        raw_detections = None
         try:
             if analysis_type == 'skin':
 
@@ -181,10 +183,9 @@ class AIAnalysisPipeline:
                     mask = (binary_mask > 0).astype("uint8")
                     mask = cv2.resize(mask, (roi_image.shape[1], roi_image.shape[0]))
 
-                    masked_roi = roi_image.copy()
-                    masked_roi[mask == 0] = 0
-
-                    roi_for_classification = masked_roi
+                    # soften mask effect
+                    roi_for_classification = roi_image.copy()
+                    roi_for_classification = cv2.bitwise_and(roi_image, roi_image, mask=mask)
 
                 else:
                     roi_for_classification = roi_image
@@ -196,10 +197,29 @@ class AIAnalysisPipeline:
                 detected_conditions = self._process_skin_conditions(condition_scores)
             else:
                 # YOLOv8 detection (returns bounding boxes)
-                detections = self.yolo.detect(roi_image)
+                # Apply segmentation mask before YOLO detection
+                if binary_mask is not None:
+
+                    mask = (binary_mask > 0).astype("uint8")
+                    mask = cv2.resize(mask, (roi_image.shape[1], roi_image.shape[0]))
+
+                    masked_roi = roi_image.copy()
+                    masked_roi[mask == 0] = 0
+
+                    roi_for_yolo = masked_roi
+
+                else:
+                    roi_for_yolo = roi_image
+
+                detections = self.yolo.detect(roi_for_yolo)
                 # Keep raw detections for visualization
                 raw_detections = detections
-                detected_conditions = self._process_scalp_conditions(detections, roi_bbox)
+                detected_conditions = self._process_scalp_conditions(
+                    detections,
+                    roi_bbox,
+                    
+            )
+
         except Exception as e:
             # Fallback: return normal condition if classification fails
             print(f"⚠️ Classification failed: {e}, using default condition")
@@ -216,19 +236,23 @@ class AIAnalysisPipeline:
             'roi_bbox': roi_bbox,
             'segmentation_mask': binary_mask.tolist(),  # Convert to list for JSON serialization
             'classification_scores': raw_scores, 
+            'yolo_detections': raw_detections,
             'processing_metadata': {
                 'normalized_crop_size': (256, 256),
                 'roi_size': roi_image.shape[:2],
                 'device': self.device
             }
         }
+        # DEBUG BLOCK
+        # DEBUG BLOCK
+        print("PIPELINE ANALYSIS TYPE:", analysis_type)
 
-        # Attach raw model outputs for downstream visualization (not required)
-        if analysis_type == 'skin' and 'raw_scores' in locals():
-            result['efficientnet_scores'] = raw_scores
-        if analysis_type == 'scalp' and 'raw_detections' in locals():
-            result['yolo_detections'] = raw_detections
-        
+        if analysis_type == "skin":
+            print("EfficientNet scores:", raw_scores)
+
+        if analysis_type == "scalp":
+            print("YOLO detections:", raw_detections)
+
         return result
     
     def _process_skin_conditions(self, condition_scores: Dict[str, float]) -> List[Dict]:
@@ -243,7 +267,7 @@ class AIAnalysisPipeline:
         """
         detected = []
         threshold = 0.3  # Confidence threshold
-        
+
         for condition, score in condition_scores.items():
             if condition != 'normal' and score > threshold:
                 detected.append({
@@ -251,7 +275,7 @@ class AIAnalysisPipeline:
                     'confidence': float(score),
                     'type': 'skin'
                 })
-        
+
         # If no conditions detected, mark as normal
         if not detected:
             detected.append({
@@ -259,7 +283,7 @@ class AIAnalysisPipeline:
                 'confidence': float(condition_scores.get('normal', 0.5)),
                 'type': 'skin'
             })
-        
+
         return detected
     
     def _process_scalp_conditions(
@@ -269,36 +293,48 @@ class AIAnalysisPipeline:
     ) -> List[Dict]:
         """
         Process YOLOv8 detection results for scalp.
-        
-        Args:
-            detections: List of YOLOv8 detections
-            roi_bbox: Bounding box of ROI in normalized crop coordinates
-            
-        Returns:
-            List of detected conditions with bounding boxes
         """
+
         detected = []
-        
+
         for detection in detections:
-            detected.append({
-                'name': detection['condition'],
-                'confidence': detection['confidence'],
-                'bbox': detection['bbox'],
-                'roi_bbox': roi_bbox,
-                'type': 'scalp'
-            })
-        
-        # If no conditions detected, mark as normal
+            for detection in detections:
+                if detection.get("confidence",0) < 0.25:
+                    continue
+            try:
+                condition_name = detection.get('condition') or detection.get('class') or 'unknown'
+                confidence = float(detection.get('confidence', 0))
+                bbox = detection.get('bbox')
+
+                if bbox is not None:
+                    bbox = tuple(map(int, bbox))
+
+                detected.append({
+                    'name': condition_name,
+                    'class': condition_name,
+                    'confidence': confidence,
+                    'bbox': bbox,
+                    'roi_bbox': roi_bbox,
+                    'type': 'scalp'
+                })
+
+            except Exception as e:
+                print("SCALP CONDITION PARSE ERROR:", e)
+                continue
+
+        # only return normal if YOLO truly found nothing
         if not detected:
             detected.append({
                 'name': 'normal',
-                'confidence': 0.5,
+                'class': 'normal',
+                'confidence': 0.0,
                 'bbox': None,
                 'roi_bbox': roi_bbox,
                 'type': 'scalp'
             })
-        
+
         return detected
+
     
     def _calculate_severity(self, conditions: List[Dict]) -> Dict[str, int]:
         """
@@ -372,6 +408,7 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
             'core/models/unet_checkpoints/eczema_pseudo/best_model.pth',
             'core/models/unet_checkpoints/best_model.pth'
         ]
+        model_configs["yolo_path"] = "core/models/yolo_scalp.pt"
         model_configs["efficientnet_path"] = "core/ai_models/efficientnet_b4_skin.pth"
         for p in possible_paths:
             try:
@@ -384,7 +421,12 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
         # set device to cuda if available
         try:
             import torch
-            model_configs['device'] = 'cuda' if torch.cuda.is_available() else 'cpu'
+            if torch.backends.mps.is_available():
+                model_configs['device'] = 'mps'
+            elif torch.cuda.is_available():
+                model_configs['device'] = 'cuda'
+            else:
+                model_configs['device'] = 'cpu'
         except Exception:
             model_configs['device'] = 'cpu'
 
