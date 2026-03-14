@@ -249,7 +249,7 @@ class AnalyzeImageView(APIView):
 
                     if labels:
 
-                        import matplotlib.pyplot as plt
+                        
 
                         plt.figure(figsize=(4,3))
                         plt.bar(labels, values)
@@ -296,16 +296,7 @@ class AnalyzeImageView(APIView):
                         2
                     )
 
-                    cv2.rectangle(vis_img,(x1,y1),(x2,y2),(0,255,0),2)
-                    cv2.putText(
-                        vis_img,
-                        f"{label}:{conf:.2f}",
-                        (x1,y1-10),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        0.5,
-                        (0,255,0),
-                        2
-                    )
+                    
 
                 yolo_name = f"yolo_{unique_name}.jpg"
                 yolo_path = os.path.join(processed_dir,yolo_name)
@@ -314,17 +305,18 @@ class AnalyzeImageView(APIView):
 
                 context["yolo_visualization"] = f"/media/processed/{yolo_name}"
 
-            if 'segmentation_mask' in pipeline_result and pipeline_result['segmentation_mask'] is not None:
+            if pipeline_result.get('segmentation_mask') is not None:
                 print("Segmentation mask received from pipeline")
 
                 seg = np.array(pipeline_result['segmentation_mask'], dtype=np.uint8)
                 # ---------- Severity calculation from segmentation ----------
                 total_pixels = seg.size
-                affected_pixels = np.sum(seg > 128)
+                affected_pixels = np.count_nonzero(seg)
 
 
                 coverage_ratio = affected_pixels / total_pixels
-                severity_percent = int(coverage_ratio * 100)
+                severity_percent = int(min(coverage_ratio * 100, 100))
+                print("YOLO DETECTIONS RECEIVED:", pipeline_result.get('yolo_detections'))
 
                 print("SEGMENTATION COVERAGE:", severity_percent, "%")
 
@@ -348,18 +340,33 @@ class AnalyzeImageView(APIView):
                 heatmap = heatmap.astype(np.uint8)
 
                 # create severity heatmap
-                colored = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+                colored = cv2.applyColorMap(heatmap, cv2.COLORMAP_TURBO)
 
                 cv2.imwrite(mask_path, colored)
 
                 context['segmentation_mask'] = f"/media/processed/{mask_name}"
+                print("SEGMENTATION MASK URL:", context['segmentation_mask'])
 
+                
                 # Create overlay using selected crop
-                if image_type == 'skin':
-                    overlay_crop = face_crop if face_crop is not None else normalized_crop
+                if image_type == "skin":
 
-                else:
-                    overlay_crop = scalp_crop if scalp_crop is not None else normalized_crop
+                    if face_crop is not None:
+                        overlay_crop = face_crop
+
+                    elif scalp_crop is not None:
+                        overlay_crop = scalp_crop
+
+                    else:
+                        overlay_crop = normalized_crop
+
+                elif image_type == "scalp":
+
+                    if scalp_crop is not None:
+                        overlay_crop = scalp_crop
+
+                    else:
+                        overlay_crop = normalized_crop
                 # ensure RGB format
                 overlay_crop = overlay_crop.astype(np.uint8)
 
@@ -369,7 +376,7 @@ class AnalyzeImageView(APIView):
                     interpolation=cv2.INTER_NEAREST
                 )
                 colored_seg = cv2.applyColorMap(seg_resized, cv2.COLORMAP_JET)
-                overlay = cv2.addWeighted(overlay_crop, 0.5, colored_seg, 0.5, 0)
+                overlay = cv2.addWeighted(overlay_crop, 0.65, colored_seg, 0.35, 0)
 
 
                 vis_name = f"vis_{unique_name}.jpg"
@@ -379,6 +386,7 @@ class AnalyzeImageView(APIView):
 
                 cv2.imwrite(final_vis_path, cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
                 context['visualized_image'] = f"/media/visualizations/{vis_name}"
+                print("SEGMENTATION OVERLAY URL:", context['visualized_image'])
 
             
 
