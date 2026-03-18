@@ -1,19 +1,24 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Sun, Moon, User, Eye, EyeOff } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 import './Login.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate('/home');
+    const result = await login(email, password);
+    if (result.success) {
+      navigate('/home');
+    }
   };
 
   return (
@@ -101,3 +106,7 @@ export default function Login() {
     </div>
   );
 }
+
+
+
+

@@ -2,6 +2,10 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud, Camera, Smile, Scissors, CheckCircle2, ShieldCheck, CheckSquare } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import { useAnalysis } from '../hooks/useAnalysis';
+import { useCamera } from '../hooks/useCamera';
+
 
 export default function ImageAnalysis() {
   const [analysisType, setAnalysisType] = useState('skin');
@@ -11,8 +15,11 @@ export default function ImageAnalysis() {
   const fileRef = useRef();
   const navigate = useNavigate();
 
+  const { uploadImage, loading } = useAnalysis();
+  const { openNativeCamera } = useCamera();
+
   const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/heic'];
-  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+  const MAX_SIZE = 10 * 1024 * 1024;
 
   const validateAndSet = (f) => {
     if (!f) return;
@@ -31,8 +38,21 @@ export default function ImageAnalysis() {
     validateAndSet(e.dataTransfer.files[0]);
   };
 
-  const handleAnalyze = () => {
-    if (file) navigate('/diagnosis');
+  const handleAnalyze = async () => {
+    if (!file) return;
+    const response = await uploadImage(file, analysisType);
+    if (response.success) {
+      navigate('/diagnosis', { state: { data: response.data } });
+    } else {
+      console.error('Upload failed:', response.error);
+    }
+  };
+
+  const handleTakePhoto = () => {
+    openNativeCamera((capturedFile) => {
+      console.log('Photo captured:', capturedFile);
+      validateAndSet(capturedFile);
+    });
   };
 
   return (
@@ -40,7 +60,6 @@ export default function ImageAnalysis() {
       <Navbar title="Image Analysis" />
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-8">
-        {/* Page title */}
         <div className="text-center mb-10">
           <h1 className="font-display text-3xl font-bold text-gray-900 text-white">Image Analysis</h1>
           <p className="text-gray-400 text-gray-500 mt-2 text-sm">Upload your image for personalized skin or scalp analysis</p>
@@ -83,13 +102,11 @@ export default function ImageAnalysis() {
 
           {/* Right: upload */}
           <div className="md:col-span-2 space-y-4">
-            {/* Tip */}
             <div className="flex items-center gap-2 text-xs text-gray-500 text-gray-400 bg-white bg-gray-900 border border-gray-100 border-gray-800 rounded-xl px-4 py-3">
               <Camera size={14} className="text-gray-400 shrink-0"/>
               Upload a clear face image in good lighting. No makeup.
             </div>
 
-            {/* Drop zone */}
             <div
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
@@ -121,27 +138,28 @@ export default function ImageAnalysis() {
               )}
             </div>
 
-            {/* Buttons */}
             <div className="grid grid-cols-2 gap-3">
               <button onClick={() => fileRef.current.click()} className="btn-secondary py-3">
                 <UploadCloud size={16}/> Choose File
               </button>
-              <button className="btn-outline py-3">
+              <button onClick={handleTakePhoto} className="btn-secondary py-3">
                 <Camera size={16}/> Take Photo
               </button>
             </div>
 
-            {/* Error */}
             {error && (
               <div className="rounded-xl bg-red-50 bg-red-900/20 border border-red-200 border-red-800 px-4 py-3 text-sm text-red-600 text-red-400 text-center">
                 Invalid file type or size. Please try again.
               </div>
             )}
 
-            {/* Analyze button */}
             {file && (
-              <button onClick={handleAnalyze} className="btn-primary w-full py-3 text-base">
-                Analyze Now →
+              <button
+                onClick={handleAnalyze}
+                disabled={loading}
+                className="btn-primary w-full py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Analyzing...' : 'Analyze Now →'}
               </button>
             )}
           </div>
@@ -162,6 +180,8 @@ export default function ImageAnalysis() {
           ))}
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

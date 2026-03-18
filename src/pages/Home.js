@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Smile, Scissors, FileText, Calendar, Bell, Palette, Sparkles, Grid, Home, ArrowRight } from 'lucide-react';
+import { Smile, Scissors, FileText, Calendar, Bell, Palette, Sparkles, Grid, ArrowRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const notifications = [
   { color: 'bg-blue-500', text: 'Daily treatment reminder for your night routine.' },
@@ -29,26 +30,57 @@ export default function HomePage() {
           {/* Main column */}
           <div className="xl:col-span-2 space-y-5">
 
-            {/* Quick Actions */}
+            {/* Quick Actions — top to bottom, prominent */}
             <section>
               <p className="text-sm font-semibold text-gray-500 text-gray-400 mb-3">Quick actions</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="flex flex-col gap-4">
                 {[
-                  { icon: <Smile size={22} className="text-blue-500"/>, title: 'Skin Analysis', desc: 'Upload a face image for AI-based skin detection.', btn: 'Analyze Skin', to: '/analysis' },
-                  { icon: <Scissors size={22} className="text-indigo-500"/>, title: 'Scalp Analysis', desc: 'Upload a scalp image to detect dandruff, dryness & more.', btn: 'Analyze Scalp', to: '/analysis' },
-                  { icon: <FileText size={22} className="text-violet-500"/>, title: 'Diagnosis Reports', desc: 'View your history and AI-generated diagnosis summaries.', btn: 'My Reports', to: '/analysis-history' },
+                  {
+                    icon: <Smile size={28} className="text-blue-500"/>,
+                    title: 'Skin Analysis',
+                    desc: 'Upload a face image for AI-based skin detection. Get instant insights on skin conditions, texture, and personalized care.',
+                    btn: 'Analyze Skin',
+                    to: '/analysis',
+                    accent: 'border-blue-500',
+                    bg: 'bg-blue-50 bg-blue-900/10',
+                    btnClass: 'bg-blue-500 hover:bg-blue-600 text-white',
+                  },
+                  {
+                    icon: <Scissors size={28} className="text-indigo-500"/>,
+                    title: 'Scalp Analysis',
+                    desc: 'Upload a scalp image to detect dandruff, dryness & more. Receive targeted scalp health recommendations.',
+                    btn: 'Analyze Scalp',
+                    to: '/analysis',
+                    accent: 'border-indigo-500',
+                    bg: 'bg-indigo-50 bg-indigo-900/10',
+                    btnClass: 'bg-indigo-500 hover:bg-indigo-600 text-white',
+                  },
+                  {
+                    icon: <FileText size={28} className="text-violet-500"/>,
+                    title: 'Diagnosis Reports',
+                    desc: 'View your history and AI-generated diagnosis summaries. Track your skin and scalp health over time.',
+                    btn: 'My Reports',
+                    to: '/analysis-history',
+                    accent: 'border-violet-500',
+                    bg: 'bg-violet-50 bg-violet-900/10',
+                    btnClass: 'bg-violet-500 hover:bg-violet-600 text-white',
+                  },
                 ].map((item, i) => (
-                  <div key={i} className="card p-5 flex flex-col justify-between gap-4 shadow-md transition-shadow">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-gray-800 text-gray-100">{item.title}</h3>
+                  <div key={i} className={`card p-6 flex items-center justify-between gap-6 border-l-4 ${item.accent} ${item.bg} shadow-md hover:shadow-lg transition-shadow`}>
+                    <div className="flex items-center gap-5 flex-1">
+                      <div className="w-14 h-14 rounded-2xl bg-white bg-gray-800 flex items-center justify-center shadow-sm shrink-0">
                         {item.icon}
                       </div>
-                      <p className="text-xs text-gray-400 text-gray-500 leading-relaxed">{item.desc}</p>
+                      <div>
+                        <h3 className="font-bold text-gray-800 text-gray-100 text-base mb-1">{item.title}</h3>
+                        <p className="text-sm text-gray-500 text-gray-400 leading-relaxed">{item.desc}</p>
+                      </div>
                     </div>
-                    <button onClick={() => navigate(item.to)}
-                      className="btn-secondary text-sm w-full">
-                      {item.btn}
+                    <button
+                      onClick={() => navigate(item.to)}
+                      className={`shrink-0 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${item.btnClass}`}
+                    >
+                      {item.btn} →
                     </button>
                   </div>
                 ))}
@@ -61,7 +93,7 @@ export default function HomePage() {
               <p className="text-sm text-gray-500 text-gray-400 leading-relaxed mb-4">
                 Based on your health profile and AI analysis, we generate safe, step-by-step skin and scalp treatment recommendations tailored to you.
               </p>
-              <button className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 text-blue-700 transition">
+              <button className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 text-blue-400 transition">
                 View treatment plan <ArrowRight size={15}/>
               </button>
             </div>
@@ -76,7 +108,7 @@ export default function HomePage() {
                 ].map((item, i) => (
                   <button key={i} className="card p-5 flex items-center justify-between shadow-md transition-all text-left group">
                     <span className="font-semibold text-gray-800 text-gray-100">{item.title}</span>
-                    <span className="text-gray-400 group-text-blue-500 transition">{item.icon}</span>
+                    <span className="text-gray-400 transition">{item.icon}</span>
                   </button>
                 ))}
               </div>
@@ -157,13 +189,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      <footer className="py-4 px-6 border-t border-gray-100 border-gray-800 flex items-center justify-between text-xs text-gray-400">
-        <span>AI Beauty Assistant · Dashboard</span>
-        <div className="flex gap-4">
-          <button className="text-gray-600 transition">About Project</button>
-          <button className="text-gray-600 transition">Contact / Support</button>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

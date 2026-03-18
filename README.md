@@ -1,4 +1,4 @@
-# AI Beauty Assistant — React + CSS
+# AI powered skin  — React + CSS
 
 Full React frontend with css 
 
@@ -37,5 +37,4 @@ App runs at: **http://localhost:3000**
 - 8 complete pages
 - File upload with drag & drop
 - Form validation
-- Django-ready structure
 

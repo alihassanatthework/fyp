@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Sun, Moon, Smile, Scissors, Layers, Eye, EyeOff, CheckSquare, Square } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
+import { Sun, Moon, Eye, EyeOff, CheckSquare, Square } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 import './SignUp.css';
 
 const healthOptions = ['Allergies', 'Diabetes', 'Pregnancy', 'Heart-related condition', 'Other medical condition', 'None'];
@@ -10,7 +10,6 @@ export default function SignUp() {
   const [form, setForm] = useState({ fullName: '', email: '', password: '', confirmPassword: '' });
   const [accountType, setAccountType] = useState('free');
   const [healthConditions, setHealthConditions] = useState([]);
-  const [analysisFocus, setAnalysisFocus] = useState('skin');
   const [agreed, setAgreed] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
@@ -22,6 +21,21 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Save user data to localStorage so profile page can read it
+    const userData = {
+      name: form.fullName,
+      email: form.email,
+      accountType: accountType.charAt(0).toUpperCase() + accountType.slice(1), // 'Free' or 'Premium'
+      conditions: healthConditions.length > 0 ? healthConditions : ['None'],
+      allergies: healthConditions.includes('Allergies') ? ['Allergies'] : [],
+      pregnancyStatus: healthConditions.includes('Pregnancy') ? 'Pregnant' : 'Not specified',
+      analysisFocus: 'skin',
+      memberSince: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
+      lastUpdated: new Date().toLocaleDateString(),
+    };
+
+    localStorage.setItem('userProfile', JSON.stringify(userData));
     navigate('/home');
   };
 
@@ -99,21 +113,7 @@ export default function SignUp() {
                       ))}
                     </div>
                   </div>
-                  <div>
-                    <p className="section-label">Analysis Focus</p>
-                    <div className="analysis-options">
-                      {[
-                        { id: 'skin', label: 'Skin', icon: <Smile size={20}/> },
-                        { id: 'scalp', label: 'Scalp', icon: <Scissors size={20}/> },
-                        { id: 'both', label: 'Both', icon: <Layers size={20}/> },
-                      ].map(opt => (
-                        <button key={opt.id} type="button" onClick={() => setAnalysisFocus(opt.id)} className={`analysis-option ${analysisFocus === opt.id ? 'selected' : ''}`}>
-                          {opt.icon}
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+
                   <button type="button" onClick={() => setAgreed(!agreed)} className={`terms-checkbox ${agreed ? 'checked' : ''}`}>
                     <span className="terms-icon">
                       {agreed ? <CheckSquare size={18}/> : <Square size={18}/>}

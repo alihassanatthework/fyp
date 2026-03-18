@@ -46,3 +46,9 @@ Desktop.ini
 # Temporary files
 *.tmp
 *.temp
+# Dependencies
+node_modules/
+
+# Build
+build/
+dist/

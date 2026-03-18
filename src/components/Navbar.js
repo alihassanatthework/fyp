@@ -1,11 +1,17 @@
-import { Sun, Moon, User } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
+import { Sun, Moon, User, LogOut } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
-
+import { useAuth } from '../contexts/AuthContext';
 export default function Navbar({ title, subtitle }) {
   const { theme, toggleTheme } = useTheme();
+  const { logout, isAuthenticated, user } = useAuth(); // added auth
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <header className="navbar">
@@ -24,6 +30,7 @@ export default function Navbar({ title, subtitle }) {
         </div>
 
         <div className="navbar-right">
+          {/* Theme toggle buttons */}
           <div className="theme-toggle">
             <button
               onClick={() => toggleTheme('light')}
@@ -39,9 +46,17 @@ export default function Navbar({ title, subtitle }) {
             </button>
           </div>
 
+          {/* Profile button */}
           <button onClick={() => navigate('/profile')} className="profile-btn">
             <User size={16} /> Profile
           </button>
+
+          {/* NEW Logout button */}
+          {isAuthenticated && (
+            <button onClick={handleLogout} className="logout-btn">
+              <LogOut size={16} /> Logout
+            </button>
+          )}
         </div>
       </div>
     </header>
