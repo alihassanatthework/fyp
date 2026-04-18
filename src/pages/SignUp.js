@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Sun, Moon, Eye, EyeOff, CheckSquare, Square } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 import './SignUp.css';
 
 const healthOptions = ['Allergies', 'Diabetes', 'Pregnancy', 'Heart-related condition', 'Other medical condition', 'None'];
@@ -14,28 +15,35 @@ export default function SignUp() {
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { register } = useAuth();
 
   const toggleHealth = (item) => {
     setHealthConditions(prev => prev.includes(item) ? prev.filter(h => h !== item) : [...prev, item]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Save user data to localStorage so profile page can read it
     const userData = {
-      name: form.fullName,
+      fullName: form.fullName,
       email: form.email,
-      accountType: accountType.charAt(0).toUpperCase() + accountType.slice(1), // 'Free' or 'Premium'
+      accountType: accountType.charAt(0).toUpperCase() + accountType.slice(1),
       conditions: healthConditions.length > 0 ? healthConditions : ['None'],
       allergies: healthConditions.includes('Allergies') ? ['Allergies'] : [],
       pregnancyStatus: healthConditions.includes('Pregnancy') ? 'Pregnant' : 'Not specified',
-      analysisFocus: 'skin',
       memberSince: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
       lastUpdated: new Date().toLocaleDateString(),
     };
 
-    localStorage.setItem('userProfile', JSON.stringify(userData));
+    // Save full profile to localStorage for profile page
+    localStorage.setItem('userProfile', JSON.stringify({
+      name: form.fullName,
+      ...userData,
+    }));
+
+    // Call register so isAuthenticated = true and logout button shows
+    await register(userData);
+
     navigate('/home');
   };
 
