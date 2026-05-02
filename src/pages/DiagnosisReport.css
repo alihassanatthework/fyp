@@ -21,7 +21,7 @@ body.dark .diagnosis-page {
 }
 
 .diagnosis-page-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -110,7 +110,7 @@ body.dark .diagnosis-page {
 }
 
 .condition-name {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);

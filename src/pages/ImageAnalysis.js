@@ -1,25 +1,36 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { UploadCloud, Camera, Smile, Scissors, CheckCircle2, ShieldCheck, CheckSquare } from 'lucide-react';
+import { UploadCloud, Camera, Droplets, Wind, CheckCircle2, ShieldCheck, CheckSquare, ArrowLeft } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAnalysis } from '../hooks/useAnalysis';
 import { useCamera } from '../hooks/useCamera';
 
+const TYPE_META = {
+  skin: {
+    icon: <Droplets size={28} />,
+    label: 'Skin Analysis',
+    desc: 'Analyse facial skin conditions, texture, and concerns.',
+    bullets: ['Acne, redness', 'Pigmentation', 'Texture insights'],
+  },
+  scalp: {
+    icon: <Wind size={28} />,
+    label: 'Scalp Analysis',
+    desc: 'Analyse scalp health, hair density, and conditions.',
+    bullets: ['Dandruff, flakes', 'Dryness', 'Hair density'],
+  },
+};
 
 export default function ImageAnalysis() {
   const location = useLocation();
-  // Read ?type=skin|scalp from the URL so Dashboard "Analyze Scalp →" / "Analyze Skin →"
-  // shortcuts preselect the correct mode. Without this the page always defaulted
-  // to 'skin' even when the user clearly clicked the Scalp shortcut.
-  // If URL has ?type=skin|scalp, lock the page to that mode and hide the other option.
-  // If not specified, user can pick between both.
   const urlType = (() => {
     const t = new URLSearchParams(location.search).get('type');
     return t === 'skin' || t === 'scalp' ? t : null;
   })();
   const typeLocked = urlType !== null;
-  const [analysisType, setAnalysisType] = useState(urlType || 'skin');
+
+  // No type selected initially when not locked — user must pick a card first.
+  const [analysisType, setAnalysisType] = useState(urlType || null);
   const [dragOver, setDragOver] = useState(false);
   const [file, setFile] = useState(null);
   const [error, setError] = useState(false);
@@ -32,15 +43,9 @@ export default function ImageAnalysis() {
   const { openNativeCamera } = useCamera();
   const dropDisabled = loading || uploadInFlightRef.current;
 
-  // Reset inflight ref on mount AND on bfcache restore (browser back button).
-  // Without this, returning via back button can leave the ref stuck at `true`
-  // from a previous navigation, silently blocking subsequent uploads.
-  // Important: empty deps `[]` — running this effect on every render would
-  // wipe the user's file selection the moment they pick a file.
   useEffect(() => {
     uploadInFlightRef.current = false;
     const onPageShow = (e) => {
-      // e.persisted is true when the page was restored from bfcache.
       if (e.persisted) {
         uploadInFlightRef.current = false;
         setServerError('');
@@ -74,34 +79,24 @@ export default function ImageAnalysis() {
   };
 
   const handlePickFile = () => {
-    // Prevent file dialog from opening while analysis is running.
     if (dropDisabled) return;
     if (fileRef.current) fileRef.current.click();
   };
 
   const handleAnalyze = async () => {
     if (!file) return;
-    // Hard guard: prevent duplicate requests from double-clicks or dev-mode reruns.
     if (uploadInFlightRef.current) return;
     uploadInFlightRef.current = true;
     setServerError('');
 
     const response = await uploadImage(file, analysisType);
     try {
-      // Be tolerant of response wrapper differences:
-      // We only need `response.data` to navigate to the Diagnosis page.
       const payload = response?.data;
       if (payload) {
-        try {
-          localStorage.setItem('lastAnalysis', JSON.stringify(payload));
-        } catch (e) {}
-        // Use react-router navigate — full-page navigation with
-        // window.location.assign triggers bfcache issues on back button,
-        // causing the next upload to appear stuck on "Analyzing...".
+        try { localStorage.setItem('lastAnalysis', JSON.stringify(payload)); } catch (e) {}
         navigate('/diagnosis');
       } else {
         const msg = response?.error || 'Upload failed. Please try a different image.';
-        console.error('Upload failed:', msg);
         setServerError(msg);
       }
     } finally {
@@ -111,65 +106,112 @@ export default function ImageAnalysis() {
 
   const handleTakePhoto = () => {
     openNativeCamera((capturedFile) => {
-      console.log('Photo captured:', capturedFile);
       validateAndSet(capturedFile);
     });
   };
+
+  const handleBack = () => {
+    setAnalysisType(null);
+    setFile(null);
+    setError(false);
+    setServerError('');
+  };
+
+  const showSelector = !analysisType;
+  const meta = analysisType ? TYPE_META[analysisType] : null;
 
   return (
     <div className="min-h-screen bg-gray-50 bg-gray-950 flex flex-col">
       <Navbar title="Image Analysis" />
 
-      <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-8">
+      <main className="flex-1 page-container py-8">
         <div className="text-center mb-10">
           <h1 className="font-display text-3xl font-bold text-gray-900 text-white">Image Analysis</h1>
-          <p className="text-gray-400 text-gray-500 mt-2 text-sm">Upload your image for personalized skin or scalp analysis</p>
+          <p className="text-gray-400 text-gray-500 mt-2 text-sm">
+            {showSelector
+              ? 'Which analysis do you want? Pick a type below to begin.'
+              : `Upload your image for personalised ${analysisType} analysis.`}
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* ── Step 1: vertical type cards ───────────────────────────────── */}
+        {showSelector && (
+          <div className="flex flex-col gap-4 max-w-2xl mx-auto">
+            {['skin', 'scalp'].map((id) => {
+              const t = TYPE_META[id];
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setAnalysisType(id)}
+                  className="card p-6 text-left transition-shadow hover:shadow-lg"
+                  style={{ cursor: 'pointer', border: '1px solid var(--border-color)' }}
+                >
+                  <div className="flex items-center gap-4 mb-3">
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+                      style={{ background: 'var(--blue-50)', color: 'var(--nav-accent)' }}
+                    >
+                      {t.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-800 text-gray-100 text-base mb-0.5">{t.label}</h3>
+                      <p className="text-sm text-gray-500 text-gray-400">{t.desc}</p>
+                    </div>
+                  </div>
+                  <ul
+                    className="text-xs text-gray-500 text-gray-400 flex flex-wrap gap-2"
+                    style={{ paddingLeft: '4.5rem', listStyle: 'none' }}
+                  >
+                    {t.bullets.map((b) => (
+                      <li
+                        key={b}
+                        style={{
+                          background: 'var(--bg-tertiary)',
+                          padding: '0.25rem 0.625rem',
+                          borderRadius: '999px',
+                        }}
+                      >
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
-          {/* Left: select type */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 text-gray-300 mb-1">
-              <span className="w-5 h-5 rounded-full bg-gray-200 bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-600 text-gray-300">⏱</span>
-              Select Analysis Type
+        {/* ── Step 2: upload + camera (only after a type is chosen) ─────── */}
+        {!showSelector && (
+          <div className="max-w-2xl mx-auto space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ background: 'var(--blue-50)', color: 'var(--nav-accent)' }}
+                >
+                  {meta.icon}
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-800 text-gray-100 text-sm">{meta.label}</p>
+                  <p className="text-xs text-gray-400 text-gray-500">{meta.desc}</p>
+                </div>
+              </div>
+              {!typeLocked && (
+                <button onClick={handleBack} className="btn-secondary text-xs py-1.5">
+                  <ArrowLeft size={13}/> Change
+                </button>
+              )}
             </div>
 
-            {[
-              { id: 'skin', icon: <Smile size={20} className="text-blue-500"/>, label: 'Skin Analysis', desc: 'Analyze facial skin conditions, texture, and concerns' },
-              { id: 'scalp', icon: <Scissors size={20} className="text-indigo-500"/>, label: 'Scalp Analysis', desc: 'Analyze scalp health, hair density, and conditions' },
-            ].filter(opt => !typeLocked || opt.id === urlType).map(opt => (
-              <button key={opt.id} type="button" onClick={() => setAnalysisType(opt.id)}
-                className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
-                  analysisType === opt.id
-                    ? 'border-blue-500 bg-blue-50 bg-blue-900/20'
-                    : 'border-gray-200 border-gray-700 bg-white bg-gray-900 border-gray-300'
-                }`}>
-                <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-2">
-                    {opt.icon}
-                    <span className="font-semibold text-gray-800 text-gray-100 text-sm">{opt.label}</span>
-                  </div>
-                  <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    analysisType === opt.id ? 'border-blue-500 bg-blue-500' : 'border-gray-300 border-gray-600'
-                  }`}>
-                    {analysisType === opt.id && <span className="w-1.5 h-1.5 rounded-full bg-white block"/>}
-                  </span>
-                </div>
-                <p className="text-xs text-gray-400 text-gray-500 leading-relaxed pl-7">{opt.desc}</p>
-              </button>
-            ))}
-          </div>
-
-          {/* Right: upload */}
-          <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-2 text-xs text-gray-500 text-gray-400 bg-white bg-gray-900 border border-gray-100 border-gray-800 rounded-xl px-4 py-3">
               <Camera size={14} className="text-gray-400 shrink-0"/>
-              Upload a clear face image in good lighting. No makeup.
+              {analysisType === 'scalp'
+                ? 'Upload a clear scalp image in good lighting.'
+                : 'Upload a clear face image in good lighting. No makeup.'}
             </div>
 
-            {/* Using <label> is the most reliable way to open a file dialog —
-                no programmatic clicks, no event-bubbling quirks. */}
             <label
               htmlFor="fyp-file-input"
               onDragOver={(e) => { if (dropDisabled) return; e.preventDefault(); setDragOver(true); }}
@@ -183,7 +225,6 @@ export default function ImageAnalysis() {
                     ? 'border-green-400 bg-green-50 bg-green-900/10'
                     : 'border-gray-200 border-gray-700 bg-white bg-gray-900 border-blue-300 bg-blue-50/30'
               }`}>
-              {/* Reset value on every click so onChange fires even when same file is re-selected */}
               <input
                 id="fyp-file-input"
                 ref={fileRef}
@@ -197,14 +238,14 @@ export default function ImageAnalysis() {
                 <>
                   <CheckCircle2 size={44} className="text-green-500 mb-3"/>
                   <p className="font-semibold text-gray-700 text-gray-200 text-sm">{file.name}</p>
-                  <p className="text-xs text-gray-400 mt-1">Ready to analyze</p>
+                  <p className="text-xs text-gray-400 mt-1">Ready to analyse</p>
                 </>
               ) : (
                 <>
                   <UploadCloud size={44} className="text-red-400 mb-3"/>
                   <p className="font-semibold text-gray-700 text-gray-200">Upload Your Image</p>
                   <p className="text-sm text-gray-400 text-gray-500 mt-1">Drag and drop your image here, or click to browse</p>
-                  <p className="text-xs text-gray-400 text-gray-500 mt-2">Supported formats: JPG, PNG, HEIC • Max size: 10MB</p>
+                  <p className="text-xs text-gray-400 text-gray-500 mt-2">Supported formats: JPG, PNG, HEIC. Max size: 10MB.</p>
                 </>
               )}
             </label>
@@ -236,18 +277,18 @@ export default function ImageAnalysis() {
                 disabled={loading}
                 className="btn-primary w-full py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Analyzing...' : 'Analyze Now →'}
+                {loading ? 'Analysing...' : 'Analyse Now'}
               </button>
             )}
           </div>
-        </div>
+        )}
 
         {/* Feature cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
           {[
-            { icon: <CheckCircle2 size={22} className="text-gray-500"/>, title: 'Face & Scalp Support', desc: 'Both analysis types supported for comprehensive care.' },
+            { icon: <CheckCircle2 size={22} className="text-gray-500"/>, title: 'Face and Scalp Support', desc: 'Both analysis types supported for comprehensive care.' },
             { icon: <ShieldCheck size={22} className="text-gray-500"/>, title: 'Input Validation', desc: 'Automatic file type and size checks ensure valid uploads.' },
-            { icon: <CheckSquare size={22} className="text-gray-500"/>, title: 'Camera & Upload', desc: 'Multiple input methods available for convenience.' },
+            { icon: <CheckSquare size={22} className="text-gray-500"/>, title: 'Camera and Upload', desc: 'Multiple input methods available for convenience.' },
           ].map((item, i) => (
             <div key={i} className="card p-5">
               <div className="mb-3">{item.icon}</div>

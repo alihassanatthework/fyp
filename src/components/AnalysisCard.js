@@ -1,22 +1,22 @@
-import { Smile, Scissors, ArrowRight } from 'lucide-react';
+import { Droplets, Wind } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './AnalysisCard.css';
 
 const VARIANTS = {
   skin: {
-    icon: <Smile size={26} />,
+    icon: <Droplets size={26} />,
     title: 'Skin Analysis',
     desc: 'Upload a face image. AI detects skin conditions, texture, and pigmentation.',
-    bullets: ['Acne & redness', 'Pigmentation', 'Texture insights'],
+    bullets: ['Acne, redness', 'Pigmentation', 'Texture insights'],
     cta: 'Start Skin Analysis',
     to: '/analysis?type=skin',
     accent: 'skin',
   },
   scalp: {
-    icon: <Scissors size={26} />,
+    icon: <Wind size={26} />,
     title: 'Scalp Analysis',
     desc: 'Upload a scalp image. AI detects dandruff, dryness, and density issues.',
-    bullets: ['Dandruff & flakes', 'Dryness', 'Hair density'],
+    bullets: ['Dandruff, flakes', 'Dryness', 'Hair density'],
     cta: 'Start Scalp Analysis',
     to: '/analysis?type=scalp',
     accent: 'scalp',
@@ -43,7 +43,7 @@ export default function AnalysisCard({ type = 'skin', onClick }) {
         ))}
       </ul>
       <button onClick={handleClick} className="analysis-card-btn">
-        {v.cta} <ArrowRight size={14} />
+        {v.cta}
       </button>
     </div>
   );

@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="footer-brand">
             <span className="footer-logo">ME</span>
             <span className="footer-tagline">
-              AI-Powered Skin &amp; Scalp Assistant
+              Personalised Skin and Scalp Assistant
             </span>
           </div>
 

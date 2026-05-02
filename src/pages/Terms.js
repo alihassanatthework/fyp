@@ -4,14 +4,14 @@ import StaticPage from '../components/StaticPage';
 export default function Terms() {
   return (
     <StaticPage
-      title="Terms & Conditions"
+      title="Terms and Conditions"
       subtitle="Last updated: placeholder date."
       icon={<FileText size={20} />}
     >
       <h2>1. Acceptance of Terms</h2>
       <p>
         By creating an account or using ME, you agree to these placeholder
-        Terms &amp; Conditions. (Replace this entire document with reviewed legal copy
+        Terms and Conditions. (Replace this entire document with reviewed legal copy
         before production launch.)
       </p>
 

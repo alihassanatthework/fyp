@@ -62,9 +62,9 @@ export default function SignUp() {
             <div className="signup-header">
               <div>
                 <h1 className="signup-title">
-                  AI-Powered Skin, Scalp, Makeup &<br/>Fashion Personalized Assistant
+                  Personalised Skin and Scalp Assistant
                 </h1>
-                <p className="signup-subtitle">Sign up once, sync your profile across light & dark themes.</p>
+                <p className="signup-subtitle">One profile, synced across light and dark themes.</p>
               </div>
               <div className="theme-toggle">
                 <button onClick={() => toggleTheme('light')} className={`theme-btn ${theme==='light' ? 'active' : ''}`}>
@@ -134,7 +134,7 @@ export default function SignUp() {
                       {agreed ? <CheckSquare size={18}/> : <Square size={18}/>}
                     </span>
                     <span className="terms-text">
-                      I agree to the <Link to="/terms" onClick={(e) => e.stopPropagation()}>Terms &amp; Conditions</Link> and consent to upload my face/scalp images for AI-based analysis.
+                      I agree to the <Link to="/terms" onClick={(e) => e.stopPropagation()}>Terms and Conditions</Link> and consent to upload my face or scalp images for AI-based analysis.
                     </span>
                   </button>
 
@@ -179,28 +179,6 @@ export default function SignUp() {
                 </p>
               </div>
             </form>
-          </div>
-
-          <div className="card signup-info-panel p-8">
-            <div>
-              <h2 className="info-panel-title">All-in-one beauty &<br/>wellness profile</h2>
-              <p className="info-panel-desc">Your skin, scalp, makeup, and fashion preferences live in a single AI-powered hub.</p>
-              <ul className="info-list">
-                {[
-                  'Health-aware recommendations that respect allergies, diabetes, pregnancy, and heart conditions.',
-                  'Guided skin & scalp analysis to match treatments, routines, and styles to your goals.',
-                  'Switch seamlessly between free and premium plans as your needs evolve.',
-                ].map((item, i) => (
-                  <li key={i} className="info-list-item">
-                    <span className="info-bullet"/>
-                    <span className="info-list-text">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <p className="info-footer">
-              Your theme preference and profile details are securely saved to your account so you can pick up where you left off on any device.
-            </p>
           </div>
         </div>
       </div>

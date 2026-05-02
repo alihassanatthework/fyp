@@ -10,18 +10,17 @@
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
   overflow: hidden;
+  flex: 1 1 auto;
+  width: 100%;
 }
 
 .analysis-card::before {
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
-  height: 4px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-}
-
-.analysis-card--scalp::before {
-  background: linear-gradient(90deg, #6366f1, #ec4899);
+  height: 3px;
+  background: var(--nav-accent);
+  opacity: 0.85;
 }
 
 .analysis-card:hover {
@@ -34,15 +33,10 @@
   height: 52px;
   border-radius: 0.85rem;
   background: var(--blue-50);
-  color: var(--blue-600);
+  color: var(--nav-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.analysis-card--scalp .analysis-card-icon {
-  background: rgba(99, 102, 241, 0.12);
-  color: #6366f1;
 }
 
 .analysis-card-title {
@@ -81,11 +75,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--blue-500);
-}
-
-.analysis-card--scalp .analysis-card-bullets li::before {
-  background: #6366f1;
+  background: var(--nav-accent);
 }
 
 .analysis-card-btn {
@@ -94,25 +84,18 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.55rem 1.05rem;
-  border-radius: 0.65rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
   font-size: 0.82rem;
   font-weight: 600;
-  background: var(--blue-600);
+  background: var(--nav-accent);
   color: white;
   border: none;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: filter 0.2s, transform 0.15s;
 }
 
 .analysis-card-btn:hover {
-  background: var(--blue-700);
-}
-
-.analysis-card--scalp .analysis-card-btn {
-  background: #6366f1;
-}
-
-.analysis-card--scalp .analysis-card-btn:hover {
-  background: #4f46e5;
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }

@@ -1,9 +1,13 @@
-import { Sun, Moon, User, LogOut } from 'lucide-react';
+import { Sun, Moon, User, LogOut, Bell } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigate, NavLink } from 'react-router-dom';
 import './Navbar.css';
 import { useAuth } from '../contexts/AuthContext';
 
+// `title` / `subtitle` props are accepted for backward compatibility with
+// existing callers but are intentionally unused — the navbar is identical
+// on every page so each page renders its own H1 inside <main>.
+// eslint-disable-next-line no-unused-vars
 export default function Navbar({ title, subtitle }) {
   const { theme, toggleTheme } = useTheme();
   const { logout, isAuthenticated } = useAuth();
@@ -27,12 +31,6 @@ export default function Navbar({ title, subtitle }) {
           >
             ME
           </span>
-          {title && (
-            <div className="navbar-title-wrap">
-              <span className="navbar-title">{title}</span>
-              {subtitle && <div className="navbar-subtitle">{subtitle}</div>}
-            </div>
-          )}
         </div>
 
         {isAuthenticated && (
@@ -59,6 +57,17 @@ export default function Navbar({ title, subtitle }) {
               <Moon size={13} /> Dark
             </button>
           </div>
+
+          {isAuthenticated && (
+            <button
+              onClick={() => navigate('/analysis-history')}
+              className="bell-btn"
+              aria-label="Notifications"
+              title="Notifications"
+            >
+              <Bell size={16} />
+            </button>
+          )}
 
           <button onClick={() => navigate('/profile')} className="profile-btn">
             <User size={16} /> Profile

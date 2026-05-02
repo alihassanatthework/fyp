@@ -80,7 +80,7 @@ export default function DiagnosisReport() {
       <Navbar title="Diagnosis Report" />
       <main className="diagnosis-main">
         <div>
-          <h1 className="diagnosis-page-title">Diagnosis Report & Actions</h1>
+          <h1 className="diagnosis-page-title">Diagnosis Report</h1>
           <p className="diagnosis-page-subtitle">Complete analysis results with actionable next steps.</p>
         </div>
         <div className="card diagnosis-meta-grid">
@@ -91,7 +91,7 @@ export default function DiagnosisReport() {
             </p>
           </div>
           <div className="meta-item">
-            <p className="meta-label">DATE & TIME</p>
+            <p className="meta-label">DATE AND TIME</p>
             <p className="meta-value">—</p>
           </div>
           <div className="meta-item">
@@ -213,7 +213,7 @@ export default function DiagnosisReport() {
         <div className="diagnosis-grid">
           <div className="card p-6">
             <div className="recommendation-header">
-              <span className="recommendation-emoji">🩺</span>
+              <ShieldCheck size={18} className="recommendation-icon" />
               <h2 className="condition-header-title">Dermatologist Recommendation</h2>
             </div>
             {recommendations.length > 0 ? (
@@ -237,7 +237,7 @@ export default function DiagnosisReport() {
           </div>
           <div className="card p-6">
             <div className="recommendation-header">
-              <span className="recommendation-emoji">📋</span>
+              <BarChart3 size={18} className="recommendation-icon" />
               <h2 className="condition-header-title">Suggested Next Steps</h2>
             </div>
             <ul className="steps-list">
@@ -302,7 +302,7 @@ export default function DiagnosisReport() {
         )}
         <div className="card footer-bar">
           <div className="footer-info">
-            <span className="footer-emoji">🗄️</span>
+            <Bookmark size={18} className="footer-icon" />
             <div>
               <p className="footer-info-title">Data auto-saved</p>
               <p className="footer-info-desc">This report is securely stored and can be accessed in your history.</p>

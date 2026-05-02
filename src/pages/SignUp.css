@@ -5,7 +5,7 @@
 }
 
 .signup-container {
-  max-width: 1152px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
@@ -13,12 +13,6 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
-}
-
-@media (min-width: 1024px) {
-  .signup-grid {
-    grid-template-columns: 2fr 1fr;
-  }
 }
 
 .signup-form-panel {
@@ -33,7 +27,7 @@
 }
 
 .signup-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.4;
@@ -220,7 +214,7 @@
 }
 
 .info-panel-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.4;

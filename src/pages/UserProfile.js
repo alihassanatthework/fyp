@@ -95,7 +95,7 @@ export default function UserProfile() {
 
   return (
     <div className="min-h-screen bg-gray-50 bg-gray-950 flex flex-col">
-      <Navbar title="User Profile" subtitle="AI-Powered Skin & Scalp Assistant" />
+      <Navbar title="User Profile" />
 
       <main className="page-container flex-1 w-full py-8">
 

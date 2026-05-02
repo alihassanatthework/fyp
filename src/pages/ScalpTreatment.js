@@ -19,7 +19,7 @@ export default function ScalpTreatment() {
       <h2 style={{ fontSize: '0.95rem' }}>Dandruff</h2>
       <p>Anti-fungal shampoos with zinc pyrithione, ketoconazole, or selenium sulphide are first-line.</p>
 
-      <h2 style={{ fontSize: '0.95rem' }}>Dryness &amp; flaking</h2>
+      <h2 style={{ fontSize: '0.95rem' }}>Dryness and flaking</h2>
       <p>Hydrate with leave-in conditioners and reduce heat-styling frequency.</p>
 
       <h2 style={{ fontSize: '0.95rem' }}>Hair density loss</h2>
