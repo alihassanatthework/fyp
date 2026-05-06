@@ -1,82 +1,69 @@
-# AI-Powered Skin and Scalp Treatment System - Architecture
+## AI Beauty Assistant - Architecture (current state)
 
 ## System Overview
 
-The system is a full-stack application with Django REST API backend and a planned React frontend, designed to diagnose skin and scalp conditions using AI-powered image analysis. The system analyzes user-uploaded images to detect conditions like acne, dark spots, dandruff, and hair fall, then provides personalized treatment recommendations based on medical history.
+This repository runs a full **Django backend** plus a **React single-page app (SPA)** for the UI and analysis workflow.
 
-**Current Status**: Development Phase - Django template-based mock frontend is functional, backend API in progress, AI models partially integrated.
+When `react/build` exists, Django serves the React SPA as the main frontend (including routes like `/analysis` and `/diagnosis`). The analysis workflow is backed by a wired JSON API:
 
-## Implementation Status Overview
+- React uploads images to `POST /api/analysis/upload/`
+- Django runs the AI pipeline and returns JSON (when the request asks for `application/json`)
+- The React diagnosis page renders returned conditions and chart images (EfficientNet for skin, YOLO for scalp)
 
-| Component | Status | Completion |
-|-----------|--------|------------|
-| **Project Structure** | ✅ Complete | 100% |
-| **Frontend Mock (Django Templates)** | ✅ Complete | 100% |
-| **User Management** | ✅ Complete | 100% |
-| **Medical History** | ✅ Complete | 100% |
-| **Image Upload & Processing** | ⏳ Partial | 80% |
-| **AI Models** | ⏳ Partial | 60% (U-Net, MediaPipe integrated, ROI extraction tested) |
-| **REST API Endpoints** | ⏳ Partial | 40% |
-| **Database Models (Analysis)** | ⏳ Partial | 30% |
-| **Security & Encryption** | ⏳ Partial | 50% |
-| **Testing** | ⏳ Partial | 20% |
+## Current Runtime Entry Points
 
-**Overall Project Completion**: ~60%
+- **React SPA**: served by Django at `/`, `/analysis`, `/diagnosis`, `/history`, `/analysis-history`, `/profile` (react-router renders the pages)
+- **Legacy template UI**: `GET /upload/` and `POST /upload/` are still present, but the React SPA is the primary UI when `react/build` exists
+- **Analysis API (JSON)**:
+  - `POST /api/analysis/upload/` (multipart: `image`, `analysis_type`)
+  - `GET /api/analysis/history/` (session-based list for scan history)
+  - `GET /api/analysis/<analysis_id>/` and `DELETE /api/analysis/<analysis_id>/` (session-based record access)
+- **Admin**: `/admin/`
 
-### Key Achievements
-- ✅ Fully functional mock frontend with 9 pages
-- ✅ Complete user registration and medical history management
-- ✅ MediaPipe face/scalp detection integrated and working
-- ✅ U-Net segmentation integrated for region segmentation
-- ✅ ROI extraction tested successfully
-- ✅ Mock analysis flow with severity scoring (0-100)
-- ✅ Medical history-aware recommendation filtering
-- ✅ Modern, responsive UI design
+## Implementation Status (high-signal, code-based)
 
-### Critical Next Steps
-1. Finalize database models for analysis results (ImageUpload, AnalysisResult, etc.)
-2. Complete REST API endpoints
-3. Integrate remaining AI models (EfficientNet, YOLOv8, XGBoost, LLM)
-4. Add comprehensive testing framework
-5. Implement encryption and security hardening
+| Area | Status | Notes (what exists in code today) |
+|------|--------|------------------------------------|
+| **Django template frontend** | ✅ Implemented | Multi-page UI and results rendering |
+| **Upload + analysis flow (React + API)** | ✅ Implemented | `AnalyzeImageView` calls the AI pipeline and returns JSON for React |
+| **AI pipeline orchestration** | ✅ Implemented | `core/ai_models/pipeline.py` singleton pipeline |
+| **MediaPipe detection** | ✅ Implemented | `core/ai_models/mediapipe_detector.py` |
+| **U-Net segmentation** | ✅ Implemented | `core/ai_models/unet_segmenter.py` loads checkpoints |
+| **ROI extraction** | ✅ Implemented | `core/ai_models/roi_extractor.py` |
+| **EfficientNet skin classifier** | ✅ Implemented + weights present | `core/ai_models/efficientnet_classifier.py` loads `core/ai_models/efficientnet_b4_skin.pth` |
+| **YOLOv8 scalp detector** | ✅ Implemented + weights present | `core/ai_models/yolo_detector.py` loads `core/models/yolo_scalp.pt` |
+| **XGBoost severity** | ✅ Implemented + weights present | `core/ai_models/xgboost_severity.py` loads `core/models/severity_model.json` |
+| **LLM recommender** | ⏳ Optional/partial | Wrapper exists; requires local model path or API key to be useful |
+| **REST API (analysis endpoints)** | ✅ Implemented | `POST /api/analysis/upload/`, `GET /api/analysis/history/`, `GET/DELETE /api/analysis/<analysis_id>/` |
+| **Analysis DB models** | ❌ Not implemented | `image_analysis/models.py`, `diagnosis/models.py`, `recommendations/models.py` are placeholders |
+| **Encryption utilities** | ❌ Placeholder | `core/encryption/__init__.py` is not implemented |
 
 ## Architecture Layers
 
-### 1. **Frontend Layer**
+### 1) Frontend Layer
 
-#### **Current Implementation: Django Templates** ✅
+#### Current Implementation: React SPA (primary) + legacy Django templates (fallback) ✅
 - ✅ User interface for image upload/capture
 - ✅ Display of analysis results with visualizations (severity scores, recommendations)
 - ✅ User profile and medical history management (view/edit)
 - ✅ Dashboard for history tracking
 - ✅ Modern, responsive UI with CSS styling
-- ✅ 9 functional pages (home, register, login, upload, results, profile, history, view/edit medical history)
+- ✅ SPA routes (`/analysis`, `/diagnosis`, `/history`, `/profile`) that call the JSON analysis API
+- ✅ Legacy template pages still exist for older flows (`/upload/`, results pages, etc.)
 
-#### **Planned: React Frontend** ⏳
-- ⏳ Real-time camera-based scanning (20 FPS minimum)
-- ⏳ Product recommendations display
-- ⏳ Progress indicators and feedback
-- ⏳ Multilingual support (English/Urdu)
-- ⏳ Future: AR hairstyle preview
+#### Legacy Template UI ⏳ (kept for compatibility)
+- ⏳ Upload/analysis UI at `GET/POST /upload/` and server-rendered results
+- ⏳ React SPA is the primary UI when `react/build` exists
 
-### 2. **API Gateway Layer (Django REST Framework)**
+### 2) API Layer (Django / DRF)
 
-**Status**: ⏳ Partially Implemented
+- **DRF + JWT are installed and configured**.
+- The React workflow uses the JSON endpoint **`POST /api/analysis/upload/`** (and session-based `/api/analysis/history/` + `/api/analysis/<id>/`).
+- For the current React demo flow, analysis endpoints disable authentication to work with the React mock auth (`authentication_classes = []` / `@authentication_classes([])` on analysis views).
 
-- ✅ Django REST Framework 3.14.0 configured
-- ✅ JWT authentication configured (djangorestframework-simplejwt)
-- ✅ CORS headers configured for React frontend
-- ⏳ RESTful API endpoints (structure defined, partial implementation)
-- ⏳ Request/Response handling
-- ⏳ Role-based access control (User, Admin, Salons, Dermatologist)
-- ❌ Rate limiting
-- ⏳ Input validation (basic validation exists)
-- ⏳ Error handling with informative messages
-- ❌ Progress tracking for long-running operations
+### 3) Business Logic Layer (Django apps)
 
-### 3. **Business Logic Layer (Django Apps)**
-
-#### **Users App** ✅ Implemented
+#### `users` ✅ Implemented (models/migrations exist)
 - ✅ User authentication (username + password via Django)
 - ✅ User registration and login (Django forms)
 - ✅ User profile management (UserProfile model with age, gender, skin_type, hair_type)
@@ -84,7 +71,7 @@ The system is a full-stack application with Django REST API backend and a planne
 - ❌ Role management (User, Admin, Salons, Dermatologist) - structure ready
 - ❌ User feedback collection - moved to Feedback app
 
-#### **Image Analysis App** ⏳ Partial
+#### `image_analysis` ✅ Implemented (view exists), models ❌ pending
 - ✅ Image upload/capture handling (AnalyzeImageView)
 - ✅ Basic image validation (file size, format)
 - ✅ Image type confirmation (skin/scalp selection)
@@ -97,7 +84,7 @@ The system is a full-stack application with Django REST API backend and a planne
 - ❌ Image anonymization for model training - needs implementation
 - ❌ Database models (ImageUpload, ImageValidation) - not created yet
 
-#### **Diagnosis App** ⏳ Partial
+#### `diagnosis` ⏳ partial (logic in pipeline), models ❌ pending
 - ✅ AI-based condition detection pipeline (U-Net integrated)
 - ⏳ Skin condition detection (Acne, Dark Spots, Hyperpigmentation, Dryness)
 - ⏳ Scalp condition detection (Dandruff, Dryness, Oiliness, Hair Fall)
@@ -106,7 +93,7 @@ The system is a full-stack application with Django REST API backend and a planne
 - ❌ Progress comparison over time
 - ❌ Database models (AnalysisResult, ConditionDetection, SeverityAssessment) - not created yet
 
-#### **Recommendations App** ⏳ Partial
+#### `recommendations` ⏳ partial (logic in pipeline), models ❌ pending
 - ✅ Personalized care suggestions (mock implementation with medical history filtering)
 - ✅ Medical-history-aware filtering (basic safety checks implemented)
 - ⏳ Product recommendations with safety checks (mock exists)
@@ -115,60 +102,53 @@ The system is a full-stack application with Django REST API backend and a planne
 - ❌ Transparent AI output explanations
 - ❌ Database models (CareRoutine, ProductRecommendation, Product) - not created yet
 
-### 4. **AI/ML Service Layer**
+### 4) AI/ML Service Layer (implemented pipeline)
+
+The pipeline is implemented as a singleton orchestrator in `core/ai_models/pipeline.py` and is already wired into the upload flow. The default model paths (used when no config is passed) are:
+
+- **U-Net checkpoints**: auto-detected under `core/models/unet_checkpoints/**` (prefers ResNet50+SCSE `resnet_unet_best.pth` when present)
+- **EfficientNet**: `core/ai_models/efficientnet_b4_skin.pth`
+- **YOLOv8**: `core/models/yolo_scalp.pt`
+- **XGBoost severity**: `core/models/severity_model.json`
+
+#### Processing flow (skin)
+
+1. **MediaPipe** detects face region → normalized crop (pipeline uses fixed crop size in that stage)
+2. **U-Net** segments affected regions → binary mask
+3. **ROI extraction** from the mask
+4. **EfficientNet-B4** classifies ROI into 4 skin conditions: `acne`, `dark_spots`, `dryness`, `normal`
+5. **XGBoost** optionally maps detection features → severity (fallback rule-based severity if the model can’t load)
+6. **LLM recommender** (optional) can generate routines/products if configured
+
+#### Processing flow (scalp)
+
+1. **MediaPipe** detects scalp/forehead region (depending on implementation)
+2. **YOLOv8** detects scalp conditions (current `SCALP_CONDITIONS`: `dandruff`, `hair_fall`)
+3. **XGBoost severity** optionally scores severity
+
+#### Notes on model integration maturity
+
+- **EfficientNet/YOLO/XGBoost are not “TODO”** anymore; wrappers are implemented and model files exist in the repository.
+- **Database persistence** for results is still missing; results are primarily rendered in the frontend flow.
+
+### 5) Data Layer
 
 **Status**: ⏳ Partial Implementation
 
-#### **Detection Models**
+#### Database
 
-| Model | Status | File | Implementation |
-|-------|--------|------|----------------|
-| **Mediapipe** | ✅ Implemented | `mediapipe_detector.py` | Face & Scalp Detection - Functional, integrated in views |
-| **U-Net** | ✅ Integrated | `unet_segmenter.py` | Image Segmentation - Functional, integrated in pipeline |
-| **EfficientNet-B4** | ⏳ TODO | `efficientnet_classifier.py` | Condition Classification - Class structure exists, needs model integration |
-| **YOLOv8** | ⏳ TODO | `yolo_detector.py` | Additional Detection - Class structure exists, needs model integration |
+- **Users + medical history**: implemented (`users` app migrations exist)
+- **Analysis persistence**: **not implemented yet** (placeholders in `image_analysis/models.py`, `diagnosis/models.py`, `recommendations/models.py`)
+- **DB backend**: Django is configured to support MySQL via env, but actual runtime depends on your `.env` and deployment config
 
-#### **Analysis Models**
-
-| Model | Status | File | Implementation |
-|-------|--------|------|----------------|
-| **XGBoost** | ⏳ TODO | `xgboost_severity.py` | Severity Scoring (0-100 scale) - Class structure exists, mock scoring implemented |
-| **LLM** | ⏳ TODO | `llm_recommender.py` | Recommendation Engine - Class structure exists, mock recommendations implemented |
-
-#### **Processing Pipeline** ⏳ Partial
-
-**Current Implementation**:
-1. ✅ Image Reception and basic validation
-2. ✅ Face/Scalp Detection (Mediapipe) - **FUNCTIONAL**
-3. ✅ Region Segmentation (U-Net) - Integrated
-4. ✅ ROI Extraction - Tested successfully
-5. ⏳ Condition Classification (EfficientNet-B4 + YOLOv8) - Mock implementation
-6. ⏳ Severity Assessment (XGBoost) - Mock implementation (0-100 scoring)
-7. ⏳ Recommendation Generation (LLM) - Mock implementation with medical history filtering
-8. ✅ Safety Check - Basic medical history filtering implemented
-9. ⏳ Result Storage - Session-based (needs database)
-10. ✅ Response - Returns results to frontend
-
-**Pipeline Orchestrator**: `pipeline.py` - Structure exists, needs model integration
-
-### 5. **Data Layer**
-
-**Status**: ⏳ Partial Implementation
-
-#### **Database**
-- **Development**: ✅ SQLite (`db.sqlite3`) - Currently in use
-- **Production**: ⏳ MySQL 8.0+ - Configured in settings, not connected
-- **Migrations**: ✅ Applied for `users` app (UserProfile, MedicalHistory)
-- ⏳ Analysis-related models in progress (ImageUpload, AnalysisResult, etc.)
-
-#### **File Storage**
+#### File storage
 - ✅ User-uploaded images stored in `media/uploads/`
 - ✅ Processed images (face/scalp crops) in `media/processed/`
-- ✅ Acne dataset added to `dataset/skin_dataset/acne_dataset`
-- ❌ Image encryption at rest - not implemented yet
+- ✅ Training datasets are stored under `dataset/` (EfficientNet and YOLO formats)
+- ❌ Image encryption at rest is not implemented yet
 - ❌ S3/Cloud storage integration - not implemented yet
 
-### 6. **Security Layer**
+### 6) Security Layer
 
 **Status**: ⏳ Partially Implemented
 
@@ -177,7 +157,7 @@ The system is a full-stack application with Django REST API backend and a planne
 - ✅ Environment variables support (`.env` file, python-dotenv)
 - ✅ Secure password storage (Django default - PBKDF2)
 - ✅ Comprehensive `.gitignore` (protects sensitive files)
-- ⏳ End-to-end encryption (AES-256) - Structure ready, not implemented
+- ❌ Encryption utilities are placeholders (`core/encryption/`)
 - ⏳ JWT refresh tokens - Configured, needs API implementation
 - ❌ HTTPS/TLS enforcement - Not configured (development mode)
 - ❌ Data encryption at rest - Not implemented yet
@@ -263,11 +243,9 @@ The system is a full-stack application with Django REST API backend and a planne
 - ❌ **ModelVersion**: AI model versions and update history
 - ❌ **ModelPerformance**: Accuracy metrics and improvement tracking
 
-## API Endpoints Structure
+## Routes / endpoints (actual wiring)
 
-**Status**: ⏳ Structure Defined, Implementation Pending
-
-### Frontend Views (Django Templates) ✅ Implemented
+### Django template views ✅
 
 - ✅ `GET /` - Home page
 - ✅ `GET /register/` - User registration (with medical history)
@@ -284,7 +262,7 @@ The system is a full-stack application with Django REST API backend and a planne
 - ✅ `POST /profile/edit-medical-history/` - Update medical history
 - ✅ `GET /history/` - Analysis history page
 
-### REST API Endpoints ❌ Not Implemented Yet
+### REST API endpoints (actual wiring)
 
 #### Authentication
 - ❌ `POST /api/auth/register/` - User registration
@@ -301,12 +279,11 @@ The system is a full-stack application with Django REST API backend and a planne
 - ❌ `GET /api/users/consent/` - Get consent status
 - ❌ `POST /api/users/consent/` - Update consent
 
-#### Image Analysis
-- ⏳ `POST /upload/` - Upload image for analysis (AnalyzeImageView exists, basic implementation)
-- ❌ `POST /api/analysis/validate/` - Validate image before upload
-- ❌ `POST /api/analysis/confirm-type/` - Confirm image type (skin/scalp)
-- ❌ `GET /api/analysis/results/{id}/` - Get analysis result
-- ❌ `GET /api/analysis/history/` - Get user's analysis history
+#### Image Analysis (session-based for now)
+- ✅ `POST /api/analysis/upload/` - Upload image for analysis (multipart: `image`, `analysis_type`)
+- ✅ `GET /api/analysis/history/` - List analysis summaries from the user's session
+- ✅ `GET /api/analysis/<analysis_id>/` - Get one analysis record from the session
+- ✅ `DELETE /api/analysis/<analysis_id>/` - Delete one analysis record from the session
 - ❌ `GET /api/analysis/progress/{id}/` - Get analysis progress
 - ❌ `GET /api/analysis/compare/` - Compare historical results
 
@@ -337,7 +314,7 @@ The system is a full-stack application with Django REST API backend and a planne
 
 **Legend**: ✅ Implemented | ⏳ Partial | ❌ Not Implemented
 
-## Technology Stack
+## Technology Stack (actual deps in `requirements.txt`)
 
 ### Backend ✅ Configured
 
@@ -348,15 +325,13 @@ The system is a full-stack application with Django REST API backend and a planne
   - Production: MySQL 8.0+ (configured, not connected)
 - ✅ **Authentication**: JWT (djangorestframework-simplejwt 5.3.0) - Configured
 - ✅ **Image Processing**: Pillow 10.1.0, OpenCV 4.8.1.78
-- ⏳ **AI/ML Libraries**:
-  - ✅ **Mediapipe** 0.10.7: Face & Scalp Detection - **Implemented**
-  - ⏳ **PyTorch** 2.1.0: U-Net, EfficientNet-B4, YOLOv8 - Structure ready
-  - ⏳ **TensorFlow** 2.15.0: U-Net (alternative)
-  - ⏳ **XGBoost** 2.0.3: Severity Classification - Structure ready
-  - ⏳ **LLM Integration**: OpenAI 1.3.0 / Transformers 4.35.0 - Structure ready
-- ⏳ **Encryption**: cryptography 41.0.7 - Structure ready, not implemented
-- ❌ **Task Queue**: Celery 5.3.4 - Not configured yet
-- ❌ **Cache**: Redis 5.0.1 - Not configured yet
+- **AI/ML**:
+  - ✅ MediaPipe (detection)
+  - ✅ PyTorch (U-Net + EfficientNet)
+  - ✅ Ultralytics YOLOv8 (scalp detector)
+  - ✅ XGBoost (severity model loader + fallback rules)
+  - ⏳ LLM integration (optional; requires configuration)
+- **Async**: Celery/Redis are in dependencies, but the pipeline currently runs inline in the request path
 
 ### Development Tools
 - **Environment**: python-dotenv
@@ -573,7 +548,7 @@ The system is a full-stack application with Django REST API backend and a planne
 9. **Doctor Appointment Booking**: Integration with scheduling
 10. **Multi-language Expansion**: Additional language support
 
-## Project Structure
+## Project Structure (key folders)
 
 ```
 fyp-development-be/
@@ -590,34 +565,28 @@ fyp-development-be/
 │   ├── views.py            # ✅ 9 view functions (implemented)
 │   ├── urls.py             # ✅ URL routing (implemented)
 │   └── templates/          # ✅ 9 HTML templates (implemented)
-├── image_analysis/         # Image processing app ⏳
-│   ├── models.py           # ❌ Empty (needs ImageUpload, ImageValidation)
-│   ├── views.py            # ⏳ AnalyzeImageView (basic implementation)
+├── image_analysis/         # Upload + analysis entrypoint ✅ (models pending)
+│   ├── models.py           # ❌ Placeholder
+│   ├── views.py            # ✅ AnalyzeImageView
 │   └── migrations/         # ⏳ Empty
-├── diagnosis/              # Condition detection app ⏳
-│   ├── models.py           # ❌ Empty (needs AnalysisResult, ConditionDetection, SeverityAssessment)
-│   ├── views.py            # ❌ Empty
+├── diagnosis/              # App placeholder; logic is mainly in pipeline ⏳
+│   ├── models.py           # ❌ Placeholder
+│   ├── views.py            # ⏳
 │   └── migrations/         # ⏳ Empty
-├── recommendations/        # Care routines & products app ⏳
-│   ├── models.py           # ❌ Empty (needs CareRoutine, ProductRecommendation, Product)
-│   ├── views.py            # ❌ Empty
+├── recommendations/        # App placeholder; logic is mainly in pipeline ⏳
+│   ├── models.py           # ❌ Placeholder
+│   ├── views.py            # ⏳
 │   └── migrations/         # ⏳ Empty
 ├── feedback/               # Feedback app ⏳
-│   ├── models.py           # ❌ Empty (needs UserFeedback, ModelVersion)
+│   ├── models.py           # (currently empty)
 │   ├── serializers.py      # ⏳ Structure exists
 │   ├── views.py            # ❌ Empty
 │   └── urls.py             # ⏳ Structure exists
-├── core/                   # Shared utilities ⏳
-│   ├── ai_models/          # AI model wrappers ⏳
-│   │   ├── mediapipe_detector.py  # ✅ Implemented (FaceScalpDetector)
-│   │   ├── unet_segmenter.py     # ⏳ Structure ready (TODO)
-│   │   ├── efficientnet_classifier.py  # ⏳ Structure ready (TODO)
-│   │   ├── yolo_detector.py     # ⏳ Structure ready (TODO)
-│   │   ├── xgboost_severity.py   # ⏳ Structure ready (TODO)
-│   │   ├── llm_recommender.py    # ⏳ Structure ready (TODO)
-│   │   └── pipeline.py           # ⏳ Partial (AIAnalysisPipeline structure exists)
-│   ├── encryption/         # Encryption utilities ⏳
-│   │   └── __init__.py     # ⏳ Empty (needs implementation)
+├── core/                   # Shared utilities ✅ (AI pipeline lives here)
+│   ├── ai_models/          # ✅ MediaPipe/U-Net/EfficientNet/YOLO/XGBoost wrappers + pipeline
+│   │   ├── efficientnet_b4_skin.pth  # ✅ EfficientNet skin classifier weights
+│   ├── models/             # ✅ model assets (YOLO .pt, XGBoost .json, U-Net checkpoints)
+│   ├── encryption/         # ❌ Placeholder (not implemented yet)
 │   └── validators/         # Custom validators ⏳
 │       └── __init__.py     # ⏳ Empty (needs implementation)
 ├── templates/              # Global templates ✅
@@ -641,35 +610,32 @@ fyp-development-be/
 └── manage.py             # Django management script
 ```
 
-## AI Model Integration Architecture
+## Model training + updating weights (how it fits the architecture)
 
-### Model Loading & Management
-- Models loaded on startup or lazy-loaded
-- Version tracking for model updates
-- Model performance monitoring
-- A/B testing support for new models
+This repo keeps **inference weights inside the repo** so the Django pipeline can load them by default:
 
-### Processing Pipeline
+- **EfficientNet (skin)**: `core/ai_models/efficientnet_b4_skin.pth`
+- **YOLO (scalp)**: `core/models/yolo_scalp.pt`
+- **XGBoost severity**: `core/models/severity_model.json`
+- **U-Net**: `core/models/unet_checkpoints/**/resnet_unet_best.pth` (or other `best_model.pth`)
 
-**Current Implementation Status**:
+When you retrain/fine-tune EfficientNet, the safest flow is:
 
-1. ✅ **Image Reception**: Receive and validate image (basic validation)
-2. ⏳ **Preprocessing**: Normalize, enhance, resize (needs implementation)
-3. ✅ **Detection**: Mediapipe detects face/scalp regions - **FUNCTIONAL**
-4. ✅ **Segmentation**: U-Net segments condition regions - **FUNCTIONAL**
-5. ⏳ **Classification**: EfficientNet-B4 + YOLOv8 classify conditions (mock exists, needs models)
-6. ⏳ **Severity**: XGBoost scores severity (mock 0-100 scoring exists, needs model)
-7. ⏳ **Recommendation**: LLM generates personalized suggestions (mock exists, needs model)
-8. ✅ **Safety Check**: Filter based on medical history - **IMPLEMENTED**
-9. ⏳ **Result Storage**: Save to database (currently session-based, needs database models)
-10. ✅ **Response**: Return to user - **IMPLEMENTED**
-
-**Pipeline Orchestrator**: `AIAnalysisPipeline` class exists in `pipeline.py` but needs model integration.
+1. Train using your dataset folders (`dataset/efficientnet_b4/train`, `dataset/efficientnet_b4/val`)
+2. Save the **best checkpoint** back to `core/ai_models/efficientnet_b4_skin.pth`
+3. Restart Django so the singleton pipeline reloads the new weights
 
 ### Async Processing
 - Use Celery for long-running AI tasks
 - Real-time progress updates via WebSocket (future)
 - Queue management for high load
+
+## Critical next steps (highest impact)
+
+1. Add **DB models** for storing `ImageUpload` + `AnalysisResult` + per-condition outputs.
+2. Enable and implement **REST API routes** under `/api/...` (currently commented in `config/urls.py`).
+3. Implement **encryption** utilities and decide what needs encryption at rest (medical history and/or images).
+4. Add a small **evaluation script** for EfficientNet (per-class accuracy, confusion matrix) so improvements are measurable.
 
 ## Implementation Status Summary
 

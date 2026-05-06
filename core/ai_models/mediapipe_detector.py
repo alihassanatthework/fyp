@@ -133,8 +133,11 @@ class FaceScalpDetector:
             scalp_crop = rgb_image[scalp_y1:scalp_y2, scalp_x1:scalp_x2]
 
         else:
-            # If no face landmarks are detected, we cannot locate the scalp reliably
-            raise ValueError("No scalp detected (no face landmarks found)")
+            # No face landmarks — this is likely a true top-down scalp photo where
+            # the face is not visible at all (camera pointing straight down at the
+            # crown of the head). Use the full image as the scalp candidate and let
+            # the _is_scalp_present() heuristic below decide whether it's valid.
+            scalp_crop = rgb_image
 
         # If we still have no crop or crop is empty, consider scalp not found
         if scalp_crop is None or scalp_crop.size == 0:

@@ -85,7 +85,7 @@ class AIAnalysisPipeline:
                 model_path=model_configs.get('yolo_path')
             )
             self.xgboost_severity = XGBoostSeverityClassifier(
-            model_path=model_configs.get('xgboost_path')
+            model_path=model_configs.get("xgboost_path")
             )
             self.llm_recommender = LLMRecommender(
                 model_path=model_configs.get('llm_path'),
@@ -98,7 +98,9 @@ class AIAnalysisPipeline:
     def process_image(
         self,
         image: Union[np.ndarray, str],
-        analysis_type: str = 'skin'
+        analysis_type: str = 'skin',
+        user_profile: Optional[Dict] = None,
+        medical_history: Optional[Dict] = None,
     ) -> Dict:
         """
         Process image through complete AI pipeline.
@@ -113,7 +115,10 @@ class AIAnalysisPipeline:
         Args:
             image: Input image (numpy array or path to image file)
             analysis_type: 'skin' or 'scalp'
-            
+            user_profile: Dict with keys: age, gender, skin_type, hair_type
+            medical_history: Dict with keys: is_pregnant, is_diabetic, has_cardio_issues,
+                             has_asthma, has_hypertension, known_allergens, current_medications
+
         Returns:
             Dictionary containing:
                 - 'analysis_type': Type of analysis performed
@@ -121,6 +126,7 @@ class AIAnalysisPipeline:
                 - 'severity_scores': Severity scores for each condition
                 - 'roi_bbox': Bounding box of extracted ROI
                 - 'segmentation_mask': Binary segmentation mask
+                - 'recommendations': LLM-generated personalised recommendations
                 - 'processing_metadata': Additional metadata
         """
         # Load image if path provided
@@ -235,7 +241,7 @@ class AIAnalysisPipeline:
             'severity_scores': severity_scores,
             'roi_bbox': roi_bbox,
             'segmentation_mask': binary_mask.tolist(),  # Convert to list for JSON serialization
-            'classification_scores': raw_scores, 
+            'classification_scores': raw_scores,
             'yolo_detections': raw_detections,
             'processing_metadata': {
                 'normalized_crop_size': (256, 256),
@@ -243,15 +249,31 @@ class AIAnalysisPipeline:
                 'device': self.device
             }
         }
-        # DEBUG BLOCK
-        # DEBUG BLOCK
-        print("PIPELINE ANALYSIS TYPE:", analysis_type)
 
+        print("PIPELINE ANALYSIS TYPE:", analysis_type)
         if analysis_type == "skin":
             print("EfficientNet scores:", raw_scores)
-
         if analysis_type == "scalp":
             print("YOLO detections:", raw_detections)
+
+        # Step 5: LLM personalised recommendations
+        try:
+            recommendations = self.llm_recommender.generate_care_routine(
+                analysis_results=result,
+                user_profile=user_profile or {},
+                medical_history=medical_history or {},
+            )
+            result['recommendations'] = recommendations
+            print("✅ LLM recommendations generated")
+        except Exception as e:
+            print(f"⚠️ LLM recommendation failed: {e}")
+            result['recommendations'] = {
+                'daily_routine': {'morning': [], 'evening': []},
+                'weekly_routine': [],
+                'products': [],
+                'dermatologist_consult': 'Consult a dermatologist if condition worsens.',
+                'safety_notes': [],
+            }
 
         return result
     
@@ -338,39 +360,46 @@ class AIAnalysisPipeline:
     
     def _calculate_severity(self, conditions: List[Dict]) -> Dict[str, int]:
         """
-        Calculate severity scores (0-100) for detected conditions.
-        
+        Calculate severity scores using XGBoost model.
+
         Args:
             conditions: List of detected conditions
-            
+
         Returns:
             Dictionary mapping condition names to severity scores (0-100)
         """
+
         severity_scores = {}
-        
+
         for condition in conditions:
+
             name = condition['name']
             confidence = condition.get('confidence', 0.0)
-            
-            # Convert confidence to severity score (0-100)
-            # Higher confidence = higher severity
-            severity = int(confidence * 100)
-            
-            # Classify severity level
-            if severity < 30:
-                level = 'Mild'
-            elif severity < 70:
-                level = 'Moderate'
-            else:
-                level = 'Severe'
-            
-            severity_scores[name] = {
-                'score': severity,
-                'level': level
-            }
-        
-        return severity_scores
 
+            # ---------- Build feature dictionary for XGBoost ----------
+            condition_data = {
+                "confidence": confidence,
+                "roi_area": condition.get("roi_area", 0.0),
+                "condition_type": name,
+                "num_regions": condition.get("num_regions", 1),
+                "avg_region_size": condition.get("avg_region_size", 0.0)
+            }
+
+            # ---------- Run XGBoost severity model ----------
+            severity_result = self.xgboost_severity.classify_severity(
+                condition_data,
+                name
+            )
+
+            severity_level = severity_result["severity"]
+            severity_score = int(severity_result["confidence"] * 100)
+
+            severity_scores[name] = {
+                "score": severity_score,
+                "level": severity_level.capitalize()
+            }
+
+        return severity_scores
 
 # Global singleton instance
 _pipeline_instance = None
@@ -410,6 +439,7 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
         ]
         model_configs["yolo_path"] = "core/models/yolo_scalp.pt"
         model_configs["efficientnet_path"] = "core/ai_models/efficientnet_b4_skin.pth"
+        model_configs["xgboost_path"] = "core/models/severity_model.json"
         for p in possible_paths:
             try:
                 from pathlib import Path
@@ -441,21 +471,27 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
 def process_image(
     image: Union[np.ndarray, str],
     analysis_type: str = 'skin',
-    model_configs: Optional[Dict] = None
+    model_configs: Optional[Dict] = None,
+    user_profile: Optional[Dict] = None,
+    medical_history: Optional[Dict] = None,
 ) -> Dict:
     """
     Convenience function to process an image through the pipeline.
-    
-    This is the main entry point for external code. It automatically
-    handles singleton pattern and provides a clean interface.
-    
+
     Args:
         image: Input image (numpy array or path to image file)
         analysis_type: 'skin' or 'scalp'
         model_configs: Dictionary of model configurations (only used on first call)
-        
+        user_profile: Dict with age, gender, skin_type, hair_type
+        medical_history: Dict with medical flags and allergens
+
     Returns:
-        Dictionary containing complete analysis results
+        Dictionary containing complete analysis results including LLM recommendations
     """
     pipeline = get_pipeline(model_configs)
-    return pipeline.process_image(image, analysis_type)
+    return pipeline.process_image(
+        image,
+        analysis_type,
+        user_profile=user_profile,
+        medical_history=medical_history,
+    )

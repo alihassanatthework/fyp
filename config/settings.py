@@ -31,7 +31,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-(@slwrk8pyqccvushh(-quuv%&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# In production set: ALLOWED_HOSTS=yourapp.onrender.com,yourdomain.com
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h.strip()]
 
 
 # Application definition
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',  # enables logout token invalidation
     'corsheaders',
     
     # Local apps
@@ -60,6 +62,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # serve static files in production
     'corsheaders.middleware.CorsMiddleware',  # CORS middleware should be as high as possible
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -92,9 +95,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# Database configuration
-# Using SQLite for development/testing (switch to MySQL for production)
+#
+# Selection is controlled by the `USE_SQLITE` env flag:
+#   USE_SQLITE=True  → local SQLite file (quick dev / offline testing)
+#   USE_SQLITE=False → PostgreSQL (the real database, used for everything
+#                      from auth onwards and in production)
+# Keeping SQLite as an opt-in fallback means you can always switch back
+# without editing code — just flip the flag in .env.
 USE_SQLITE = os.getenv('USE_SQLITE', 'True') == 'True'
 
 if USE_SQLITE:
@@ -107,16 +114,12 @@ if USE_SQLITE:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DB_NAME', 'skin_scalp_db'),
-            'USER': os.getenv('DB_USER', 'root'),
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'fyp_skin_scalp'),
+            'USER': os.getenv('DB_USER', os.getenv('USER', 'postgres')),
             'PASSWORD': os.getenv('DB_PASSWORD', ''),
             'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '3306'),
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-                'charset': 'utf8mb4',
-            },
+            'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
 
@@ -157,6 +160,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+# WhiteNoise compresses + caches static files in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Serve React production build static assets when running Django as a single server.
+REACT_BUILD_STATIC_DIR = BASE_DIR / 'react' / 'build' / 'static'
+STATICFILES_DIRS = [REACT_BUILD_STATIC_DIR] if REACT_BUILD_STATIC_DIR.exists() else []
 
 # Media files (User uploaded files)
 MEDIA_URL = '/media/'
@@ -191,8 +200,10 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_ACCESS_TOKEN_LIFETIME', '60'))),
-    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_REFRESH_TOKEN_LIFETIME', '1440'))),
+    # Local dev: long-lived tokens so you're never logged out mid-session.
+    # Production: override via JWT_ACCESS_TOKEN_LIFETIME / JWT_REFRESH_TOKEN_LIFETIME env vars.
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_ACCESS_TOKEN_LIFETIME', '480'))),   # 8 hours
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=int(os.getenv('JWT_REFRESH_TOKEN_LIFETIME_DAYS', '30'))),  # 30 days
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
@@ -202,10 +213,13 @@ SIMPLE_JWT = {
 }
 
 # CORS Settings
+# Add your Vercel production URL via env: CORS_ALLOWED_ORIGINS=https://yourapp.vercel.app
+_extra_origins = [o.strip() for o in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:5173",  # Vite default port
+    "http://localhost:5173",
+    *_extra_origins,
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -237,23 +251,70 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Security Settings
-SECURE_SSL_REDIRECT = False  # Set to True in production with HTTPS
-SESSION_COOKIE_SECURE = False  # Set to True in production
-CSRF_COOKIE_SECURE = False  # Set to True in production
-SECURE_BROWSER_XSS_FILTER = True
+# In production (DEBUG=False) all HTTPS and cookie flags are enabled automatically.
+# In development they stay off so HTTP localhost still works.
+IS_PRODUCTION = not DEBUG
+
+SECURE_SSL_REDIRECT         = IS_PRODUCTION
+SESSION_COOKIE_SECURE       = IS_PRODUCTION
+CSRF_COOKIE_SECURE          = IS_PRODUCTION
+SECURE_HSTS_SECONDS         = 31536000 if IS_PRODUCTION else 0   # 1 year HSTS in prod
+SECURE_HSTS_INCLUDE_SUBDOMAINS = IS_PRODUCTION
+SECURE_HSTS_PRELOAD         = IS_PRODUCTION
+SECURE_BROWSER_XSS_FILTER  = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
+X_FRAME_OPTIONS             = 'DENY'
 
 # File Upload Settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 
-# 2. Define Media Paths relative to that BASE_DIR
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'  # This syntax is safer on Mac
+# Cache
+# django_ratelimit requires a *shared* cache — the default LocMemCache is
+# per-process and fails the system check. We use:
+#   • FileBasedCache in local development (no extra services needed)
+#   • Redis in production (set REDIS_URL env var on Render)
+# Cache + Rate Limiting
+# django_ratelimit requires Redis or Memcache (atomic increment support).
+# In production set REDIS_URL and rate limiting is enforced.
+# In local dev (no REDIS_URL) we use a dummy cache and disable rate limiting
+# so the server starts without needing Redis installed locally.
+_redis_url = os.getenv('REDIS_URL', '')
+if _redis_url:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': _redis_url,
+        }
+    }
+    # Only register django_ratelimit when Redis is available — the app's
+    # system check blocks startup if the cache doesn't support atomic ops.
+    INSTALLED_APPS += ['django_ratelimit']
+    RATELIMIT_ENABLE = True
+    RATELIMIT_USE_CACHE = 'default'
+else:
+    # No Redis locally — skip ratelimit entirely (no system-check errors).
+    RATELIMIT_ENABLE = False
 
-# 3. Print the path to the console every time you save, so you know it worked
-print(f"✅ MEDIA SAVING TO: {MEDIA_ROOT}")
+# Email Settings
+# In development: prints emails to the console (no SMTP needed).
+# In production:  set EMAIL_HOST_USER + EMAIL_HOST_PASSWORD env vars to use Gmail.
+_email_user = os.getenv('EMAIL_HOST_USER', '')
+if _email_user:
+    EMAIL_BACKEND     = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST        = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+    EMAIL_PORT        = int(os.getenv('EMAIL_PORT', '587'))
+    EMAIL_USE_TLS     = True
+    EMAIL_HOST_USER   = _email_user
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+    DEFAULT_FROM_EMAIL = f'AI Skin Assistant <{_email_user}>'
+else:
+    # Console backend — emails are printed in the terminal during local dev.
+    EMAIL_BACKEND     = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'AI Skin Assistant <noreply@fyp.local>'
+
+# Frontend base URL used in password-reset links
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 
 # AI Model Settings
 MEDIAPIPE_MODEL_PATH = os.getenv('MEDIAPIPE_MODEL_PATH', '')
@@ -261,3 +322,40 @@ UNET_MODEL_PATH = os.getenv('UNET_MODEL_PATH', '')
 
 # Encryption Key for sensitive data
 ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY', '').encode() if os.getenv('ENCRYPTION_KEY') else None
+
+# Logging
+# Replaces scattered `print()` debug calls. In DEBUG mode we show INFO-level
+# logs from our own apps on the console; Django's noisy logs stay at WARNING.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[{levelname}] {name}: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        # Our own apps — keep at INFO (or DEBUG if DEBUG=True).
+        'image_analysis': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'core': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+    },
+}

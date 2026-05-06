@@ -140,3 +140,9 @@ dataset/
 data_eczema/
 data/
 
+# Claude Code
+.claude/
+
+# React node_modules
+react/node_modules/
+

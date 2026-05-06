@@ -1,3 +1,4 @@
+import os
 import xgboost as xgb
 import numpy as np
 from typing import Dict, List, Optional, Union
@@ -12,6 +13,12 @@ class XGBoostSeverityClassifier:
             self.load_model(model_path)
     def load_model(self, model_path):
         """Load XGBoost model from file."""
+        # Avoid xgboost fatal/log spam when model file is missing.
+        if not model_path or not os.path.isfile(model_path):
+            print(f"⚠️ XGBoost model file not found: {model_path}. Skipping load.")
+            self.model = None
+            self.model_path = None
+            return
         try:
             # XGBoost can load .json, .ubj, or .pkl files
             self.model = xgb.Booster()

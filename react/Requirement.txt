@@ -1,0 +1,54 @@
+# AI Beauty Assistant - Requirements File
+# This is a documentation file. For actual installation, use: npm install
+
+# ============================================
+# SYSTEM REQUIREMENTS
+# ============================================
+Node.js >= 16.0.0
+npm >= 8.0.0
+Operating System: Windows 10/11, macOS 10.15+, or Linux
+
+# ============================================
+# JAVASCRIPT/REACT DEPENDENCIES
+# ============================================
+# These are installed via npm from package.json
+
+react==18.2.0
+react-dom==18.2.0
+react-router-dom==6.20.0
+react-scripts==5.0.1
+lucide-react==0.263.1
+
+# ============================================
+# INSTALLATION COMMAND
+# ============================================
+# npm install
+
+# ============================================
+# DEV DEPENDENCIES (Included with react-scripts)
+# ============================================
+# webpack (bundler)
+# babel (transpiler)
+# eslint (linter)
+# jest (testing framework)
+
+# ============================================
+# TOTAL DISK SPACE NEEDED
+# ============================================
+# ~500MB (includes node_modules)
+
+# ============================================
+# BROWSER REQUIREMENTS
+# ============================================
+# Chrome >= 90
+# Firefox >= 88
+# Safari >= 14
+# Edge >= 90
+
+# ============================================
+# NOTES
+# ============================================
+# - This is NOT used by npm (npm uses package.json)
+# - For documentation purposes only
+# - Run 'npm install' to install dependencies
+# - Run 'npm start' to start the application

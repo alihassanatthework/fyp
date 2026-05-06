@@ -8,26 +8,62 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponse
+from django.views.static import serve as static_serve
+from django.urls import re_path
 
 from image_analysis.views import AnalyzeImageView
 
+from pathlib import Path
+
+# React single-server integration:
+# If `react/build` exists, Django will serve React (index.html + /static/*) and
+# let React Router handle all non-API/non-admin routes.
+REACT_BUILD_DIR = Path(settings.BASE_DIR) / "react" / "build"
+REACT_STATIC_DIR = REACT_BUILD_DIR / "static"
+
+def react_index(_request):
+    index_path = REACT_BUILD_DIR / "index.html"
+    if not index_path.exists():
+        return HttpResponse(
+            "React build not found. Run `npm run build` in the `react/` folder.",
+            status=500,
+        )
+    response = HttpResponse(index_path.read_text(encoding="utf-8"), content_type="text/html")
+    # Prevent browsers from caching index.html so they always pick up the
+    # latest hashed JS/CSS bundle after a rebuild. (The bundles themselves
+    # have content hashes in their names, so they're safe to cache forever.)
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response["Pragma"] = "no-cache"
+    response["Expires"] = "0"
+    return response
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('upload/', AnalyzeImageView.as_view(), name='upload_force_test'),
-    path('upload/', AnalyzeImageView.as_view(), name='upload'),
-    
-    # Frontend pages
-    path('', include('frontend.urls')),
-    
-    # API endpoints (to be implemented)
-    # path('api/auth/', include('users.urls')),
-    # path('api/users/', include('users.urls')),
-    # path('api/analysis/', include('image_analysis.urls')),
-    # path('api/diagnosis/', include('diagnosis.urls')),
-    # path('api/recommendations/', include('recommendations.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# Serve media files in development
+    # Template-based upload/analysis flow (older UI).
+    # Kept for backwards compatibility/testing.
+    path('upload/', AnalyzeImageView.as_view(), name='upload'),
+
+    # If React build exists, we serve React for all routes.
+    # Otherwise, fall back to the legacy Django template frontend.
+    *([] if REACT_BUILD_DIR.exists() else [path('', include('frontend.urls'))]),
+
+    # React frontend API (JSON endpoints)
+    path('api/', include('config.api.urls')),
+]
+
+# Serve uploaded images (/media/*) and static assets BEFORE the React catch-all.
+# Order matters: the React regex below matches anything not starting with
+# `api/` or `admin/`, so without these routes registered first the catch-all
+# would swallow /media/* requests and return index.html instead of the image.
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# Catch-all: send unknown routes to React so react-router can render.
+# Note: `api/`, `admin/`, and `/media/*` are matched earlier and won't reach this.
+if REACT_BUILD_DIR.exists():
+    urlpatterns += [
+        re_path(r"^(?!api/|admin/|media/).*$", react_index),
+    ]
