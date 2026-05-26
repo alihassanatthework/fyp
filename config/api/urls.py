@@ -31,4 +31,12 @@ urlpatterns = [
 
     # Analysis detail + delete
     path('analysis/<str:analysis_id>/', analysis_detail, name='analysis-detail'),
+
+    # Phase 2 — Providers & Bookings
+    path('', include('providers.urls')),
+    path('', include('bookings.urls')),
+
+    # Phase 2 — Makeup & Fashion
+    path('', include('makeup.urls')),
+    path('', include('fashion.urls')),
 ]

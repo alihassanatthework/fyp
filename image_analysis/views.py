@@ -467,26 +467,54 @@ class AnalyzeImageView(APIView):
             logger.info("Pipeline finished in %.2fs — keys: %s", time() - pipeline_start, list(pipeline_result.keys()))
             
 
-            # Add EfficientNet classification scores
+            # Add EfficientNet classification scores — show ALL classes
+            # (acne, dark_spots, dryness, normal) with their probability, with
+            # the % value printed on top of each bar and "normal" coloured
+            # green while diseases are coloured warm.
             if image_type == "skin" and 'classification_scores' in pipeline_result:
-
                 scores = pipeline_result['classification_scores']
-
                 context['classification'] = scores
 
-                labels = list(scores.keys())
-                values = [round(v*100,2) for v in scores.values()]
-                plt.ylabel("Probability (%)")
+                # Sort by probability descending so the top class is leftmost
+                ordered = sorted(scores.items(), key=lambda kv: kv[1], reverse=True)
+                labels_raw = [k for k, _ in ordered]
+                values     = [round(v * 100, 2) for _, v in ordered]
+                # Pretty labels: "dark_spots" -> "Dark Spots"
+                labels = [l.replace('_', ' ').title() for l in labels_raw]
 
-                plt.figure(figsize=(4,3))
-                plt.bar(labels, values)
-                plt.title("EfficientNet Classification")
-                plt.ylabel("Probability")
+                # Colour: green for Normal, warm gradient for diseases
+                disease_colors = ["#E07A30", "#D45A4A", "#B3454A"]
+                colors = []
+                disease_i = 0
+                for raw in labels_raw:
+                    if raw.lower() == "normal":
+                        colors.append("#2E8B57")
+                    else:
+                        colors.append(disease_colors[disease_i % len(disease_colors)])
+                        disease_i += 1
+
+                fig, ax = plt.subplots(figsize=(5.5, 3.4))
+                bars = ax.bar(labels, values, color=colors, edgecolor="#444444", linewidth=0.6)
+                ax.set_title("EfficientNet Classification", fontsize=11, fontweight="bold")
+                ax.set_ylabel("Probability (%)")
+                ax.set_ylim(0, max(105, max(values) + 10))
+                ax.grid(axis='y', linestyle='--', alpha=0.4)
+                ax.spines['top'].set_visible(False)
+                ax.spines['right'].set_visible(False)
+                # Print the % value on top of each bar
+                for bar, v in zip(bars, values):
+                    ax.text(
+                        bar.get_x() + bar.get_width() / 2,
+                        bar.get_height() + 1.5,
+                        f"{v:.1f}%",
+                        ha='center', va='bottom',
+                        fontsize=10, fontweight='bold', color="#222222",
+                    )
+                plt.tight_layout()
 
                 viz_name = f"efficientnet_{unique_name}.png"
                 viz_path = os.path.join(processed_dir, viz_name)
-
-                plt.savefig(viz_path)
+                plt.savefig(viz_path, dpi=130)
                 plt.close()
 
                 context['efficientnet_visualization'] = f"/media/processed/{viz_name}"
@@ -498,34 +526,62 @@ class AnalyzeImageView(APIView):
                 logger.debug("Pipeline detected conditions: %s", pipeline_result.get('detected_conditions'))
 
                 try:
-
-                    labels = []
-                    values = []
-
+                    # Aggregate YOLO detections by class so multiple bboxes
+                    # of the same condition collapse into a single bar at the
+                    # MAX confidence seen for that class.
+                    per_class_max = {}
                     for det in detections:
                         label = det.get("condition") or det.get("class", "unknown")
-                        conf = det.get("confidence", 0)
+                        conf = float(det.get("confidence", 0)) * 100
+                        if label not in per_class_max or conf > per_class_max[label]:
+                            per_class_max[label] = conf
 
-                        labels.append(label)
-                        values.append(conf * 100)
+                    # Sort by confidence descending
+                    ordered = sorted(per_class_max.items(), key=lambda kv: kv[1], reverse=True)
+                    labels_raw = [k for k, _ in ordered]
+                    values     = [round(v, 2) for _, v in ordered]
 
-                    if labels:
+                    # No detections at all = healthy scalp → single green bar
+                    if not labels_raw:
+                        labels_raw = ["Normal Scalp"]
+                        values = [100.0]
 
-                        
+                    labels = [l.replace('_', ' ').title() for l in labels_raw]
 
-                        plt.figure(figsize=(4,3))
-                        plt.bar(labels, values)
-                        plt.title("YOLOv8 Scalp Detection")
-                        plt.ylabel("Confidence (%)")
-                        plt.ylim(0,100)
+                    disease_colors = ["#E07A30", "#D45A4A", "#B3454A", "#8B3E55"]
+                    colors = []
+                    di = 0
+                    for raw in labels_raw:
+                        if raw.lower() in ("normal scalp", "normal"):
+                            colors.append("#2E8B57")
+                        else:
+                            colors.append(disease_colors[di % len(disease_colors)])
+                            di += 1
 
-                        yolo_graph_name = f"yolo_chart_{unique_name}.png"
-                        yolo_graph_path = os.path.join(processed_dir, yolo_graph_name)
+                    fig, ax = plt.subplots(figsize=(5.5, 3.4))
+                    bars = ax.bar(labels, values, color=colors, edgecolor="#444444", linewidth=0.6)
+                    ax.set_title("YOLOv8 Scalp Detection", fontsize=11, fontweight="bold")
+                    ax.set_ylabel("Confidence (%)")
+                    ax.set_ylim(0, max(105, max(values) + 10))
+                    ax.grid(axis='y', linestyle='--', alpha=0.4)
+                    ax.spines['top'].set_visible(False)
+                    ax.spines['right'].set_visible(False)
+                    for bar, v in zip(bars, values):
+                        ax.text(
+                            bar.get_x() + bar.get_width() / 2,
+                            bar.get_height() + 1.5,
+                            f"{v:.1f}%",
+                            ha='center', va='bottom',
+                            fontsize=10, fontweight='bold', color="#222222",
+                        )
+                    plt.tight_layout()
 
-                        plt.savefig(yolo_graph_path)
-                        plt.close()
+                    yolo_graph_name = f"yolo_chart_{unique_name}.png"
+                    yolo_graph_path = os.path.join(processed_dir, yolo_graph_name)
+                    plt.savefig(yolo_graph_path, dpi=130)
+                    plt.close()
 
-                        context["yolo_chart"] = f"/media/processed/{yolo_graph_name}"
+                    context["yolo_chart"] = f"/media/processed/{yolo_graph_name}"
 
                 except Exception as e:
                     logger.warning("YOLO graph error: %s", e)

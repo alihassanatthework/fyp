@@ -1,7 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import UserProfile, MedicalHistory
+from .models import UserProfile, MedicalHistory, UserRole
+
+
+class UserRoleInline(admin.TabularInline):
+    model      = UserRole
+    can_delete = False
+    extra      = 1
 
 
 class UserProfileInline(admin.StackedInline):
@@ -17,7 +23,7 @@ class MedicalHistoryInline(admin.StackedInline):
 
 
 class UserAdmin(BaseUserAdmin):
-    inlines = (UserProfileInline, MedicalHistoryInline)
+    inlines = (UserRoleInline, UserProfileInline, MedicalHistoryInline)
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'date_joined')
     ordering = ('-date_joined',)
 
@@ -25,6 +31,14 @@ class UserAdmin(BaseUserAdmin):
 # Re-register User with our enhanced admin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+
+@admin.register(UserRole)
+class UserRoleAdmin(admin.ModelAdmin):
+    list_display  = ('user', 'role', 'created_at')
+    list_filter   = ('role',)
+    search_fields = ('user__email',)
+    list_editable = ('role',)
 
 
 @admin.register(UserProfile)

@@ -3,6 +3,20 @@ import { Download, Bookmark, Bell, ArrowRight, CheckCircle2, ShieldCheck } from 
 import Navbar from '../components/Navbar';
 import './DiagnosisReport.css';
 
+// Safely convert any recommendation item to a displayable string.
+// The LLM occasionally returns objects instead of strings.
+function toText(item) {
+  if (!item) return '';
+  if (typeof item === 'string') return item;
+  if (typeof item === 'object') {
+    // e.g. { name, type, reason } or { step, description }
+    return [item.name, item.step, item.description, item.reason, item.usage]
+      .filter(Boolean)
+      .join(' — ');
+  }
+  return String(item);
+}
+
 const steps = [
   { title: 'Consult a certified dermatologist', desc: 'Schedule an in-person or telehealth visit within 7 days.' },
   { title: 'Topical treatment options', desc: 'Discuss retinoids or benzoyl peroxide-based treatments if appropriate.' },
@@ -31,7 +45,18 @@ export default function DiagnosisReport() {
   }
 
   const conditions = report?.conditions || [];
-  const recommendations = report?.recommendations || [];
+
+  // Use structured recommendations from LLM (preferred) or fall back to flat array
+  const recStructured = report?.recommendations_structured || report?.recommendations || {};
+  const isFlatArray = Array.isArray(recStructured);
+
+  const morningSteps  = isFlatArray ? recStructured : (recStructured?.daily_routine?.morning  || []);
+  const eveningSteps  = isFlatArray ? []            : (recStructured?.daily_routine?.evening  || []);
+  const weeklySteps   = isFlatArray ? []            : (recStructured?.weekly_routine           || []);
+  const medicines     = isFlatArray ? []            : (recStructured?.medicines                || []);
+  const products      = isFlatArray ? []            : (recStructured?.products                 || []);
+  const safetyNotes   = isFlatArray ? []            : (recStructured?.safety_notes             || []);
+  const dermConsult   = isFlatArray ? ''            : (recStructured?.dermatologist_consult     || '');
 
   const primary = conditions[0] || {
     name: 'Normal',
@@ -146,7 +171,7 @@ export default function DiagnosisReport() {
             <div>
               <h2 className="book-title">Ready to treat this?</h2>
               <p className="book-desc">Book a consultation with a specialist.</p>
-              <button className="btn btn-primary w-full py-3">Book Appointment <ArrowRight size={15}/></button>
+              <button className="btn btn-primary w-full py-3" onClick={() => navigate('/bookings')}>Book Appointment <ArrowRight size={15}/></button>
             </div>
             <div className="book-footer">
               <ShieldCheck size={14}/>Securely verified report
@@ -159,19 +184,51 @@ export default function DiagnosisReport() {
               <span className="recommendation-emoji">🩺</span>
               <h2 className="condition-header-title">Dermatologist Recommendation</h2>
             </div>
-            {recommendations.length > 0 ? (
-              <ul className="recommendation-text" style={{ marginTop: 10 }}>
-                {recommendations.slice(0, 5).map((r, idx) => (
-                  <li key={idx} style={{ marginBottom: 8 }}>
-                    {r}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="recommendation-text">
-                Based on the analysis of the affected areas, consulting a certified dermatologist is recommended to assess underlying causes.
-              </p>
+
+            {/* Morning Routine */}
+            {morningSteps.length > 0 && (
+              <div style={{ marginTop: 12 }}>
+                <p className="step-title" style={{ marginBottom: 6 }}>☀️ Morning Routine</p>
+                <ul className="recommendation-text">
+                  {morningSteps.map((r, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(r)}</li>)}
+                </ul>
+              </div>
             )}
+
+            {/* Evening Routine */}
+            {eveningSteps.length > 0 && (
+              <div style={{ marginTop: 12 }}>
+                <p className="step-title" style={{ marginBottom: 6 }}>🌙 Evening Routine</p>
+                <ul className="recommendation-text">
+                  {eveningSteps.map((r, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(r)}</li>)}
+                </ul>
+              </div>
+            )}
+
+            {/* Weekly Routine */}
+            {weeklySteps.length > 0 && (
+              <div style={{ marginTop: 12 }}>
+                <p className="step-title" style={{ marginBottom: 6 }}>📅 Weekly Care</p>
+                <ul className="recommendation-text">
+                  {weeklySteps.map((r, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(r)}</li>)}
+                </ul>
+              </div>
+            )}
+
+            {/* Fallback flat array */}
+            {isFlatArray && recStructured.length > 0 && (
+              <ul className="recommendation-text" style={{ marginTop: 10 }}>
+                {recStructured.slice(0, 5).map((r, idx) => <li key={idx} style={{ marginBottom: 8 }}>{toText(r)}</li>)}
+              </ul>
+            )}
+
+            {/* Dermatologist consult note */}
+            {dermConsult ? (
+              <p className="recommendation-text" style={{ marginTop: 12, fontStyle: 'italic' }}>
+                💬 {dermConsult}
+              </p>
+            ) : null}
+
             <div className="disclaimer-box">
               <p className="disclaimer-text">
                 <span className="disclaimer-label">Medical Disclaimer:</span> This report is AI-generated for informational purposes only and does not constitute a medical diagnosis. Always seek the advice of a physician or other qualified health provider.
@@ -196,6 +253,73 @@ export default function DiagnosisReport() {
             </ul>
           </div>
         </div>
+
+        {/* Medicines Section */}
+        {medicines.length > 0 && (
+          <div className="card p-6" style={{ marginTop: 16 }}>
+            <div className="recommendation-header" style={{ marginBottom: 12 }}>
+              <span className="recommendation-emoji">💊</span>
+              <h2 className="condition-header-title">Medicine Suggestions</h2>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
+              {medicines.map((med, i) => (
+                <div key={i} style={{
+                  background: 'var(--bg-secondary, #f8fafc)',
+                  border: '1px solid var(--border-color, #e2e8f0)',
+                  borderRadius: 10,
+                  padding: '12px 14px',
+                }}>
+                  <p style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
+                    {med.name}
+                    {med.type && (
+                      <span style={{
+                        marginLeft: 8,
+                        fontSize: 11,
+                        background: 'var(--accent-light, #e0f2fe)',
+                        color: 'var(--accent, #0284c7)',
+                        borderRadius: 4,
+                        padding: '1px 6px',
+                        fontWeight: 500,
+                        textTransform: 'capitalize',
+                      }}>{med.type}</span>
+                    )}
+                  </p>
+                  {med.usage && <p className="step-desc" style={{ marginBottom: 4 }}>🕐 {med.usage}</p>}
+                  {med.reason && <p className="step-desc" style={{ color: 'var(--text-tertiary)' }}>ℹ️ {med.reason}</p>}
+                </div>
+              ))}
+            </div>
+            <p className="disclaimer-text" style={{ marginTop: 12 }}>
+              ⚠️ Always consult a healthcare professional before starting any medication.
+            </p>
+          </div>
+        )}
+
+        {/* Recommended Products */}
+        {products.length > 0 && (
+          <div className="card p-6" style={{ marginTop: 16 }}>
+            <div className="recommendation-header" style={{ marginBottom: 12 }}>
+              <span className="recommendation-emoji">🧴</span>
+              <h2 className="condition-header-title">Recommended Products</h2>
+            </div>
+            <ul className="recommendation-text">
+              {products.map((p, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(p)}</li>)}
+            </ul>
+          </div>
+        )}
+
+        {/* Safety Notes */}
+        {safetyNotes.length > 0 && (
+          <div className="card p-6" style={{ marginTop: 16 }}>
+            <div className="recommendation-header" style={{ marginBottom: 12 }}>
+              <span className="recommendation-emoji">⚠️</span>
+              <h2 className="condition-header-title">Safety Notes</h2>
+            </div>
+            <ul className="recommendation-text">
+              {safetyNotes.map((n, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(n)}</li>)}
+            </ul>
+          </div>
+        )}
 
         {(visualizedImage || originalImage) && (
           <div className="card p-6" style={{ marginTop: 16 }}>

@@ -15,7 +15,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
-from .models import UserProfile, MedicalHistory
+from .models import UserProfile, MedicalHistory, UserRole
+from .permissions import IsAdmin
 from .serializers import (
     RegisterSerializer,
     UserSerializer,
@@ -350,3 +351,69 @@ class ResetPasswordView(APIView):
             {'message': 'Password reset successfully. You can now log in with your new password.'},
             status=status.HTTP_200_OK,
         )
+
+
+# ---------------------------------------------------------------------------
+# Role Management (Admin only)
+# ---------------------------------------------------------------------------
+
+class UserListView(APIView):
+    """
+    GET  /api/admin/users/          — list all users with their roles (admin only)
+    """
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get(self, request):
+        users = User.objects.all().select_related('role', 'profile')
+        data = []
+        for u in users:
+            data.append({
+                'id':         u.id,
+                'email':      u.email,
+                'name':       f"{u.first_name} {u.last_name}".strip(),
+                'role':       getattr(u, 'role', None) and u.role.role or 'user',
+                'is_active':  u.is_active,
+                'joined':     u.date_joined,
+            })
+        return Response(data)
+
+
+class UserRoleView(APIView):
+    """
+    PATCH /api/admin/users/<id>/role/  — change a user's role (admin only)
+    Body: { "role": "user" | "admin" | "dermatologist" | "salon" }
+    """
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    VALID_ROLES = {'user', 'admin'}
+
+    def patch(self, request, pk):
+        role = request.data.get('role', '').strip().lower()
+        if role not in self.VALID_ROLES:
+            return Response(
+                {'error': f'Invalid role. Choose from: {", ".join(self.VALID_ROLES)}'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        user_role, _ = UserRole.objects.get_or_create(user=user)
+        user_role.role = role
+        user_role.save()
+
+        logger.info("Role changed: user=%s role=%s by admin=%s", user.email, role, request.user.email)
+        return Response({'message': f"Role updated to '{role}' for {user.email}."})
+
+
+class MyRoleView(APIView):
+    """GET /api/auth/my-role/  — return current user's role."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            role = request.user.role.role
+        except Exception:
+            role = 'user'
+        return Response({'role': role})

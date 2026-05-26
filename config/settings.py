@@ -58,6 +58,12 @@ INSTALLED_APPS = [
     'recommendations',
     'feedback',
     'frontend',
+
+    # Phase 2 apps
+    'providers',
+    'bookings',
+    'makeup',
+    'fashion',
 ]
 
 MIDDLEWARE = [

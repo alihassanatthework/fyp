@@ -23,6 +23,7 @@ from .efficientnet_classifier import EfficientNetClassifier
 from .yolo_detector import YOLODetector
 from .xgboost_severity import XGBoostSeverityClassifier
 from .llm_recommender import LLMRecommender
+from .normal_detector import NormalDetector
 
 
 class AIAnalysisPipeline:
@@ -92,7 +93,15 @@ class AIAnalysisPipeline:
                 api_key=model_configs.get('llm_api_key'),
                 use_api=model_configs.get('llm_use_api', False)
             )
-            
+            # Specialist binary normal-vs-abnormal detector. If the .pth file
+            # does not exist this object is created but reports
+            # is_available()==False and the pipeline falls back to legacy
+            # B4-only behaviour transparently.
+            self.normal_detector = NormalDetector(
+                model_path=model_configs.get('normal_binary_path'),
+                device=self.device,
+            )
+
             self._initialized = True
     
     def process_image(
@@ -182,40 +191,53 @@ class AIAnalysisPipeline:
         raw_detections = None
         try:
             if analysis_type == 'skin':
+                # IMPORTANT: do NOT use the U-Net mask to gate the classifier.
+                # The U-Net was trained on eczema masks and produces large
+                # false-positive regions on normal skin (often 30-50% coverage
+                # on healthy faces), which used to black out most of the image
+                # before classification and forced the classifier to predict
+                # disease classes (typically "dryness") with near-100%
+                # confidence. EfficientNet was trained on whole faces, so we
+                # classify on the full ROI. The U-Net mask is still produced
+                # and is used purely for the visual overlay shown to the user.
+                roi_for_classification = roi_image
 
-                # Apply segmentation mask before classification
-                if binary_mask is not None:
-
-                    mask = (binary_mask > 0).astype("uint8")
-                    mask = cv2.resize(mask, (roi_image.shape[1], roi_image.shape[0]))
-
-                    # soften mask effect
-                    roi_for_classification = roi_image.copy()
-                    roi_for_classification = cv2.bitwise_and(roi_image, roi_image, mask=mask)
-
-                else:
-                    roi_for_classification = roi_image
-
-                # EfficientNet classification
+                # EfficientNet classification (4-class: acne, dark_spots, dryness, normal)
                 condition_scores = self.efficientnet.classify(roi_for_classification)
+
+                # ── Ensemble-of-specialists: override the (broken) "normal"
+                # output from B4 with the dedicated B0 binary classifier when
+                # it is available. B4's disease distribution (acne / dark_spots
+                # / dryness) is preserved exactly — we only rescale it to fill
+                # the remaining 1 - P(normal) probability mass.
+                if self.normal_detector is not None and self.normal_detector.is_available():
+                    p_normal = self.normal_detector.predict(roi_for_classification)
+                    if p_normal is not None:
+                        disease_keys = [k for k in condition_scores if k != 'normal']
+                        disease_sum  = sum(condition_scores[k] for k in disease_keys)
+                        if disease_sum > 1e-9:
+                            scale = (1.0 - p_normal) / disease_sum
+                            for k in disease_keys:
+                                condition_scores[k] = float(condition_scores[k] * scale)
+                        else:
+                            # B4 gave near-zero on every disease → just spread
+                            # the remaining (1 - p_normal) evenly across them.
+                            even = (1.0 - p_normal) / max(len(disease_keys), 1)
+                            for k in disease_keys:
+                                condition_scores[k] = float(even)
+                        condition_scores['normal'] = float(p_normal)
+                        print(f"🧪 NormalDetector applied: p_normal={p_normal:.3f}  "
+                              f"final_scores={condition_scores}")
 
                 raw_scores = condition_scores
                 detected_conditions = self._process_skin_conditions(condition_scores)
             else:
-                # YOLOv8 detection (returns bounding boxes)
-                # Apply segmentation mask before YOLO detection
-                if binary_mask is not None:
-
-                    mask = (binary_mask > 0).astype("uint8")
-                    mask = cv2.resize(mask, (roi_image.shape[1], roi_image.shape[0]))
-
-                    masked_roi = roi_image.copy()
-                    masked_roi[mask == 0] = 0
-
-                    roi_for_yolo = masked_roi
-
-                else:
-                    roi_for_yolo = roi_image
+                # Same rationale as skin: U-Net mask was hurting more than
+                # helping because it blacked out large portions of the ROI
+                # before detection. YOLOv8 was trained on whole crops, so we
+                # run it on the full ROI. The mask remains available for the
+                # visualization overlay only.
+                roi_for_yolo = roi_image
 
                 detections = self.yolo.detect(roi_for_yolo)
                 # Keep raw detections for visualization
@@ -270,6 +292,7 @@ class AIAnalysisPipeline:
             result['recommendations'] = {
                 'daily_routine': {'morning': [], 'evening': []},
                 'weekly_routine': [],
+                'medicines': [],
                 'products': [],
                 'dermatologist_consult': 'Consult a dermatologist if condition worsens.',
                 'safety_notes': [],
@@ -440,6 +463,9 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
         model_configs["yolo_path"] = "core/models/yolo_scalp.pt"
         model_configs["efficientnet_path"] = "core/ai_models/efficientnet_b4_skin.pth"
         model_configs["xgboost_path"] = "core/models/severity_model.json"
+        # Optional specialist binary normal/abnormal classifier. If the file
+        # does not exist the pipeline runs in legacy B4-only mode.
+        model_configs["normal_binary_path"] = "core/ai_models/efficientnet_b0_normal_binary.pth"
         for p in possible_paths:
             try:
                 from pathlib import Path

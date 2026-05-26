@@ -1,5 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import User
+from core.encryption.fields import EncryptedTextField
+
+
+class UserRole(models.Model):
+    """
+    Two roles only:
+      - user  → end user (all app features)
+      - admin → Django admin panel, user management, system monitoring
+    All AI decisions (diagnosis, recommendations, bookings) are fully automated.
+    """
+    ROLES = [
+        ('user',  'User'),
+        ('admin', 'Admin'),
+    ]
+    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name='role')
+    role       = models.CharField(max_length=10, choices=ROLES, default='user')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} — {self.role}"
+
+    @property
+    def is_admin(self):
+        return self.role == 'admin'
 
 
 class UserProfile(models.Model):
@@ -45,10 +69,10 @@ class MedicalHistory(models.Model):
     has_skin_conditions = models.BooleanField(default=False, help_text="Existing skin conditions")
     has_scalp_conditions = models.BooleanField(default=False, help_text="Existing scalp conditions")
     
-    # Additional notes
-    other_conditions = models.TextField(blank=True, null=True, help_text="Other medical conditions or notes")
-    current_medications = models.TextField(blank=True, null=True, help_text="Current medications")
-    known_allergens = models.TextField(blank=True, null=True, help_text="Known allergens (if any)")
+    # Additional notes — encrypted at rest
+    other_conditions    = EncryptedTextField(blank=True, null=True, help_text="Other medical conditions or notes")
+    current_medications = EncryptedTextField(blank=True, null=True, help_text="Current medications")
+    known_allergens     = EncryptedTextField(blank=True, null=True, help_text="Known allergens (if any)")
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

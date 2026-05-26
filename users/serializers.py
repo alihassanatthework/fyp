@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from .models import UserProfile, MedicalHistory
+from .models import UserProfile, MedicalHistory, UserRole
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +60,7 @@ class RegisterSerializer(serializers.Serializer):
 
         # Always create profile + medical history rows at registration
         UserProfile.objects.create(user=user)
+        UserRole.objects.create(user=user, role='user')  # default role
         med = MedicalHistory.objects.create(user=user)
 
         other_conditions = []

@@ -1,4 +1,7 @@
-## AI Beauty Assistant - Architecture (current state)
+## AI Beauty Assistant - Architecture
+
+> **Phase 1**: ✅ Complete — JWT auth, profiles, skin/scalp AI pipeline, analysis DB, diagnosis, recommendations, feedback, password reset, 39 tests passing.
+> **Phase 2**: 🔲 In Progress — Providers, Bookings, Makeup assistance, Fashion assistance.
 
 ## System Overview
 
@@ -25,18 +28,36 @@ When `react/build` exists, Django serves the React SPA as the main frontend (inc
 | Area | Status | Notes (what exists in code today) |
 |------|--------|------------------------------------|
 | **Django template frontend** | ✅ Implemented | Multi-page UI and results rendering |
+| **React SPA + JWT auth** | ✅ Implemented | Real JWT auth, Axios auto-refresh interceptor, HEIC support |
 | **Upload + analysis flow (React + API)** | ✅ Implemented | `AnalyzeImageView` calls the AI pipeline and returns JSON for React |
 | **AI pipeline orchestration** | ✅ Implemented | `core/ai_models/pipeline.py` singleton pipeline |
-| **MediaPipe detection** | ✅ Implemented | `core/ai_models/mediapipe_detector.py` |
+| **MediaPipe detection** | ✅ Implemented | `core/ai_models/mediapipe_detector.py` (scalp detection fix for top-down photos included) |
 | **U-Net segmentation** | ✅ Implemented | `core/ai_models/unet_segmenter.py` loads checkpoints |
 | **ROI extraction** | ✅ Implemented | `core/ai_models/roi_extractor.py` |
 | **EfficientNet skin classifier** | ✅ Implemented + weights present | `core/ai_models/efficientnet_classifier.py` loads `core/ai_models/efficientnet_b4_skin.pth` |
 | **YOLOv8 scalp detector** | ✅ Implemented + weights present | `core/ai_models/yolo_detector.py` loads `core/models/yolo_scalp.pt` |
 | **XGBoost severity** | ✅ Implemented + weights present | `core/ai_models/xgboost_severity.py` loads `core/models/severity_model.json` |
 | **LLM recommender** | ⏳ Optional/partial | Wrapper exists; requires local model path or API key to be useful |
-| **REST API (analysis endpoints)** | ✅ Implemented | `POST /api/analysis/upload/`, `GET /api/analysis/history/`, `GET/DELETE /api/analysis/<analysis_id>/` |
-| **Analysis DB models** | ❌ Not implemented | `image_analysis/models.py`, `diagnosis/models.py`, `recommendations/models.py` are placeholders |
+| **REST API — Auth** | ✅ Implemented | register, login, logout (blacklist), me, change-password, forgot/reset-password, token refresh |
+| **REST API — Profile** | ✅ Implemented | `GET/PATCH /api/profile/` |
+| **REST API — Analysis** | ✅ Implemented | upload, history, stats, detail, delete |
+| **REST API — Diagnosis** | ✅ Implemented | `GET /api/diagnosis/`, `GET /api/diagnosis/<analysis_id>/` |
+| **REST API — Recommendations** | ✅ Implemented | `GET /api/recommendations/`, `GET /api/recommendations/<analysis_id>/` |
+| **REST API — Feedback** | ✅ Implemented | `GET /api/feedback/<id>/`, `POST /api/feedback/<id>/submit/` |
+| **Analysis DB models** | ✅ Implemented | `AnalysisResult`, `DiagnosisReport`, `Recommendation`, `AnalysisFeedback` — all with migrations |
+| **PostgreSQL database** | ✅ Implemented | Default; `USE_SQLITE` env flag for local dev |
+| **JWT token blacklist on logout** | ✅ Implemented | simplejwt blacklist app wired to logout endpoint |
+| **Email backend** | ✅ Implemented | Console in dev; SMTP in prod via `EMAIL_HOST_USER` env |
+| **Password reset via email** | ✅ Implemented | One-time token flow (`forgot-password` + `reset-password`) |
+| **Rate limiting** | ✅ Implemented | Disabled locally; Redis-backed in prod |
+| **WhiteNoise static files** | ✅ Implemented | Production static file serving |
+| **CORS from env** | ✅ Implemented | `CORS_ALLOWED_ORIGINS` controlled via env variable |
+| **Production security flags** | ✅ Implemented | HSTS + SSL redirect auto-enabled when `DEBUG=False` |
+| **Test suite** | ✅ 39 tests passing | `test_auth.py`, `test_analysis.py`, `test_profile.py`, `test_password_reset.py` |
 | **Encryption utilities** | ❌ Placeholder | `core/encryption/__init__.py` is not implemented |
+| **Role-based access control** | ❌ Not implemented | Structure ready, needs implementation |
+| **AI model training** | ❌ Scripts exist, not trained | EfficientNet + U-Net need GPU training; scripts are present |
+| **Deployment** | 🔲 Not yet done | Render + Neon + Vercel — planned |
 
 ## Architecture Layers
 
@@ -63,44 +84,55 @@ When `react/build` exists, Django serves the React SPA as the main frontend (inc
 
 ### 3) Business Logic Layer (Django apps)
 
-#### `users` ✅ Implemented (models/migrations exist)
-- ✅ User authentication (username + password via Django)
-- ✅ User registration and login (Django forms)
-- ✅ User profile management (UserProfile model with age, gender, skin_type, hair_type)
-- ✅ Medical history management (MedicalHistory model with all conditions)
-- ❌ Role management (User, Admin, Salons, Dermatologist) - structure ready
-- ❌ User feedback collection - moved to Feedback app
+#### `users` ✅ Implemented (models/migrations/REST API exist)
+- ✅ User registration and login via REST API (`POST /api/auth/register/`, `POST /api/auth/login/`)
+- ✅ JWT logout with refresh token blacklisting (`POST /api/auth/logout/`)
+- ✅ Token refresh (`POST /api/auth/token/refresh/`)
+- ✅ Current user endpoint (`GET /api/auth/me/`)
+- ✅ Change password (`POST /api/auth/change-password/`)
+- ✅ Password reset via email (`POST /api/auth/forgot-password/`, `POST /api/auth/reset-password/`)
+- ✅ User profile management via REST API (`GET/PATCH /api/profile/`)
+- ✅ UserProfile model (age, gender, skin_type, hair_type) and MedicalHistory model
+- ✅ Email backend (console dev / SMTP prod)
+- ❌ Role management (User, Admin, Salons, Dermatologist) - structure ready, not implemented
+- ❌ User consent management - not implemented
 
-#### `image_analysis` ✅ Implemented (view exists), models ❌ pending
-- ✅ Image upload/capture handling (AnalyzeImageView)
-- ✅ Basic image validation (file size, format)
+#### `image_analysis` ✅ Implemented (view + DB model + migrations exist)
+- ✅ Image upload/capture handling (`AnalyzeImageView`)
+- ✅ Basic image validation (file size, format; HEIC supported via pillow-heif)
 - ✅ Image type confirmation (skin/scalp selection)
-- ✅ MediaPipe face/scalp detection and cropping
-- ✅ Secure image storage (media/uploads/, media/processed/)
+- ✅ MediaPipe face/scalp detection and cropping (scalp detection fix for top-down photos)
+- ✅ Secure image storage (`media/uploads/`, `media/processed/`)
 - ✅ U-Net segmentation integrated for region segmentation
 - ✅ ROI extraction tested successfully
+- ✅ `AnalysisResult` DB model with all fields and migrations applied
+- ✅ REST API: `POST /api/analysis/upload/`, `GET /api/analysis/history/`, `GET /api/analysis/stats/`, `GET/DELETE /api/analysis/<id>/`
 - ❌ Image validation (clarity, lighting) - needs implementation
-- ❌ Image preprocessing and normalization - needs implementation
 - ❌ Image anonymization for model training - needs implementation
-- ❌ Database models (ImageUpload, ImageValidation) - not created yet
 
-#### `diagnosis` ⏳ partial (logic in pipeline), models ❌ pending
+#### `diagnosis` ✅ Implemented (model + migrations + REST API exist)
 - ✅ AI-based condition detection pipeline (U-Net integrated)
-- ⏳ Skin condition detection (Acne, Dark Spots, Hyperpigmentation, Dryness)
-- ⏳ Scalp condition detection (Dandruff, Dryness, Oiliness, Hair Fall)
-- ✅ Severity classification (Mild, Moderate, Severe) - mock with 0-100 scoring
-- ⏳ Result storage and history tracking (session-based, needs database)
-- ❌ Progress comparison over time
-- ❌ Database models (AnalysisResult, ConditionDetection, SeverityAssessment) - not created yet
+- ✅ Skin condition detection (Acne, Dark Spots, Hyperpigmentation, Dryness)
+- ✅ Scalp condition detection (Dandruff, Dryness, Oiliness, Hair Fall)
+- ✅ Severity classification (Mild, Moderate, Severe) with 0-100 scoring
+- ✅ `DiagnosisReport` DB model with migrations applied
+- ✅ REST API: `GET /api/diagnosis/`, `GET /api/diagnosis/<analysis_id>/`
+- ❌ Progress comparison over time — not implemented
+- ❌ Transparent AI output explanation — not implemented
 
-#### `recommendations` ⏳ partial (logic in pipeline), models ❌ pending
-- ✅ Personalized care suggestions (mock implementation with medical history filtering)
-- ✅ Medical-history-aware filtering (basic safety checks implemented)
-- ⏳ Product recommendations with safety checks (mock exists)
-- ⏳ Care routine generation (mock exists)
-- ❌ Educational content (lifestyle tips, habits)
-- ❌ Transparent AI output explanations
-- ❌ Database models (CareRoutine, ProductRecommendation, Product) - not created yet
+#### `recommendations` ✅ Implemented (model + migrations + REST API exist)
+- ✅ Personalized care suggestions with medical history filtering
+- ✅ Medical-history-aware safety checks
+- ✅ `Recommendation` DB model with migrations applied
+- ✅ REST API: `GET /api/recommendations/`, `GET /api/recommendations/<analysis_id>/`
+- ❌ Educational content (lifestyle tips, habits) — not implemented
+- ❌ Transparent AI output explanations — not implemented
+- ❌ Product catalog (CareRoutine, ProductRecommendation, Product models) — not created yet
+
+#### `feedback` ✅ Implemented (model + migrations + REST API exist)
+- ✅ `AnalysisFeedback` DB model with migrations applied
+- ✅ REST API: `GET /api/feedback/<id>/`, `POST /api/feedback/<id>/submit/`
+- ❌ Aggregate feedback reporting / model improvement loop — not implemented
 
 ### 4) AI/ML Service Layer (implemented pipeline)
 
@@ -129,17 +161,17 @@ The pipeline is implemented as a singleton orchestrator in `core/ai_models/pipel
 #### Notes on model integration maturity
 
 - **EfficientNet/YOLO/XGBoost are not “TODO”** anymore; wrappers are implemented and model files exist in the repository.
-- **Database persistence** for results is still missing; results are primarily rendered in the frontend flow.
+- **Database persistence** for results is implemented (`AnalysisResult`, `DiagnosisReport`, `Recommendation`, `AnalysisFeedback` models with migrations).
 
 ### 5) Data Layer
 
-**Status**: ⏳ Partial Implementation
+**Status**: ✅ Implemented
 
 #### Database
 
 - **Users + medical history**: implemented (`users` app migrations exist)
-- **Analysis persistence**: **not implemented yet** (placeholders in `image_analysis/models.py`, `diagnosis/models.py`, `recommendations/models.py`)
-- **DB backend**: Django is configured to support MySQL via env, but actual runtime depends on your `.env` and deployment config
+- **Analysis persistence**: implemented — `AnalysisResult`, `DiagnosisReport`, `Recommendation`, `AnalysisFeedback` models all have migrations applied
+- **DB backend**: PostgreSQL by default; `USE_SQLITE=true` env flag switches to SQLite for local dev
 
 #### File storage
 - ✅ User-uploaded images stored in `media/uploads/`
@@ -150,20 +182,23 @@ The pipeline is implemented as a singleton orchestrator in `core/ai_models/pipel
 
 ### 6) Security Layer
 
-**Status**: ⏳ Partially Implemented
+**Status**: ✅ Mostly Implemented (encryption + RBAC pending)
 
-- ✅ JWT authentication configured (djangorestframework-simplejwt)
-- ✅ CORS headers configured for React frontend
+- ✅ JWT authentication fully wired (register, login, logout with blacklist, token refresh)
+- ✅ CORS headers configured via env variable (`CORS_ALLOWED_ORIGINS`)
 - ✅ Environment variables support (`.env` file, python-dotenv)
-- ✅ Secure password storage (Django default - PBKDF2)
+- ✅ Secure password storage (Django default — PBKDF2)
 - ✅ Comprehensive `.gitignore` (protects sensitive files)
+- ✅ JWT refresh token blacklist on logout (simplejwt blacklist app)
+- ✅ Password reset via one-time email token
+- ✅ Rate limiting (disabled locally; Redis-backed in prod)
+- ✅ Production security flags: HSTS + SSL redirect auto-enabled when `DEBUG=False`
+- ✅ WhiteNoise for production static file serving
 - ❌ Encryption utilities are placeholders (`core/encryption/`)
-- ⏳ JWT refresh tokens - Configured, needs API implementation
-- ❌ HTTPS/TLS enforcement - Not configured (development mode)
-- ❌ Data encryption at rest - Not implemented yet
-- ❌ Role-based access control - Structure ready, needs implementation
-- ❌ Image anonymization for training data - Not implemented yet
-- ❌ User consent management - Not implemented yet
+- ❌ Data encryption at rest — not implemented yet
+- ❌ Role-based access control — structure ready, needs implementation
+- ❌ Image anonymization for training data — not implemented yet
+- ❌ User consent management — not implemented yet
 
 ## User Roles & Permissions
 
@@ -214,34 +249,28 @@ The pipeline is implemented as a singleton orchestrator in `core/ai_models/pipel
 - ❌ **UserRole**: Role assignment (User, Admin, Salons, Dermatologist) - Not created yet
 - ❌ **UserConsent**: Consent tracking for data usage - Not created yet
 
-### Image Analysis ❌ Not Created Yet
+### Image Analysis ✅ Implemented
 
-- ❌ **ImageUpload**: Uploaded images metadata (file path, upload date, image type)
-- ❌ **ImageValidation**: Validation results (clarity, lighting, size)
-- ❌ **AnalysisResult**: AI analysis results (timestamp, processing time)
-- ❌ **ConditionDetection**: Detected conditions with severity scores
-  - Skin: Acne, Dark Spots, Hyperpigmentation, Dryness
-  - Scalp: Dandruff, Dryness, Oiliness, Hair Fall
-- ❌ **SeverityAssessment**: Severity scores (0-100) per condition
-- ❌ **SegmentationData**: U-Net segmentation masks and regions
+- ✅ **AnalysisResult**: AI analysis results (image path, analysis type, conditions detected, severity scores, recommendations, chart images, timestamp) — migrations applied
+- ❌ **ImageValidation**: Clarity/lighting validation results — not created yet
+- ❌ **SegmentationData**: U-Net segmentation masks — not stored separately yet
 
-**Note**: Currently using session-based storage for analysis results. Database models needed for persistence.
+### Diagnosis ✅ Implemented
 
-### Recommendations ❌ Not Created Yet
+- ✅ **DiagnosisReport**: Linked to `AnalysisResult`; stores structured condition + severity output — migrations applied
+- ❌ **ConditionDetection** (separate per-condition rows) — folded into DiagnosisReport for now
 
-- ❌ **CareRoutine**: Personalized care routines (daily, weekly)
-- ❌ **ProductRecommendation**: Suggested products with safety flags
-- ❌ **Product**: Product catalog with ingredients and safety information
-- ❌ **EducationalContent**: Lifestyle tips, habits, environmental factors
-- ❌ **AIExplanation**: Transparent explanations of AI decisions
+### Recommendations ✅ Implemented
 
-**Note**: Currently using mock recommendations with medical history filtering. Database models needed for persistence.
+- ✅ **Recommendation**: Linked to `AnalysisResult`; stores personalized care suggestions with medical-history-aware filtering — migrations applied
+- ❌ **Product**: Product catalog — not created yet
+- ❌ **EducationalContent**: Lifestyle tips — not created yet
 
-### Feedback & Improvement ❌ Not Created Yet
+### Feedback & Improvement ✅ Implemented
 
-- ❌ **UserFeedback**: User ratings and comments on diagnosis
-- ❌ **ModelVersion**: AI model versions and update history
-- ❌ **ModelPerformance**: Accuracy metrics and improvement tracking
+- ✅ **AnalysisFeedback**: User ratings and comments on diagnosis — migrations applied
+- ❌ **ModelVersion**: AI model versions and update history — not created yet
+- ❌ **ModelPerformance**: Accuracy metrics — not created yet
 
 ## Routes / endpoints (actual wiring)
 
@@ -265,44 +294,44 @@ The pipeline is implemented as a singleton orchestrator in `core/ai_models/pipel
 ### REST API endpoints (actual wiring)
 
 #### Authentication
-- ❌ `POST /api/auth/register/` - User registration
-- ❌ `POST /api/auth/login/` - User login (email/phone + password)
-- ❌ `POST /api/auth/refresh/` - Token refresh
-- ❌ `POST /api/auth/logout/` - User logout
-- ❌ `POST /api/auth/verify-token/` - Token verification
+- ✅ `POST /api/auth/register/` - User registration
+- ✅ `POST /api/auth/login/` - User login (email + password)
+- ✅ `POST /api/auth/logout/` - User logout (blacklists refresh token)
+- ✅ `GET /api/auth/me/` - Current user info
+- ✅ `POST /api/auth/change-password/` - Change password
+- ✅ `POST /api/auth/forgot-password/` - Request password reset email
+- ✅ `POST /api/auth/reset-password/` - Confirm reset with one-time token
+- ✅ `POST /api/auth/token/refresh/` - JWT token refresh
 
 #### User Management
-- ❌ `GET /api/users/profile/` - Get user profile
-- ❌ `PUT /api/users/profile/` - Update profile
-- ❌ `GET /api/users/medical-history/` - Get medical history
-- ❌ `POST /api/users/medical-history/` - Add/update medical history
-- ❌ `GET /api/users/consent/` - Get consent status
-- ❌ `POST /api/users/consent/` - Update consent
+- ✅ `GET /api/profile/` - Get user profile
+- ✅ `PATCH /api/profile/` - Update profile
+- ❌ `GET /api/users/consent/` - Get consent status — not implemented
+- ❌ `POST /api/users/consent/` - Update consent — not implemented
 
-#### Image Analysis (session-based for now)
+#### Image Analysis
 - ✅ `POST /api/analysis/upload/` - Upload image for analysis (multipart: `image`, `analysis_type`)
-- ✅ `GET /api/analysis/history/` - List analysis summaries from the user's session
-- ✅ `GET /api/analysis/<analysis_id>/` - Get one analysis record from the session
-- ✅ `DELETE /api/analysis/<analysis_id>/` - Delete one analysis record from the session
-- ❌ `GET /api/analysis/progress/{id}/` - Get analysis progress
-- ❌ `GET /api/analysis/compare/` - Compare historical results
+- ✅ `GET /api/analysis/history/` - List past analysis records (DB-backed)
+- ✅ `GET /api/analysis/stats/` - Aggregated analysis statistics
+- ✅ `GET /api/analysis/<id>/` - Get one analysis record
+- ✅ `DELETE /api/analysis/<id>/` - Delete one analysis record
+- ❌ `GET /api/analysis/compare/` - Compare historical results — not implemented
 
 #### Diagnosis
-- ❌ `GET /api/diagnosis/conditions/{analysis_id}/` - Get detected conditions
-- ❌ `GET /api/diagnosis/severity/{analysis_id}/` - Get severity assessment
-- ❌ `GET /api/diagnosis/explanation/{analysis_id}/` - Get AI explanation
-- ❌ `GET /api/diagnosis/visualization/{analysis_id}/` - Get visualization data
+- ✅ `GET /api/diagnosis/` - List all diagnosis reports for current user
+- ✅ `GET /api/diagnosis/<analysis_id>/` - Get diagnosis for a specific analysis
+- ❌ `GET /api/diagnosis/explanation/{analysis_id}/` - AI explanation — not implemented
+- ❌ `GET /api/diagnosis/visualization/{analysis_id}/` - Visualization data — not implemented
 
 #### Recommendations
-- ❌ `GET /api/recommendations/care-routine/{analysis_id}/` - Get care routine
-- ❌ `GET /api/recommendations/products/{analysis_id}/` - Get product recommendations
-- ❌ `GET /api/recommendations/educational/{condition}/` - Get educational content
-- ❌ `POST /api/recommendations/validate-safety/` - Validate product safety
+- ✅ `GET /api/recommendations/` - List all recommendations for current user
+- ✅ `GET /api/recommendations/<analysis_id>/` - Get recommendations for a specific analysis
+- ❌ `GET /api/recommendations/educational/{condition}/` - Educational content — not implemented
+- ❌ `POST /api/recommendations/validate-safety/` - Product safety validation — not implemented
 
 #### Feedback
-- ❌ `POST /api/feedback/diagnosis/` - Submit diagnosis feedback
-- ❌ `POST /api/feedback/recommendation/` - Submit recommendation feedback
-- ❌ `GET /api/feedback/history/` - Get feedback history
+- ✅ `GET /api/feedback/<id>/` - Get feedback for an analysis
+- ✅ `POST /api/feedback/<id>/submit/` - Submit feedback for an analysis
 
 #### Admin (Protected)
 - ❌ `GET /api/admin/users/` - List all users
@@ -320,9 +349,9 @@ The pipeline is implemented as a singleton orchestrator in `core/ai_models/pipel
 
 - ✅ **Framework**: Django 4.2.7
 - ✅ **API**: Django REST Framework 3.14.0
-- ⏳ **Database**: 
-  - Development: SQLite3 (currently in use)
-  - Production: MySQL 8.0+ (configured, not connected)
+- ✅ **Database**: 
+  - Development: SQLite3 (via `USE_SQLITE=true` env flag) or PostgreSQL
+  - Production: PostgreSQL (default; Neon planned for deployment)
 - ✅ **Authentication**: JWT (djangorestframework-simplejwt 5.3.0) - Configured
 - ✅ **Image Processing**: Pillow 10.1.0, OpenCV 4.8.1.78
 - **AI/ML**:
@@ -535,6 +564,59 @@ The pipeline is implemented as a singleton orchestrator in `core/ai_models/pipel
 - **AR Latency**: < 200ms
 - **Accuracy Target**: 75-80% for condition detection
 
+## Phase 2 — New Apps (In Progress)
+
+### `providers` app ✅ Implemented
+- **Model**: Provider (name, type, address, city, phone, lat/lng, working hours)
+- **Endpoints**:
+  - `GET /api/providers/` — list all providers (filter by type/city)
+  - `GET /api/providers/nearby/?lat=&lng=&radius=` — nearby providers using Haversine formula
+  - `GET /api/providers/<id>/` — provider detail
+- **Admin**: Add dermatologists/salons manually via Django admin
+- **Provider types**: dermatologist, salon, clinic
+
+### `bookings` app ✅ Implemented
+- **Model**: Booking (user FK, provider FK, date, time, notes, status)
+- **Endpoints**:
+  - `POST /api/bookings/` — create booking (sends confirmation email)
+  - `GET  /api/bookings/` — user's bookings (filter by status)
+  - `GET  /api/bookings/<id>/` — booking detail
+  - `PATCH /api/bookings/<id>/cancel/` — cancel booking
+  - `DELETE /api/bookings/<id>/` — delete booking
+- **Status flow**: pending → confirmed → completed / cancelled
+- **Email**: Confirmation email sent on booking (uses existing email config)
+
+### `makeup` app ✅ Implemented
+- **Model**: MakeupSuggestion (user, image, face_shape, skin_tone, suggestions JSON)
+- **Pipeline**:
+  1. MediaPipe FaceMesh (468 landmarks) → face shape classification (Oval/Round/Square/Heart/Oblong)
+  2. OpenCV Lab color space → skin tone classification (Fair/Light/Medium/Tan/Deep)
+  3. Ollama LLM (llama3.2) → personalized makeup suggestions JSON
+  4. Rule-based fallback if Ollama is not running
+- **Endpoints**:
+  - `POST /api/makeup/suggest/` — upload face photo, returns suggestions
+  - `GET  /api/makeup/history/` — user's past suggestions
+- **No new ML model needed** — uses existing MediaPipe + OpenCV
+
+### `fashion` app ✅ Implemented
+- **Model**: FashionSuggestion (user, image, event_type, body_type, skin_tone, suggestions JSON)
+- **Pipeline**:
+  1. MediaPipe Pose (33 landmarks) → body type classification (Hourglass/Pear/Apple/Rectangle/Inverted Triangle)
+  2. OpenCV → skin tone (reused from makeup app)
+  3. Ollama LLM (llama3.2) → outfit suggestions JSON
+  4. Rule-based fallback if Ollama is not running
+- **Endpoints**:
+  - `POST /api/fashion/suggest/` — upload photo + event type, returns suggestions
+  - `GET  /api/fashion/history/` — user's past suggestions
+- **Event types**: casual, formal, wedding, party, business, outdoor, sports
+- **No new ML model needed** — uses existing MediaPipe Pose (already installed)
+
+### Ollama Integration
+- Local LLM server running at `http://localhost:11434`
+- Model: `llama3.2` (text) — install with `ollama pull llama3.2`
+- Both makeup and fashion have **full rule-based fallback** — app works without Ollama
+- Future: swap to Groq API by changing one URL in services.py
+
 ## Future Enhancements
 
 1. **Advanced Skin Conditions**: Rosacea, fungal infections
@@ -544,9 +626,8 @@ The pipeline is implemented as a singleton orchestrator in `core/ai_models/pipel
 5. **Smart Device Integration**: Smart mirrors, wearables (UV exposure, moisture)
 6. **Predictive Analysis**: Forecast future issues based on patterns
 7. **AR Enhancements**: Live AR previews, 3D visualization
-8. **Expert Collaboration**: Dermatologist review system
-9. **Doctor Appointment Booking**: Integration with scheduling
-10. **Multi-language Expansion**: Additional language support
+8. **Groq API**: Replace Ollama with Groq for cloud-based LLM suggestions
+9. **Multi-language Expansion**: English/Urdu support
 
 ## Project Structure (key folders)
 
@@ -559,29 +640,52 @@ fyp-development-be/
 │   └── asgi.py             # ASGI configuration
 ├── users/                  # User management app ✅
 │   ├── models.py           # ✅ UserProfile, MedicalHistory (implemented)
-│   ├── views.py            # ⏳ Basic views (not REST API yet)
+│   ├── views.py            # ✅ Full REST API (register, login, logout, me, change-password, forgot/reset-password, token refresh)
+│   ├── serializers.py      # ✅ Auth + profile serializers
+│   ├── urls.py             # ✅ /api/auth/ and /api/profile/ routing
 │   └── migrations/         # ✅ Applied
-├── frontend/               # Mock frontend app ✅
+├── frontend/               # Legacy template UI ✅ (kept for compatibility)
 │   ├── views.py            # ✅ 9 view functions (implemented)
 │   ├── urls.py             # ✅ URL routing (implemented)
 │   └── templates/          # ✅ 9 HTML templates (implemented)
-├── image_analysis/         # Upload + analysis entrypoint ✅ (models pending)
-│   ├── models.py           # ❌ Placeholder
-│   ├── views.py            # ✅ AnalyzeImageView
-│   └── migrations/         # ⏳ Empty
-├── diagnosis/              # App placeholder; logic is mainly in pipeline ⏳
-│   ├── models.py           # ❌ Placeholder
-│   ├── views.py            # ⏳
-│   └── migrations/         # ⏳ Empty
-├── recommendations/        # App placeholder; logic is mainly in pipeline ⏳
-│   ├── models.py           # ❌ Placeholder
-│   ├── views.py            # ⏳
-│   └── migrations/         # ⏳ Empty
-├── feedback/               # Feedback app ⏳
-│   ├── models.py           # (currently empty)
-│   ├── serializers.py      # ⏳ Structure exists
-│   ├── views.py            # ❌ Empty
-│   └── urls.py             # ⏳ Structure exists
+├── image_analysis/         # Upload + analysis app ✅
+│   ├── models.py           # ✅ AnalysisResult model
+│   ├── views.py            # ✅ upload, history, stats, detail, delete
+│   └── migrations/         # ✅ Applied
+├── diagnosis/              # Diagnosis app ✅
+│   ├── models.py           # ✅ DiagnosisReport model
+│   ├── views.py            # ✅ list + detail endpoints
+│   ├── urls.py             # ✅ /api/diagnosis/ routing
+│   └── migrations/         # ✅ Applied
+├── recommendations/        # Recommendations app ✅
+│   ├── models.py           # ✅ Recommendation model
+│   ├── views.py            # ✅ list + detail endpoints
+│   ├── urls.py             # ✅ /api/recommendations/ routing
+│   └── migrations/         # ✅ Applied
+├── providers/              # Phase 2 — Provider listings ✅
+│   ├── models.py           # ✅ Provider model
+│   ├── views.py            # ✅ list, nearby, detail
+│   └── urls.py             # ✅ /api/providers/
+├── bookings/               # Phase 2 — Appointment booking ✅
+│   ├── models.py           # ✅ Booking model
+│   ├── views.py            # ✅ create, list, cancel
+│   └── urls.py             # ✅ /api/bookings/
+├── makeup/                 # Phase 2 — Makeup assistance ✅
+│   ├── models.py           # ✅ MakeupSuggestion model
+│   ├── services.py         # ✅ MediaPipe face shape + skin tone + Ollama
+│   ├── views.py            # ✅ suggest, history
+│   └── urls.py             # ✅ /api/makeup/
+├── fashion/                # Phase 2 — Fashion assistance ✅
+│   ├── models.py           # ✅ FashionSuggestion model
+│   ├── services.py         # ✅ MediaPipe body type + Ollama
+│   ├── views.py            # ✅ suggest, history
+│   └── urls.py             # ✅ /api/fashion/
+├── feedback/               # Feedback app ✅
+│   ├── models.py           # ✅ AnalysisFeedback model
+│   ├── serializers.py      # ✅ Feedback serializer
+│   ├── views.py            # ✅ get + submit endpoints
+│   ├── urls.py             # ✅ /api/feedback/ routing
+│   └── migrations/         # ✅ Applied
 ├── core/                   # Shared utilities ✅ (AI pipeline lives here)
 │   ├── ai_models/          # ✅ MediaPipe/U-Net/EfficientNet/YOLO/XGBoost wrappers + pipeline
 │   │   ├── efficientnet_b4_skin.pth  # ✅ EfficientNet skin classifier weights
@@ -632,41 +736,56 @@ When you retrain/fine-tune EfficientNet, the safest flow is:
 
 ## Critical next steps (highest impact)
 
-1. Add **DB models** for storing `ImageUpload` + `AnalysisResult` + per-condition outputs.
-2. Enable and implement **REST API routes** under `/api/...` (currently commented in `config/urls.py`).
-3. Implement **encryption** utilities and decide what needs encryption at rest (medical history and/or images).
-4. Add a small **evaluation script** for EfficientNet (per-class accuracy, confusion matrix) so improvements are measurable.
+1. **Train AI models** on GPU — EfficientNet and U-Net training scripts exist; run them to produce production-quality weights.
+2. **Deploy** to Render (backend) + Neon (PostgreSQL) + Vercel (React SPA).
+3. Implement **encryption** utilities (`core/encryption/`) and decide what needs AES-256 at rest.
+4. Implement **role-based access control** (User, Admin, Salons, Dermatologist).
+5. Add **educational content and product catalog** models for richer recommendations.
 
 ## Implementation Status Summary
 
-### ✅ Completed
+### ✅ Completed (Phase 1)
 - Project structure and Django configuration
-- User management (registration, login, profiles)
-- Medical history management (full CRUD)
-- Frontend mock interface (9 pages, modern UI)
-- MediaPipe face/scalp detection integration
+- PostgreSQL database (USE_SQLITE flag for local dev)
+- User management REST API: register, login, logout (blacklist), me, change-password, forgot/reset-password, token refresh
+- Profile REST API: GET/PATCH /api/profile/
+- Medical history management (full CRUD via UserProfile/MedicalHistory models)
+- React SPA with real JWT auth and Axios auto-refresh interceptor
+- HEIC image support (pillow-heif)
+- MediaPipe face/scalp detection (scalp detection fix for top-down photos)
 - U-Net segmentation integration
-- Basic image upload and processing
-- Mock analysis flow with severity scoring
-- Medical history-aware recommendation filtering
-- Session-based result storage
+- EfficientNet-B4 skin classifier (weights present)
+- YOLOv8 scalp detector (weights present)
+- XGBoost severity model (weights present)
+- Analysis REST API: upload, history, stats, detail, delete
+- AnalysisResult DB model with migrations
+- Diagnosis REST API: GET /api/diagnosis/, GET /api/diagnosis/<analysis_id>/
+- DiagnosisReport DB model with migrations
+- Recommendations REST API: GET /api/recommendations/, GET /api/recommendations/<analysis_id>/
+- Recommendation DB model with migrations
+- Feedback REST API: GET /api/feedback/<id>/, POST /api/feedback/<id>/submit/
+- AnalysisFeedback DB model with migrations
+- Email backend (console dev / SMTP prod)
+- Password reset via one-time email token
+- Rate limiting (Redis-backed in prod)
+- WhiteNoise for production static files
+- CORS from env variable
+- Production security flags (HSTS, SSL redirect) auto-enabled when DEBUG=False
+- 39 tests passing (test_auth.py, test_analysis.py, test_profile.py, test_password_reset.py)
 - Comprehensive documentation
 
 ### ⏳ In Progress / Partial
-- REST API endpoints (structure defined, partial implementation)
-- AI model integration (MediaPipe, U-Net done, others pending)
-- Database models for analysis results (partial)
-- Image validation (clarity, lighting)
-- JWT authentication API implementation
+- LLM recommender (wrapper exists; requires model path or API key)
+- Image validation (clarity, lighting checks)
 
 ### ❌ Pending
-- EfficientNet, YOLOv8, XGBoost, LLM model integration
-- Complete database models for ImageUpload, AnalysisResult, ConditionDetection, etc.
-- Complete REST API endpoint implementations
-- End-to-end encryption
+- Encryption utilities (`core/encryption/` still placeholder)
 - Role-based access control
-- Unit and integration tests
-- Production deployment configuration
+- AI model training (EfficientNet + U-Net scripts exist, need GPU training run)
+- Educational content and product catalog models
+- Image anonymization for training data
+- User consent management
+- Production deployment (Render + Neon + Vercel — not yet done)
 
 ## Deployment Considerations
 

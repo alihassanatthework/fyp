@@ -223,7 +223,7 @@ def _call_ollama(prompt: str, model: str, host: str, timeout: int) -> Optional[s
         "keep_alive": "5m",  # keep model loaded for 5 min -> fast subsequent calls
         "options": {
             "temperature": 0.3,   # low temperature = more consistent medical advice
-            "num_predict": 600,   # shorter output = faster response
+            "num_predict": 1200,  # enough for full routine + products + notes
         }
     }).encode("utf-8")
 
@@ -293,9 +293,9 @@ class LLMRecommender:
         use_api=False,
         model_name=None,
     ):
-        self.model = model or os.getenv("OLLAMA_MODEL", "llama3")
+        self.model = model or os.getenv("OLLAMA_MODEL", "llama3.2")
         self.host = host or os.getenv("OLLAMA_HOST", "http://localhost:11434")
-        self.timeout = timeout
+        self.timeout = timeout or 60  # 60s — enough for llama3.2 to generate full response
         self._ollama_available: Optional[bool] = None  # lazy check
 
     # ------------------------------------------------------------------
@@ -443,7 +443,8 @@ Current medications: {medications}
 Other conditions: {other_conditions}
 
 === TASK ===
-Provide personalised recommendations tailored to the detected conditions, severity, and medical history above.
+Provide personalised, evidence-based recommendations tailored to the detected conditions, severity, and medical history.
+Include medicines/treatments (OTC or prescription-level guidance), daily routine, and weekly routine.
 IMPORTANT: Return ONLY valid JSON — no markdown, no explanation outside the JSON.
 
 Required JSON structure:
@@ -453,11 +454,14 @@ Required JSON structure:
     "evening": ["step 1", "step 2", "..."]
   }},
   "weekly_routine": ["suggestion 1", "suggestion 2"],
+  "medicines": [
+    {{"name": "medicine or active ingredient name", "type": "topical|oral|shampoo|serum", "usage": "how and when to apply/take it", "reason": "why this is recommended for the detected condition"}}
+  ],
   "products": [
     {{"name": "product name", "type": "cleanser|moisturiser|serum|shampoo|etc", "reason": "why this product suits this patient"}}
   ],
   "dermatologist_consult": "clear guidance on when/whether to see a dermatologist",
-  "safety_notes": ["any ingredient or practice the patient must avoid given their medical flags"]
+  "safety_notes": ["any ingredient, medicine or practice the patient must avoid given their medical flags"]
 }}
 """
         return prompt
@@ -479,6 +483,7 @@ Required JSON structure:
             # Ensure all expected keys exist
             parsed.setdefault("daily_routine", {"morning": [], "evening": []})
             parsed.setdefault("weekly_routine", [])
+            parsed.setdefault("medicines", [])
             parsed.setdefault("products", [])
             parsed.setdefault("dermatologist_consult", "Consult a dermatologist if condition worsens.")
             parsed.setdefault("safety_notes", [])
@@ -517,6 +522,7 @@ Required JSON structure:
         result = {
             "daily_routine": base["daily_routine"],
             "weekly_routine": base["weekly_routine"],
+            "medicines": list(base.get("medicines", [])),
             "products": list(base["products"]),
             "dermatologist_consult": base["dermatologist_consult"],
             "safety_notes": [],
