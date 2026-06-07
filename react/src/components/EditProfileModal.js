@@ -13,18 +13,12 @@ const HEALTH_CONDITIONS = [
   { field: 'has_scalp_conditions', label: 'Scalp Condition' },
 ];
 
-const SKIN_TYPES = ['oily', 'dry', 'combination', 'normal', 'sensitive'];
-const HAIR_TYPES = ['straight', 'wavy', 'curly', 'coily'];
-
 export default function EditProfileModal({ isOpen, onClose, onSave, profileData }) {
   const user    = profileData?.user    || {};
-  const profile = profileData?.profile || {};
   const med     = profileData?.medical_history || {};
 
   const [firstName,   setFirstName]   = useState('');
   const [lastName,    setLastName]    = useState('');
-  const [skinType,    setSkinType]    = useState('');
-  const [hairType,    setHairType]    = useState('');
   const [medFields,   setMedFields]   = useState({});
   const [allergens,   setAllergens]   = useState('');
   const [medications, setMedications] = useState('');
@@ -34,10 +28,17 @@ export default function EditProfileModal({ isOpen, onClose, onSave, profileData 
   // Populate form whenever modal opens with latest profileData
   useEffect(() => {
     if (!isOpen) return;
-    setFirstName(user.first_name || '');
-    setLastName(user.last_name   || '');
-    setSkinType(profile.skin_type || '');
-    setHairType(profile.hair_type || '');
+    // Pre-fill from existing user data — supports either explicit
+    // first_name/last_name fields, or a single `full_name` we split.
+    let fn = user.first_name || '';
+    let ln = user.last_name  || '';
+    if (!fn && user.full_name) {
+      const parts = user.full_name.trim().split(/\s+/);
+      fn = parts[0] || '';
+      ln = parts.slice(1).join(' ');
+    }
+    setFirstName(fn);
+    setLastName(ln);
     setAllergens(med.known_allergens      || '');
     setMedications(med.current_medications || '');
     const initial = {};
@@ -55,8 +56,11 @@ export default function EditProfileModal({ isOpen, onClose, onSave, profileData 
     setError('');
     try {
       await onSave({
-        user:    { first_name: firstName, last_name: lastName },
-        profile: { skin_type: skinType || null, hair_type: hairType || null },
+        user:    {
+          first_name: firstName,
+          last_name: lastName,
+          full_name: `${firstName} ${lastName}`.trim(),
+        },
         medical_history: {
           ...medFields,
           known_allergens:     allergens,
@@ -106,27 +110,6 @@ export default function EditProfileModal({ isOpen, onClose, onSave, profileData 
               disabled style={{ opacity: 0.55, cursor: 'not-allowed' }}/>
           </div>
 
-          {/* Skin & hair */}
-          <p className="modal-section-label" style={{ marginTop: '1.25rem' }}>Skin &amp; Hair</p>
-          <div className="form-group">
-            <label>Skin Type</label>
-            <select value={skinType} onChange={e => setSkinType(e.target.value)} className="input-field">
-              <option value="">— select —</option>
-              {SKIN_TYPES.map(t => (
-                <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Hair Type</label>
-            <select value={hairType} onChange={e => setHairType(e.target.value)} className="input-field">
-              <option value="">— select —</option>
-              {HAIR_TYPES.map(t => (
-                <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
-              ))}
-            </select>
-          </div>
-
           {/* Health conditions */}
           <p className="modal-section-label" style={{ marginTop: '1.25rem' }}>Health Conditions</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
@@ -135,9 +118,9 @@ export default function EditProfileModal({ isOpen, onClose, onSave, profileData 
                 style={{
                   padding: '0.35rem 0.85rem', borderRadius: '999px',
                   fontSize: '0.8rem', fontWeight: 500, cursor: 'pointer',
-                  border: medFields[field] ? '2px solid #3b82f6' : '2px solid var(--border)',
-                  background: medFields[field] ? 'rgba(59,130,246,0.15)' : 'transparent',
-                  color: medFields[field] ? '#3b82f6' : 'var(--text-secondary)',
+                  border: medFields[field] ? '2px solid var(--nav-accent)' : '2px solid var(--border-color)',
+                  background: medFields[field] ? 'var(--blue-50)' : 'transparent',
+                  color: medFields[field] ? 'var(--nav-accent)' : 'var(--text-secondary)',
                   transition: 'all 0.15s',
                 }}>
                 {label}

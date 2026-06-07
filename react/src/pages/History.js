@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Heart, Download, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAnalysis } from '../hooks/useAnalysis';
+import { analysisService } from '../services/analysisService';
 import './History.css';
 
 export default function History() {
+  const navigate = useNavigate();
   const [liked, setLiked] = useState({});
   const [scanType, setScanType] = useState('All Types');
   const [severity, setSeverity] = useState('All Severities');
   const [scans, setScans] = useState([]);
+  const [openingId, setOpeningId] = useState(null);
 
   const { getHistory, loading } = useAnalysis();
 
@@ -17,11 +21,43 @@ export default function History() {
     const loadHistory = async () => {
       const result = await getHistory({ type: scanType, severity });
       if (result.success) {
-        setScans(result.data);
+        // history endpoint may be paginated → { count, results } or a bare array
+        const list = Array.isArray(result.data)
+          ? result.data
+          : (result.data?.results || []);
+        setScans(list);
       }
     };
     loadHistory();
   }, [scanType, severity]);
+
+  // View Details — fetch the full pipeline payload then navigate to /diagnosis.
+  const handleViewDetails = async (scan) => {
+    if (!scan.id) return;
+    try {
+      setOpeningId(scan.id);
+      const full = await analysisService.getAnalysisById(scan.id);
+      navigate('/diagnosis', { state: { data: full } });
+    } catch {
+      navigate('/diagnosis', { state: { data: scan } });
+    } finally {
+      setOpeningId(null);
+    }
+  };
+
+  // Download a tiny .txt summary so the button does something useful.
+  const handleDownload = (scan) => {
+    const blob = new Blob(
+      [`Scan Report\n\nType: ${scan.type}\nDate: ${scan.date}\nCondition: ${scan.name}\nSeverity: ${scan.severity}\n`],
+      { type: 'text/plain' },
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${(scan.name || 'scan').replace(/\s+/g, '_')}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const toggleLike = (i) => setLiked(prev => ({ ...prev, [i]: !prev[i] }));
 
@@ -93,8 +129,19 @@ export default function History() {
                     <h3 className="scan-name">{scan.name}</h3>
                     <span className={`badge ${scan.severityClass}`}>{scan.severity}</span>
                     <div className="scan-card-actions">
-                      <button className="btn btn-secondary">View Details</button>
-                      <button className="btn btn-secondary"><Download size={12}/> Report</button>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => handleViewDetails(scan)}
+                        disabled={openingId === scan.id}
+                      >
+                        {openingId === scan.id ? 'Loading…' : 'View Details'}
+                      </button>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => handleDownload(scan)}
+                      >
+                        <Download size={12}/> Report
+                      </button>
                     </div>
                   </div>
                 ))}

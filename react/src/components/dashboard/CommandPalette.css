@@ -1,0 +1,151 @@
+.cp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  animation: cpFade 0.18s ease;
+}
+@keyframes cpFade { from { opacity: 0; } to { opacity: 1; } }
+
+.cp-shell {
+  width: 100%;
+  max-width: 560px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 1rem;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(99, 102, 241, 0.15);
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  animation: cpRise 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes cpRise {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+body.dark .cp-shell {
+  background: rgba(19, 28, 46, 0.96);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(165, 180, 252, 0.2);
+}
+
+.cp-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  color: var(--text-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+.cp-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+.cp-esc {
+  font-size: 0.7rem;
+  font-family: ui-monospace, monospace;
+  padding: 0.18rem 0.45rem;
+  border-radius: 0.35rem;
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.cp-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 0.3rem 0.4rem;
+}
+.cp-empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+
+.cp-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.55rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  transition: background 0.12s;
+}
+.cp-item.highlight {
+  background: var(--blue-50);
+  color: var(--nav-accent);
+}
+body.dark .cp-item.highlight {
+  background: rgba(99, 102, 241, 0.18);
+}
+.cp-item-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+}
+.cp-item.highlight .cp-item-icon { color: var(--nav-accent); }
+.cp-item-label { flex: 1; text-align: left; }
+.cp-item-arrow {
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+.cp-item.highlight .cp-item-arrow {
+  opacity: 1;
+  color: var(--nav-accent);
+}
+
+.cp-footer {
+  display: flex;
+  gap: 1rem;
+  padding: 0.55rem 1rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  align-items: center;
+}
+.cp-footer kbd {
+  font-family: ui-monospace, monospace;
+  font-size: 0.7rem;
+  background: var(--bg-tertiary);
+  padding: 0.12rem 0.35rem;
+  border-radius: 0.3rem;
+  margin: 0 2px;
+  border: 1px solid var(--border-color);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE (≤768px) — Command Palette.
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .cp-overlay { padding-top: 4vh; padding-left: 1rem; padding-right: 1rem; }
+  .cp-shell {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0.85rem;
+  }
+  .cp-input-row { padding: 0.85rem; }
+  .cp-input     { font-size: 16px; min-height: 28px; }
+  .cp-list      { max-height: 65vh; }
+  .cp-item      { padding: 0.7rem; min-height: 44px; font-size: 0.9rem; }
+  .cp-footer    { flex-wrap: wrap; gap: 0.6rem; padding: 0.6rem 0.85rem; font-size: 0.7rem; }
+}

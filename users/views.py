@@ -60,36 +60,62 @@ class LoginView(APIView):
     authentication_classes = []
 
     def post(self, request):
-        email = request.data.get('email', '').strip().lower()
-        password = request.data.get('password', '')
-
-        if not email or not password:
-            return Response(
-                {'error': 'Email and password are required.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # Resolve email → username (we store email as username at registration)
         try:
-            user_obj = User.objects.get(email__iexact=email)
-        except User.DoesNotExist:
+            email = request.data.get('email', '').strip().lower()
+            password = request.data.get('password', '')
+
+            if not email or not password:
+                return Response(
+                    {'error': 'Email and password are required.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # Resolve email → username (we store email as username at registration)
+            try:
+                user_obj = User.objects.get(email__iexact=email)
+            except User.DoesNotExist:
+                return Response(
+                    {'error': 'Invalid email or password.'},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+            except User.MultipleObjectsReturned:
+                # Defensive: duplicate emails in legacy data — fall back to .filter().first()
+                user_obj = User.objects.filter(email__iexact=email).first()
+                if not user_obj:
+                    return Response(
+                        {'error': 'Invalid email or password.'},
+                        status=status.HTTP_401_UNAUTHORIZED,
+                    )
+
+            user = authenticate(request, username=user_obj.username, password=password)
+            if not user:
+                return Response(
+                    {'error': 'Invalid email or password.'},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+            try:
+                tokens = _tokens_for_user(user)
+            except Exception as exc:
+                logger.exception("Token generation failed for %s: %s", user.email, exc)
+                return Response(
+                    {'error': 'Could not issue session token. Please try again.'},
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                )
+
+            logger.info("User logged in: %s", user.email)
             return Response(
-                {'error': 'Invalid email or password.'},
-                status=status.HTTP_401_UNAUTHORIZED,
+                {'user': UserSerializer(user).data, **tokens},
+                status=status.HTTP_200_OK,
             )
 
-        user = authenticate(request, username=user_obj.username, password=password)
-        if not user:
+        except Exception as exc:
+            # Last-resort guard so the user never sees a raw HTML 500 page.
+            logger.exception("Unexpected error in LoginView: %s", exc)
             return Response(
-                {'error': 'Invalid email or password.'},
-                status=status.HTTP_401_UNAUTHORIZED,
+                {'error': 'Something went wrong. Please try again in a moment.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-        logger.info("User logged in: %s", user.email)
-        return Response(
-            {'user': UserSerializer(user).data, **_tokens_for_user(user)},
-            status=status.HTTP_200_OK,
-        )
 
 
 class LogoutView(APIView):

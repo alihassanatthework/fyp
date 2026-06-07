@@ -1,0 +1,126 @@
+.skin-copilot {
+  display: flex;
+  gap: 1rem;
+  padding: 1.4rem 1.5rem;
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 10px 30px -10px rgba(67, 56, 202, 0.18),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+body.dark .skin-copilot {
+  background: rgba(19, 28, 46, 0.55);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 10px 30px -10px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+.skin-copilot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.10),
+    rgba(236, 72, 153, 0.06) 60%,
+    transparent);
+  pointer-events: none;
+}
+.skin-copilot.tone-alert::before {
+  background: linear-gradient(135deg,
+    rgba(239, 68, 68, 0.16),
+    rgba(245, 158, 11, 0.08) 60%, transparent);
+}
+.skin-copilot.tone-happy::before {
+  background: linear-gradient(135deg,
+    rgba(16, 185, 129, 0.14),
+    rgba(99, 102, 241, 0.08) 60%, transparent);
+}
+
+.skin-copilot-avatar {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+  background-size: 200% 200%;
+  animation: skinCopilotShift 5s ease infinite;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+  position: relative;
+  z-index: 1;
+}
+.skin-copilot.tone-alert .skin-copilot-avatar {
+  background: linear-gradient(135deg, #ef4444, #f59e0b);
+}
+.skin-copilot.tone-happy .skin-copilot-avatar {
+  background: linear-gradient(135deg, #10b981, #6366f1);
+}
+@keyframes skinCopilotShift {
+  0%,100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+.skin-copilot-body { flex: 1; min-width: 0; position: relative; z-index: 1; }
+
+.skin-copilot-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.3rem;
+}
+
+.skin-copilot-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.45;
+  margin-bottom: 0.85rem;
+}
+
+.skin-copilot-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skin-copilot-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.42rem 0.85rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--nav-accent);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.skin-copilot-chip:hover {
+  background: var(--nav-accent);
+  color: white;
+  border-color: var(--nav-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+body.dark .skin-copilot-chip {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(165, 180, 252, 0.35);
+  color: #c7d2fe;
+}
+body.dark .skin-copilot-chip:hover {
+  background: var(--nav-accent);
+  color: #0b1220;
+}

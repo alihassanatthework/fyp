@@ -1,0 +1,129 @@
+.analysis-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.analysis-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--nav-accent);
+  opacity: 0.85;
+}
+
+.analysis-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.analysis-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.85rem;
+  background: var(--blue-50);
+  color: var(--nav-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.analysis-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.analysis-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.analysis-card-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.analysis-card-bullets li {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.analysis-card-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nav-accent);
+}
+
+.analysis-card-btn {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--nav-accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.15s;
+}
+
+.analysis-card-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+/* ── Feature illustration widget ─── */
+.analysis-card-illustration {
+  position: relative;
+  width: 80px; height: 80px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.25rem;
+}
+.aci-ring {
+  position: absolute; border-radius: 50%;
+  border: 2px solid var(--nav-accent);
+  opacity: 0.15;
+}
+.aci-ring-1 { width: 80px; height: 80px; }
+.aci-ring-2 { width: 60px; height: 60px; opacity: 0.1; }
+.aci-icon-wrap {
+  width: 52px; height: 52px; border-radius: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  position: relative; z-index: 1;
+}
+.aci-dot {
+  position: absolute; border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.aci-dot-1 { width: 9px; height: 9px; top: 4px; right: 8px; }
+.aci-dot-2 { width: 7px; height: 7px; bottom: 6px; right: 4px; }
+.aci-dot-3 { width: 6px; height: 6px; bottom: 8px; left: 6px; }

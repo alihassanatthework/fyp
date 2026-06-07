@@ -1,0 +1,74 @@
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* Subtler than before — lets the cards lead. */
+  opacity: calc(0.42 * var(--aurora-intensity, 1));
+}
+body.dark .aurora-bg {
+  opacity: calc(0.22 * var(--aurora-intensity, 1));
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  mix-blend-mode: screen;
+  animation: auroraDrift 22s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+/* Light mode — soft pastel indigo / violet / pink */
+.aurora-blob-1 {
+  top: -20%;
+  left: -10%;
+  width: 55vw;
+  height: 55vw;
+  background: hsl(var(--aurora-h1), 70%, 70%);
+  animation-duration: 26s;
+}
+.aurora-blob-2 {
+  top: 30%;
+  right: -15%;
+  width: 50vw;
+  height: 50vw;
+  background: hsl(var(--aurora-h2), 65%, 68%);
+  animation-duration: 32s;
+  animation-delay: -8s;
+}
+.aurora-blob-3 {
+  bottom: -25%;
+  left: 25%;
+  width: 60vw;
+  height: 60vw;
+  background: hsl(var(--aurora-h3), 60%, 70%);
+  animation-duration: 28s;
+  animation-delay: -14s;
+}
+
+/* Dark mode — deeper, more muted variants of the SAME hues so the
+   page reads "indigo theme" instead of glowing pink. */
+body.dark .aurora-blob-1 {
+  background: hsl(var(--aurora-h1), 55%, 28%);
+  filter: blur(110px);
+}
+body.dark .aurora-blob-2 {
+  background: hsl(var(--aurora-h2), 50%, 26%);
+  filter: blur(110px);
+}
+body.dark .aurora-blob-3 {
+  background: hsl(var(--aurora-h3), 45%, 26%);
+  filter: blur(110px);
+}
+
+@keyframes auroraDrift {
+  0%   { transform: translate(0, 0) scale(1);     opacity: 0.6; }
+  50%  { transform: translate(6%, -4%) scale(1.06); opacity: 0.8; }
+  100% { transform: translate(-4%, 6%) scale(0.96); opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob { animation: none; }
+}

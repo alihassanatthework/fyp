@@ -240,12 +240,18 @@ class AnalyzeImageView(APIView):
         logger.info("Image type received: %s", image_type)
 
         # -----------------------------
-        # Idempotency cache (fix double upload)
+        # Idempotency cache — DISABLED during AI/model rebuild phase
         # -----------------------------
-        # React sometimes triggers the upload twice; this cache ensures the
-        # heavy AI pipeline is executed only once per identical upload.
-        session_cache = request.session.get("analysis_result_cache", {})
+        # The cache used to short-circuit identical uploads to avoid running
+        # the heavy AI pipeline twice. But while we are actively iterating on
+        # the model (binary normal detector, mask logic, retraining), the
+        # cache returns stale results from before the change. We compute a
+        # cache_key so the in-flight signalling at the end of the view still
+        # works, but we never return from cache. The double-upload protection
+        # is already handled on the React side by the Axios interceptor.
+        session_cache = {}
         cache_limit = 20
+        cache_key = None
         try:
             sha = hashlib.sha256()
             with open(file_path, "rb") as f:
@@ -253,74 +259,11 @@ class AnalyzeImageView(APIView):
                     sha.update(chunk)
             file_hash = sha.hexdigest()
             cache_key = f"{file_hash}:{image_type}"
-
-            # 1) Try global cache first (works even across sessions)
+            logger.debug("[cache] DISABLED — bypassing for key %s", cache_key)
+            # Clear any stale entry for this key so old results don't linger.
             with GLOBAL_ANALYSIS_CACHE_LOCK:
-                entry = GLOBAL_ANALYSIS_CACHE.get(cache_key)
-                if entry:
-                    if time() - entry.get("ts", 0) <= GLOBAL_CACHE_TTL_SECONDS:
-                        cached_context = entry.get("context")
-                        request.session.modified = True
-                        logger.debug("[cache] Returning cached analysis for %s", cache_key)
-                        # Remove duplicate uploaded file since we won't process it again.
-                        try:
-                            os.remove(file_path)
-                        except Exception:
-                            pass
-                        if wants_json:
-                            return Response({"success": True, "data": cached_context}, status=200)
-                        return render(request, "frontend/results.html", cached_context)
-                    # expired
-                    GLOBAL_ANALYSIS_CACHE.pop(cache_key, None)
-
-                # 2) If another request for the same key is in progress, wait for it.
-                inflight = GLOBAL_ANALYSIS_INFLIGHT.get(cache_key)
-                if inflight:
-                    event = inflight.get("event")
-                    start_ts = inflight.get("ts", time())
-                    # Important: release lock before waiting.
-                    # We'll wait below outside the lock, then try cache again.
-                else:
-                    # Mark this request as the in-progress owner for this key.
-                    import threading
-                    GLOBAL_ANALYSIS_INFLIGHT[cache_key] = {
-                        "event": threading.Event(),
-                        "ts": time(),
-                    }
-                    event = None
-                    start_ts = None
-            if event is not None:
-                # Wait for the first request to finish and fill GLOBAL_ANALYSIS_CACHE.
-                remaining = max(0, GLOBAL_INFLIGHT_TTL_SECONDS - (time() - start_ts))
-                event.wait(timeout=remaining)
-                with GLOBAL_ANALYSIS_CACHE_LOCK:
-                    entry2 = GLOBAL_ANALYSIS_CACHE.get(cache_key)
-                    if entry2 and (time() - entry2.get("ts", 0) <= GLOBAL_CACHE_TTL_SECONDS):
-                        cached_context = entry2.get("context")
-                        request.session.modified = True
-                        logger.debug("[cache] Returning cached (inflight) analysis for %s", cache_key)
-                        try:
-                            os.remove(file_path)
-                        except Exception:
-                            pass
-                        if wants_json:
-                            return Response({"success": True, "data": cached_context}, status=200)
-                        return render(request, "frontend/results.html", cached_context)
-                # If we timed out or cache is still empty, proceed to compute normally.
-
-            if cache_key in session_cache:
-                cached_context = session_cache[cache_key]
-                request.session.modified = True
-                # Remove duplicate uploaded file since we won't process it again.
-                try:
-                    os.remove(file_path)
-                except Exception:
-                    pass
-                if wants_json:
-                    return Response({"success": True, "data": cached_context}, status=200)
-                return render(request, 'frontend/results.html', cached_context)
+                GLOBAL_ANALYSIS_CACHE.pop(cache_key, None)
         except Exception:
-            # If hashing/cache fails, proceed normally.
             cache_key = None
 
         face_path = None
@@ -447,6 +390,7 @@ class AnalyzeImageView(APIView):
             "face_url": f"/media/processed/{os.path.basename(face_path)}" if face_path else None,
             "scalp_url": f"/media/processed/{os.path.basename(scalp_path)}" if scalp_path else None,
             "analysis_id": uuid.uuid4().hex[:8].upper(),
+            "created_at": datetime.utcnow().isoformat() + "Z",
             "max_severity": 0,
             "recommend_dermatologist": False,
             "conditions": [],
@@ -521,8 +465,18 @@ class AnalyzeImageView(APIView):
 
 
             if image_type == "scalp" and 'yolo_detections' in pipeline_result:
-                detections = pipeline_result['yolo_detections']
-                logger.debug("YOLO text source: %s", detections)
+                # ── P1.3 — YOLO confidence floor (0.45) ──
+                # Filter out low-confidence boxes BEFORE any chart, overlay,
+                # or condition aggregation runs.
+                YOLO_CONF_MIN = 0.45
+                _raw_dets = pipeline_result.get('yolo_detections') or []
+                detections = [
+                    d for d in _raw_dets
+                    if float(d.get('confidence', 0)) >= YOLO_CONF_MIN
+                ]
+                pipeline_result['yolo_detections'] = detections  # keep downstream consistent
+                logger.info("YOLO detections kept: %d / %d (≥%.2f conf)",
+                            len(detections), len(_raw_dets), YOLO_CONF_MIN)
                 logger.debug("Pipeline detected conditions: %s", pipeline_result.get('detected_conditions'))
 
                 try:
@@ -722,57 +676,99 @@ class AnalyzeImageView(APIView):
 
             
 
-            # --- For scalp: build text from YOLO detections directly ---
+            # ── P1.3 — Area-percentage severity scoring ──────────────
+            # mild = <5% affected area, moderate = 5-15%, severe = >15%.
+            # Falls back to confidence-derived score when no per-condition
+            # area information is available.
+            def _area_to_severity(area_pct):
+                if area_pct < 5:    return 'Mild',     int(min(35,  area_pct * 7))
+                if area_pct < 15:   return 'Moderate', int(35 + (area_pct - 5)  * 4)
+                return                   'Severe',     int(min(100, 75 + (area_pct - 15) * 1.5))
+
+            # --- Scalp: build conditions from filtered YOLO detections ---
             if image_type == "scalp" and pipeline_result.get('yolo_detections'):
-
-                formatted = []
-
-                for det in pipeline_result.get('yolo_detections', []):
-                    name = det.get('condition') or det.get('class') or "normal"
-                    confidence = float(det.get('confidence', 0))
-                    score_int = int(confidence * 100)
-
-                    if score_int < 30:
-                        level = "Mild"
-                    elif score_int < 70:
-                        level = "Moderate"
+                # Aggregate by class, computing total bbox area as a % of frame.
+                frame_h, frame_w = normalized_crop.shape[:2]
+                frame_area = max(1, frame_h * frame_w)
+                per_cls_area = {}
+                per_cls_conf = {}
+                for det in pipeline_result['yolo_detections']:
+                    name = det.get('condition') or det.get('class') or 'normal'
+                    bbox = det.get('bbox')
+                    if bbox and len(bbox) == 4:
+                        x1, y1, x2, y2 = bbox
+                        a = max(0, (x2 - x1)) * max(0, (y2 - y1)) / frame_area * 100
                     else:
-                        level = "Severe"
+                        a = float(det.get('roi_area', 0)) * 100
+                    per_cls_area[name] = per_cls_area.get(name, 0) + a
+                    per_cls_conf[name] = max(per_cls_conf.get(name, 0),
+                                              float(det.get('confidence', 0)))
 
+                # Per-zone breakdown — split image into crown / sides / nape.
+                zones = {'crown': 0.0, 'sides': 0.0, 'nape': 0.0}
+                for det in pipeline_result['yolo_detections']:
+                    bbox = det.get('bbox')
+                    if not bbox or len(bbox) != 4:
+                        continue
+                    _, y1, _, y2 = bbox
+                    cy = (y1 + y2) / 2
+                    rel = cy / frame_h
+                    a = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) / frame_area * 100
+                    if rel < 1/3:
+                        zones['crown'] += a
+                    elif rel < 2/3:
+                        zones['sides'] += a
+                    else:
+                        zones['nape']  += a
+                context['scalp_zones'] = {k: round(v, 2) for k, v in zones.items()}
+
+                # Top-3 by area only; suppress noise.
+                ranked = sorted(per_cls_area.items(), key=lambda kv: kv[1], reverse=True)[:3]
+                formatted = []
+                for name, area_pct in ranked:
+                    if name.lower() == 'normal':
+                        continue
+                    level, score_int = _area_to_severity(area_pct)
                     formatted.append({
-                        'name': name.replace('_', ' ').title(),
-                        'severity_level': level,
-                        'severity_score': score_int
+                        'name':            name.replace('_', ' ').title(),
+                        'severity_level':  level,
+                        'severity_score':  score_int,
+                        'area_pct':        round(area_pct, 2),
+                        'confidence':      round(per_cls_conf.get(name, 0), 3),
                     })
-
                 if formatted:
                     context['conditions'] = formatted
 
-            # --- For skin: use detected_conditions as before ---
+            # --- Skin: detected_conditions, top-3 by area when available --
             elif 'detected_conditions' in pipeline_result:
-
-                formatted = []
                 sev = pipeline_result.get('severity_scores', {})
-
+                formatted = []
                 for c in pipeline_result.get('detected_conditions', []):
                     name = c.get('name') or c.get('condition') or "normal"
-                    confidence = c.get('confidence', 0)
+                    if name.lower() == 'normal':
+                        continue
+                    confidence = float(c.get('confidence', 0))
+                    area_pct   = float(c.get('roi_area', 0)) * 100
 
-                    s = sev.get(name, {'score': confidence * 100, 'level': 'Detected'})
-
-                    try:
+                    # Prefer area-based severity; fall back to LLM/score map.
+                    if area_pct > 0:
+                        level, score_int = _area_to_severity(area_pct)
+                    else:
+                        s = sev.get(name, {'score': confidence * 100, 'level': 'Mild'})
                         score_int = int(s.get('score', confidence * 100))
-                    except Exception:
-                        score_int = int(confidence * 100)
+                        level     = s.get('level', 'Mild')
 
                     formatted.append({
-                        'name': name.replace('_', ' ').title(),
-                        'severity_level': s.get('level', 'Detected'),
-                        'severity_score': score_int
+                        'name':           name.replace('_', ' ').title(),
+                        'severity_level': level,
+                        'severity_score': score_int,
+                        'area_pct':       round(area_pct, 2),
+                        'confidence':     round(confidence, 3),
                     })
-
+                # Top-3 by area first, then by score.
+                formatted.sort(key=lambda x: (x['area_pct'], x['severity_score']), reverse=True)
                 if formatted:
-                    context['conditions'] = formatted
+                    context['conditions'] = formatted[:3]
 
 
             if 'severity_scores' in pipeline_result:
@@ -887,16 +883,11 @@ class AnalyzeImageView(APIView):
                             for k, _ in sorted_items[: max(0, len(GLOBAL_ANALYSIS_CACHE) - GLOBAL_CACHE_MAX_ITEMS)]:
                                 GLOBAL_ANALYSIS_CACHE.pop(k, None)
 
-                # Store in session cache too (helps if same session repeats)
-                if cache_key:
-                    session_cache = request.session.get("analysis_result_cache", {})
-                    session_cache[cache_key] = context
-                    # soft limit
-                    if len(session_cache) > cache_limit:
-                        # remove oldest-ish by insertion order (best-effort)
-                        for k in list(session_cache.keys())[: len(session_cache) - cache_limit]:
-                            session_cache.pop(k, None)
-                    request.session["analysis_result_cache"] = session_cache
+                # Session cache disabled during AI rebuild — actively wipe
+                # any stored entries so a future "re-enable" doesn't serve
+                # stale data from before the model change.
+                if "analysis_result_cache" in request.session:
+                    request.session.pop("analysis_result_cache", None)
                     request.session.modified = True
             except Exception:
                 pass
@@ -917,13 +908,10 @@ class AnalyzeImageView(APIView):
                         "ts": time(),
                         "context": context,
                     }
-                session_cache = request.session.get("analysis_result_cache", {})
-                session_cache[cache_key] = context
-                if len(session_cache) > cache_limit:
-                    for k in list(session_cache.keys())[: len(session_cache) - cache_limit]:
-                        session_cache.pop(k, None)
-                request.session["analysis_result_cache"] = session_cache
-                request.session.modified = True
+                # Session cache disabled during AI rebuild (same reason as JSON branch above).
+                if "analysis_result_cache" in request.session:
+                    request.session.pop("analysis_result_cache", None)
+                    request.session.modified = True
         except Exception:
             pass
         return render(request, 'frontend/results.html', context)

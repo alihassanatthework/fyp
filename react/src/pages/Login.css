@@ -3,21 +3,171 @@
   display: flex;
   flex-direction: column;
   background: var(--bg-primary);
+  /* Establish a 3D perspective context so the card's transform
+     reads as real depth, not skew. */
+  perspective: 1400px;
 }
 
+/* ──────────────────────────────────────────────────────────────────
+   3D Login card — parallax tilt + layered z-depth.
+   .depth-back  → soft halo behind the form
+   .depth-mid   → form fields (slightly forward)
+   .depth-front → title + accent (most forward)
+   The JS in Login.js drives the card's rotateX/Y from the cursor.
+   ────────────────────────────────────────────────────────────────── */
+.login-card-3d {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: box-shadow 0.3s;
+  will-change: transform;
+  background: rgba(19, 28, 46, 0.55) !important;
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(165, 180, 252, 0.18) !important;
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 1px 0 0 rgba(255, 255, 255, 0.06) inset;
+}
+/* Light mode — white glass card with dark text. */
+body:not(.dark) .login-card-3d {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow:
+    0 30px 80px -20px rgba(67, 56, 202, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset,
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset;
+}
+
+/* Soft halo orb behind the form fields — at the back Z plane. */
+.depth-back {
+  position: absolute;
+  inset: -30px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 30% 30%,
+    rgba(165, 180, 252, 0.35),
+    rgba(236, 72, 153, 0.15) 50%,
+    transparent 70%);
+  filter: blur(30px);
+  transform: translateZ(-60px);
+  pointer-events: none;
+  z-index: 0;
+}
+.login-card-3d > * { position: relative; }
+
+/* Layer offsets — the magic of the parallax effect. */
+.depth-mid   { transform: translateZ(20px); }
+.depth-front { transform: translateZ(40px); }
+
+/* Title gets a subtle gradient sheen to feel premium. */
+.login-card-3d .login-title {
+  background: linear-gradient(135deg, var(--text-primary), var(--nav-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Form fields — translucent so the cosmic backdrop bleeds through,
+   but solid enough on focus to be clearly legible.
+   Dark mode = dark glass; light mode = white glass. */
+.login-card-3d .input-field {
+  background: rgba(11, 18, 32, 0.5);
+  border-color: rgba(165, 180, 252, 0.22);
+  color: #f9fafb;
+}
+.login-card-3d .input-field::placeholder {
+  color: rgba(249, 250, 251, 0.4);
+}
+.login-card-3d .input-field:focus {
+  background: rgba(11, 18, 32, 0.78);
+  border-color: rgba(165, 180, 252, 0.55);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+body:not(.dark) .login-card-3d .input-field {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(99, 102, 241, 0.25);
+  color: var(--text-primary);
+}
+body:not(.dark) .login-card-3d .input-field::placeholder {
+  color: var(--text-tertiary);
+}
+body:not(.dark) .login-card-3d .input-field:focus {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--nav-accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.20);
+}
+
+/* Login button on the 3D card pops forward a bit. */
+.login-card-3d .btn-primary {
+  transform: translateZ(28px);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   AUTH NAVBAR — same indigo gradient pill the main <Navbar /> uses on
+   every authenticated page. Makes the ME. logo unmistakable against
+   the dark/particle-galaxy background, and matches the rest of the
+   site so users feel they've arrived at the same app.
+   ────────────────────────────────────────────────────────────────── */
 .login-header {
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-secondary);
+  position: relative;
+  z-index: 5;
+  padding: 0.7rem 1rem 0;
+  background: transparent;
+  border-bottom: none;
 }
 
 .login-header-content {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
-  height: 3.5rem;
+  height: 3.6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Same gradient + radius the real Navbar component uses. */
+  background: linear-gradient(135deg, #3730a3, #4338ca, #4f46e5);
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px rgba(67, 56, 202, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Logo gets a soft drop-shadow so it pops on the gradient. */
+.login-header .navbar-logo {
+  color: #ffffff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.28);
+}
+.login-header .navbar-divider {
+  color: rgba(255, 255, 255, 0.4);
+}
+.login-header .navbar-title {
+  color: #ffffff;
+}
+
+/* Theme toggle pill — same translucent-white look as the main Navbar. */
+.login-header .theme-toggle {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.login-header .theme-btn {
+  color: rgba(255, 255, 255, 0.72);
+}
+.login-header .theme-btn:hover { color: #ffffff; }
+.login-header .theme-btn.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* Profile button — translucent white pill. */
+.login-header .profile-btn {
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.login-header .profile-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .login-main {
@@ -36,7 +186,7 @@
 }
 
 .login-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   text-align: center;

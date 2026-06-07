@@ -1,21 +1,17 @@
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Download, Bookmark, Bell, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Download, Bookmark, BookmarkCheck, Bell, ArrowRight, CheckCircle2, ShieldCheck, BarChart3, X } from 'lucide-react';
+import apiClient from '../api/client';
+import { API_ENDPOINTS } from '../api/config';
+import {
+  ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
+  RadialBarChart, RadialBar, PolarAngleAxis,
+} from 'recharts';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import NearbyProvidersMap from '../components/NearbyProvidersMap';
 import './DiagnosisReport.css';
-
-// Safely convert any recommendation item to a displayable string.
-// The LLM occasionally returns objects instead of strings.
-function toText(item) {
-  if (!item) return '';
-  if (typeof item === 'string') return item;
-  if (typeof item === 'object') {
-    // e.g. { name, type, reason } or { step, description }
-    return [item.name, item.step, item.description, item.reason, item.usage]
-      .filter(Boolean)
-      .join(' — ');
-  }
-  return String(item);
-}
 
 const steps = [
   { title: 'Consult a certified dermatologist', desc: 'Schedule an in-person or telehealth visit within 7 days.' },
@@ -44,19 +40,31 @@ export default function DiagnosisReport() {
     } catch (e) {}
   }
 
+  // P2 — If still no report, fetch the user's most recent analysis from
+  // the server instead of showing the "No report" dead-end. Direct nav
+  // to /diagnosis from the Navbar now lands on the latest scan.
+  const [fetchedReport, setFetchedReport] = useState(null);
+  const [fetchingRecent, setFetchingRecent] = useState(false);
+  useEffect(() => {
+    if (report || fetchedReport || fetchingRecent) return;
+    setFetchingRecent(true);
+    apiClient.get(API_ENDPOINTS.ANALYSIS.HISTORY, { params: { page_size: 1 } })
+      .then((res) => {
+        const list = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+        if (!list.length) return null;
+        const id = list[0].id || list[0].analysis_id;
+        if (!id) return null;
+        return apiClient.get(API_ENDPOINTS.ANALYSIS.DETAIL(id)).then((r) => r.data);
+      })
+      .then((data) => { if (data) setFetchedReport(data); })
+      .catch(() => {})
+      .finally(() => setFetchingRecent(false));
+  }, [report, fetchedReport, fetchingRecent]);
+
+  if (!report && fetchedReport) report = fetchedReport;
+
   const conditions = report?.conditions || [];
-
-  // Use structured recommendations from LLM (preferred) or fall back to flat array
-  const recStructured = report?.recommendations_structured || report?.recommendations || {};
-  const isFlatArray = Array.isArray(recStructured);
-
-  const morningSteps  = isFlatArray ? recStructured : (recStructured?.daily_routine?.morning  || []);
-  const eveningSteps  = isFlatArray ? []            : (recStructured?.daily_routine?.evening  || []);
-  const weeklySteps   = isFlatArray ? []            : (recStructured?.weekly_routine           || []);
-  const medicines     = isFlatArray ? []            : (recStructured?.medicines                || []);
-  const products      = isFlatArray ? []            : (recStructured?.products                 || []);
-  const safetyNotes   = isFlatArray ? []            : (recStructured?.safety_notes             || []);
-  const dermConsult   = isFlatArray ? ''            : (recStructured?.dermatologist_consult     || '');
+  const recommendations = report?.recommendations || [];
 
   const primary = conditions[0] || {
     name: 'Normal',
@@ -72,13 +80,19 @@ export default function DiagnosisReport() {
         <Navbar title="Diagnosis Report" />
         <main className="diagnosis-main">
           <div className="card p-6">
-            <h1 className="diagnosis-page-title">No report data found</h1>
+            <h1 className="diagnosis-page-title">
+              {fetchingRecent ? 'Loading your most recent report…' : 'No reports yet'}
+            </h1>
             <p className="diagnosis-page-subtitle" style={{ marginTop: 8 }}>
-              Please run an analysis first.
+              {fetchingRecent
+                ? 'One moment — fetching your latest analysis.'
+                : 'Run your first analysis to see results here.'}
             </p>
-            <button className="btn btn-primary w-full py-3" onClick={() => navigate('/analysis')}>
-              Start Analysis
-            </button>
+            {!fetchingRecent && (
+              <button className="btn btn-primary w-full py-3" onClick={() => navigate('/analysis')}>
+                Start Analysis
+              </button>
+            )}
           </div>
         </main>
       </div>
@@ -94,12 +108,129 @@ export default function DiagnosisReport() {
   const yoloChart = report.yolo_chart || '';
   const yoloVisualization = report.yolo_visualization || '';
 
+  // ── Date / time of the report ──────────────────────────────────────
+  // Use the backend timestamp if present; otherwise fall back to "now"
+  // (only happens for very old cached reports from before the field existed).
+  const rawTimestamp = report.created_at
+                    || report.timestamp
+                    || report.date
+                    || new Date().toISOString();
+  const reportDate = new Date(rawTimestamp);
+  const formattedDate = isNaN(reportDate.getTime())
+    ? '—'
+    : reportDate.toLocaleString(undefined, {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      });
+
+  // ── Save Scan (bookmark) — local state persisted to localStorage ──
+  const SAVED_KEY = 'savedDiagnosisIds';
+  const getSavedIds = () => {
+    try { return JSON.parse(localStorage.getItem(SAVED_KEY) || '[]'); }
+    catch { return []; }
+  };
+  const [isSaved, setIsSaved]     = useState(false);
+  const [toast, setToast]         = useState('');
+
+  useEffect(() => {
+    if (analysisId && analysisId !== '—') {
+      setIsSaved(getSavedIds().includes(analysisId));
+    }
+  }, [analysisId]);
+
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  const handleSaveScan = () => {
+    if (!analysisId || analysisId === '—') {
+      showToast('Cannot save — no analysis ID found.');
+      return;
+    }
+    const ids = getSavedIds();
+    let next;
+    if (ids.includes(analysisId)) {
+      next = ids.filter((x) => x !== analysisId);
+      setIsSaved(false);
+      showToast('Removed from saved scans.');
+    } else {
+      next = [...ids, analysisId];
+      setIsSaved(true);
+      showToast('Scan saved. View it from History.');
+    }
+    try { localStorage.setItem(SAVED_KEY, JSON.stringify(next)); } catch {}
+  };
+
+  // ── Download PDF — uses the browser's native print dialog. The user
+  // picks "Save as PDF" as the printer. No external dependency needed.
+  const handleDownloadPDF = () => {
+    showToast('Opening print dialog — choose "Save as PDF".');
+    setTimeout(() => window.print(), 250);
+  };
+
+  // ── Set Reminder — small inline modal, then schedules a browser
+  // notification + persists to localStorage so it survives reloads.
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const [reminderWhen, setReminderWhen] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 14);  // default: 2 weeks for follow-up scan
+    d.setMinutes(0); d.setSeconds(0); d.setMilliseconds(0);
+    return d.toISOString().slice(0, 16);  // input[type=datetime-local] format
+  });
+
+  const handleSetReminder = async () => {
+    if (!reminderWhen) {
+      showToast('Please pick a date and time.');
+      return;
+    }
+    const when = new Date(reminderWhen);
+    const delay = when.getTime() - Date.now();
+    if (delay <= 0) {
+      showToast('Pick a future date and time.');
+      return;
+    }
+
+    // Try to use the browser's Notification API for a real reminder
+    if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        try { await Notification.requestPermission(); } catch {}
+      }
+    }
+
+    // Persist so the reminder isn't lost on reload
+    const REM_KEY = 'diagnosisReminders';
+    let rems = [];
+    try { rems = JSON.parse(localStorage.getItem(REM_KEY) || '[]'); } catch {}
+    rems.push({
+      analysisId,
+      condition: primary?.name,
+      when: when.toISOString(),
+    });
+    try { localStorage.setItem(REM_KEY, JSON.stringify(rems)); } catch {}
+
+    // In-tab scheduling (works while this tab stays open)
+    if (delay < 2147483647) {  // setTimeout max ~24.8 days
+      setTimeout(() => {
+        if (Notification.permission === 'granted') {
+          new Notification('Skin & Scalp Reminder', {
+            body: `Time to re-scan for ${primary?.name || 'your condition'}.`,
+            icon: '/favicon.svg',
+          });
+        }
+      }, delay);
+    }
+
+    setReminderOpen(false);
+    showToast(`Reminder set for ${when.toLocaleString()}.`);
+  };
+
   return (
     <div className="diagnosis-page">
       <Navbar title="Diagnosis Report" />
       <main className="diagnosis-main">
         <div>
-          <h1 className="diagnosis-page-title">Diagnosis Report & Actions</h1>
+          <h1 className="diagnosis-page-title">Diagnosis Report</h1>
           <p className="diagnosis-page-subtitle">Complete analysis results with actionable next steps.</p>
         </div>
         <div className="card diagnosis-meta-grid">
@@ -110,8 +241,8 @@ export default function DiagnosisReport() {
             </p>
           </div>
           <div className="meta-item">
-            <p className="meta-label">DATE & TIME</p>
-            <p className="meta-value">—</p>
+            <p className="meta-label">DATE AND TIME</p>
+            <p className="meta-value">{formattedDate}</p>
           </div>
           <div className="meta-item">
             <p className="meta-label">REPORT ID</p>
@@ -169,66 +300,92 @@ export default function DiagnosisReport() {
           </div>
           <div className="card book-card p-6">
             <div>
-              <h2 className="book-title">Ready to treat this?</h2>
-              <p className="book-desc">Book a consultation with a specialist.</p>
-              <button className="btn btn-primary w-full py-3" onClick={() => navigate('/bookings')}>Book Appointment <ArrowRight size={15}/></button>
+              <h2 className="book-title">Book Derma Appointment</h2>
+              <p className="book-desc">Consult a certified dermatologist for expert treatment.</p>
+              <button
+                className="btn btn-primary w-full py-3"
+                onClick={() => navigate('/bookings?type=dermatologist', {
+                  state: { fromDiagnosis: true, condition: primary?.name, type: 'dermatologist' },
+                })}
+              >
+                Book Appointment <ArrowRight size={15}/>
+              </button>
             </div>
             <div className="book-footer">
               <ShieldCheck size={14}/>Securely verified report
             </div>
           </div>
         </div>
+        {/* ── Recharts visualizations ──────────────────────────────── */}
+        <div className="card p-6" style={{ marginTop: 16 }}>
+          <div className="recommendation-header">
+            <BarChart3 size={18} className="condition-header-icon"/>
+            <h2 className="condition-header-title">
+              {analysisTypeLower === 'scalp' ? 'Scalp' : 'Skin'} Condition Scores
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginTop: 12 }}>
+            {/* Gauge — primary severity */}
+            <div style={{ height: 220 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <RadialBarChart
+                  cx="50%" cy="55%"
+                  innerRadius="65%" outerRadius="95%"
+                  barSize={14}
+                  startAngle={210} endAngle={-30}
+                  data={[{ name: primary.name, value: scorePct, fill: scorePct >= 66 ? '#ef4444' : scorePct >= 33 ? '#f59e0b' : '#10b981' }]}
+                >
+                  <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+                  <RadialBar background dataKey="value" cornerRadius={8} />
+                </RadialBarChart>
+              </ResponsiveContainer>
+              <p style={{ textAlign: 'center', marginTop: -32, fontWeight: 700, fontSize: '1.4rem', color: 'var(--text-primary)' }}>
+                {scorePct}<span style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>/100</span>
+              </p>
+              <p style={{ textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-tertiary)' }}>{primary.severity_level} severity</p>
+            </div>
+
+            {/* Bar chart — all detected conditions */}
+            <div style={{ height: 220 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={(conditions.length ? conditions : [primary]).slice(0, 6).map(c => ({
+                  name: (c.name || '').slice(0, 16),
+                  score: Number(c.severity_score) || 0,
+                }))}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-tertiary)' }} />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: 'var(--text-tertiary)' }} />
+                  <Tooltip
+                    contentStyle={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 8, fontSize: 12 }}
+                    cursor={{ fill: 'rgba(59,130,246,0.08)' }}
+                  />
+                  <Bar dataKey="score" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
         <div className="diagnosis-grid">
           <div className="card p-6">
             <div className="recommendation-header">
-              <span className="recommendation-emoji">🩺</span>
+              <ShieldCheck size={18} className="recommendation-icon" />
               <h2 className="condition-header-title">Dermatologist Recommendation</h2>
             </div>
-
-            {/* Morning Routine */}
-            {morningSteps.length > 0 && (
-              <div style={{ marginTop: 12 }}>
-                <p className="step-title" style={{ marginBottom: 6 }}>☀️ Morning Routine</p>
-                <ul className="recommendation-text">
-                  {morningSteps.map((r, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(r)}</li>)}
-                </ul>
-              </div>
-            )}
-
-            {/* Evening Routine */}
-            {eveningSteps.length > 0 && (
-              <div style={{ marginTop: 12 }}>
-                <p className="step-title" style={{ marginBottom: 6 }}>🌙 Evening Routine</p>
-                <ul className="recommendation-text">
-                  {eveningSteps.map((r, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(r)}</li>)}
-                </ul>
-              </div>
-            )}
-
-            {/* Weekly Routine */}
-            {weeklySteps.length > 0 && (
-              <div style={{ marginTop: 12 }}>
-                <p className="step-title" style={{ marginBottom: 6 }}>📅 Weekly Care</p>
-                <ul className="recommendation-text">
-                  {weeklySteps.map((r, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(r)}</li>)}
-                </ul>
-              </div>
-            )}
-
-            {/* Fallback flat array */}
-            {isFlatArray && recStructured.length > 0 && (
+            {recommendations.length > 0 ? (
               <ul className="recommendation-text" style={{ marginTop: 10 }}>
-                {recStructured.slice(0, 5).map((r, idx) => <li key={idx} style={{ marginBottom: 8 }}>{toText(r)}</li>)}
+                {recommendations.slice(0, 5).map((r, idx) => (
+                  <li key={idx} style={{ marginBottom: 8 }}>
+                    {r}
+                  </li>
+                ))}
               </ul>
-            )}
-
-            {/* Dermatologist consult note */}
-            {dermConsult ? (
-              <p className="recommendation-text" style={{ marginTop: 12, fontStyle: 'italic' }}>
-                💬 {dermConsult}
+            ) : (
+              <p className="recommendation-text">
+                Based on the analysis of the affected areas, consulting a certified dermatologist is recommended to assess underlying causes.
               </p>
-            ) : null}
-
+            )}
             <div className="disclaimer-box">
               <p className="disclaimer-text">
                 <span className="disclaimer-label">Medical Disclaimer:</span> This report is AI-generated for informational purposes only and does not constitute a medical diagnosis. Always seek the advice of a physician or other qualified health provider.
@@ -237,7 +394,7 @@ export default function DiagnosisReport() {
           </div>
           <div className="card p-6">
             <div className="recommendation-header">
-              <span className="recommendation-emoji">📋</span>
+              <BarChart3 size={18} className="recommendation-icon" />
               <h2 className="condition-header-title">Suggested Next Steps</h2>
             </div>
             <ul className="steps-list">
@@ -253,73 +410,6 @@ export default function DiagnosisReport() {
             </ul>
           </div>
         </div>
-
-        {/* Medicines Section */}
-        {medicines.length > 0 && (
-          <div className="card p-6" style={{ marginTop: 16 }}>
-            <div className="recommendation-header" style={{ marginBottom: 12 }}>
-              <span className="recommendation-emoji">💊</span>
-              <h2 className="condition-header-title">Medicine Suggestions</h2>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
-              {medicines.map((med, i) => (
-                <div key={i} style={{
-                  background: 'var(--bg-secondary, #f8fafc)',
-                  border: '1px solid var(--border-color, #e2e8f0)',
-                  borderRadius: 10,
-                  padding: '12px 14px',
-                }}>
-                  <p style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
-                    {med.name}
-                    {med.type && (
-                      <span style={{
-                        marginLeft: 8,
-                        fontSize: 11,
-                        background: 'var(--accent-light, #e0f2fe)',
-                        color: 'var(--accent, #0284c7)',
-                        borderRadius: 4,
-                        padding: '1px 6px',
-                        fontWeight: 500,
-                        textTransform: 'capitalize',
-                      }}>{med.type}</span>
-                    )}
-                  </p>
-                  {med.usage && <p className="step-desc" style={{ marginBottom: 4 }}>🕐 {med.usage}</p>}
-                  {med.reason && <p className="step-desc" style={{ color: 'var(--text-tertiary)' }}>ℹ️ {med.reason}</p>}
-                </div>
-              ))}
-            </div>
-            <p className="disclaimer-text" style={{ marginTop: 12 }}>
-              ⚠️ Always consult a healthcare professional before starting any medication.
-            </p>
-          </div>
-        )}
-
-        {/* Recommended Products */}
-        {products.length > 0 && (
-          <div className="card p-6" style={{ marginTop: 16 }}>
-            <div className="recommendation-header" style={{ marginBottom: 12 }}>
-              <span className="recommendation-emoji">🧴</span>
-              <h2 className="condition-header-title">Recommended Products</h2>
-            </div>
-            <ul className="recommendation-text">
-              {products.map((p, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(p)}</li>)}
-            </ul>
-          </div>
-        )}
-
-        {/* Safety Notes */}
-        {safetyNotes.length > 0 && (
-          <div className="card p-6" style={{ marginTop: 16 }}>
-            <div className="recommendation-header" style={{ marginBottom: 12 }}>
-              <span className="recommendation-emoji">⚠️</span>
-              <h2 className="condition-header-title">Safety Notes</h2>
-            </div>
-            <ul className="recommendation-text">
-              {safetyNotes.map((n, i) => <li key={i} style={{ marginBottom: 6 }}>{toText(n)}</li>)}
-            </ul>
-          </div>
-        )}
 
         {(visualizedImage || originalImage) && (
           <div className="card p-6" style={{ marginTop: 16 }}>
@@ -369,20 +459,115 @@ export default function DiagnosisReport() {
         )}
         <div className="card footer-bar">
           <div className="footer-info">
-            <span className="footer-emoji">🗄️</span>
+            <Bookmark size={18} className="footer-icon" />
             <div>
               <p className="footer-info-title">Data auto-saved</p>
               <p className="footer-info-desc">This report is securely stored and can be accessed in your history.</p>
             </div>
           </div>
           <div className="footer-actions">
-            <button className="btn btn-secondary"><Download size={14}/> Download PDF</button>
-            <button className="btn btn-secondary"><Bookmark size={14}/> Save Scan</button>
-            <button className="btn btn-secondary"><Bell size={14}/> Set Reminder</button>
+            <button className="btn btn-secondary" onClick={handleDownloadPDF}>
+              <Download size={14}/> Download PDF
+            </button>
+            <button
+              className={`btn btn-secondary ${isSaved ? 'btn-saved' : ''}`}
+              onClick={handleSaveScan}
+            >
+              {isSaved ? <BookmarkCheck size={14}/> : <Bookmark size={14}/>}
+              {isSaved ? ' Saved' : ' Save Scan'}
+            </button>
+            <button className="btn btn-secondary" onClick={() => setReminderOpen(true)}>
+              <Bell size={14}/> Set Reminder
+            </button>
           </div>
         </div>
         <p className="footer-note">Regular monitoring helps track your skin health progress over time.</p>
+
+        {/* ── Toast notification ──────────────────────────────────── */}
+        {toast && (
+          <div className="dr-toast" role="status" aria-live="polite">
+            {toast}
+          </div>
+        )}
+
+        {/* ── Reminder modal ──────────────────────────────────────── */}
+        {reminderOpen && (
+          <div className="dr-modal-overlay" onClick={() => setReminderOpen(false)}>
+            <div className="dr-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="dr-modal-header">
+                <h3>Set a Reminder</h3>
+                <button className="dr-modal-close" onClick={() => setReminderOpen(false)}>
+                  <X size={18}/>
+                </button>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)', margin: '0 0 1rem' }}>
+                You'll get a browser notification at the chosen time, reminding you to re-scan.
+              </p>
+              <label className="dr-modal-label">Date and time</label>
+              <input
+                type="datetime-local"
+                value={reminderWhen}
+                onChange={(e) => setReminderWhen(e.target.value)}
+                className="dr-modal-input"
+                min={new Date(Date.now() + 5 * 60 * 1000).toISOString().slice(0, 16)}
+              />
+              <div className="dr-modal-quick">
+                {[
+                  { label: 'In 1 hour', mins: 60 },
+                  { label: 'Tomorrow', mins: 24 * 60 },
+                  { label: 'In 1 week', mins: 7 * 24 * 60 },
+                  { label: 'In 4 weeks', mins: 4 * 7 * 24 * 60 },
+                ].map((q) => (
+                  <button
+                    key={q.label}
+                    type="button"
+                    className="dr-modal-quick-btn"
+                    onClick={() => {
+                      const d = new Date(Date.now() + q.mins * 60 * 1000);
+                      d.setSeconds(0); d.setMilliseconds(0);
+                      setReminderWhen(d.toISOString().slice(0, 16));
+                    }}
+                  >
+                    {q.label}
+                  </button>
+                ))}
+              </div>
+              <div className="dr-modal-actions">
+                <button className="btn btn-secondary" onClick={() => setReminderOpen(false)}>
+                  Cancel
+                </button>
+                <button className="btn btn-primary" onClick={handleSetReminder}>
+                  <Bell size={14}/> Set Reminder
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Live Google Maps: nearby dermatologists / skin clinics ── */}
+        <div className="card p-6" style={{ marginTop: 16 }}>
+          <NearbyProvidersMap
+            searchType="dermatologist"
+            title="Nearby Dermatologists & Skin Clinics"
+            subtitle="Live results from Google Maps, sorted by distance from your current location."
+            onBookProvider={(place) => navigate('/bookings?type=dermatologist', {
+              state: {
+                type: 'dermatologist',
+                source: 'diagnosis',
+                condition: primary?.name,
+                googlePlace: {
+                  place_id: place.place_id,
+                  name: place.name,
+                  vicinity: place.vicinity,
+                  lat: place._loc?.lat,
+                  lng: place._loc?.lng,
+                },
+              },
+            })}
+          />
+        </div>
       </main>
+      <Footer />
     </div>
   );
 }

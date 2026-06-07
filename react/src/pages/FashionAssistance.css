@@ -1,0 +1,734 @@
+/* ─── FashionAssistance Page ─────────────────────────────────────── */
+
+.fa-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3.5rem;
+}
+
+/* ── Page header ─── */
+.fa-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.fa-header-left { display: flex; align-items: center; gap: 1rem; }
+.fa-header-icon {
+  width: 52px; height: 52px;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(67, 56, 202, 0.38);
+  flex-shrink: 0;
+}
+.fa-header h1 {
+  font-size: 1.55rem; font-weight: 800;
+  color: var(--text-primary); line-height: 1.2;
+}
+.fa-header p {
+  font-size: 0.85rem; color: var(--text-tertiary); margin-top: 0.2rem;
+}
+
+/* ── Section label ─── */
+.fa-section-label {
+  font-size: 0.69rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--text-tertiary); margin-bottom: 0.65rem;
+}
+
+/* ── Upload zone ─── */
+.fa-upload-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: 1.1rem;
+  background: var(--bg-secondary);
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.fa-upload-zone:hover,
+.fa-upload-zone.drag-over {
+  border-color: #4f46e5;
+  background: var(--bg-tertiary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+.fa-upload-zone input[type="file"] {
+  position: absolute; inset: 0; opacity: 0;
+  cursor: pointer; width: 100%; height: 100%;
+}
+.fa-upload-icon {
+  width: 58px; height: 58px; border-radius: 1rem;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 0.9rem; color: #4338ca;
+}
+.fa-upload-title {
+  font-size: 1rem; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 0.3rem;
+}
+.fa-upload-sub { font-size: 0.8rem; color: var(--text-tertiary); }
+.fa-upload-btn-label {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.55rem 1.5rem;
+  border-radius: 9999px; font-size: 0.82rem; font-weight: 600;
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: #fff; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.3);
+  transition: opacity 0.2s, transform 0.15s;
+}
+.fa-upload-btn-label:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* ── Image preview ─── */
+.fa-preview-wrap {
+  position: relative; border-radius: 1.1rem; overflow: hidden;
+  background: var(--bg-secondary); border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+.fa-preview-wrap img,
+.fa-preview-wrap canvas {
+  display: block; width: 100%; max-height: 360px;
+  object-fit: cover; border-radius: 1.1rem;
+}
+.fa-preview-change {
+  position: absolute; top: 0.7rem; right: 0.7rem;
+  background: rgba(0,0,0,0.55); color: #fff;
+  border: none; cursor: pointer; border-radius: 9999px;
+  padding: 0.35rem 0.9rem; font-size: 0.75rem; font-weight: 600;
+  display: flex; align-items: center; gap: 0.35rem;
+  transition: background 0.2s;
+}
+.fa-preview-change:hover { background: rgba(0,0,0,0.78); }
+.fa-preview-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.58));
+  padding: 1.2rem 1rem 0.7rem;
+  font-size: 0.78rem; font-weight: 600; color: #fff;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+
+/* ── Body type detector badge ─── */
+.fa-body-detected {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  margin-top: 0.9rem;
+}
+body.dark .fa-body-detected {
+  background: rgba(79, 70, 229, 0.12);
+  border-color: rgba(79, 70, 229, 0.25);
+}
+.fa-body-detected-icon {
+  width: 32px; height: 32px; border-radius: 0.55rem;
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+.fa-body-detected-label {
+  font-size: 0.7rem; color: #4338ca; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.fa-body-detected-value {
+  font-size: 0.88rem; font-weight: 700; color: var(--text-primary);
+}
+
+/* ── Event selector ─── */
+.fa-event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.65rem;
+}
+.fa-event-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  padding: 0.85rem 0.4rem;
+  border-radius: 0.9rem;
+  border: 2px solid var(--border-color);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: center;
+}
+.fa-event-btn:hover {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  transform: translateY(-2px);
+}
+.fa-event-btn.active {
+  border-color: #4338ca;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  box-shadow: 0 4px 14px rgba(67, 56, 202, 0.18);
+  transform: translateY(-2px);
+}
+body.dark .fa-event-btn.active { background: rgba(79, 70, 229, 0.1); }
+.fa-event-emoji { font-size: 1.5rem; line-height: 1; }
+.fa-event-label { font-size: 0.72rem; font-weight: 600; color: var(--text-primary); }
+.fa-event-btn.active .fa-event-label { color: #4338ca; }
+
+.fa-other-input {
+  margin-top: 0.7rem; width: 100%;
+  padding: 0.65rem 1rem; border-radius: 0.75rem;
+  border: 2px solid #4f46e5; background: var(--bg-secondary);
+  color: var(--text-primary); font-size: 0.88rem; font-family: inherit;
+  outline: none; transition: box-shadow 0.2s;
+}
+.fa-other-input:focus { box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.18); }
+
+/* ── Analyze button ─── */
+.fa-analyze-btn {
+  width: 100%; padding: 0.92rem;
+  border-radius: 9999px; border: none; cursor: pointer;
+  font-size: 0.95rem; font-weight: 700; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+  background: linear-gradient(135deg, #4f46e5, #4338ca, #3730a3);
+  background-size: 200% 200%;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(67, 56, 202, 0.38);
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  animation: faGradShift 3.5s ease infinite;
+}
+.fa-analyze-btn:disabled {
+  opacity: 0.42; cursor: not-allowed; transform: none !important;
+}
+.fa-analyze-btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(67, 56, 202, 0.5);
+}
+@keyframes faGradShift {
+  0%,100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* ── Loading ─── */
+.fa-loading {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1.1rem; padding: 2.5rem 1rem;
+}
+.fa-loading-spinner {
+  width: 62px; height: 62px; border-radius: 50%;
+  border: 4px solid var(--border-color);
+  border-top-color: #4f46e5;
+  border-right-color: #4338ca;
+  border-bottom-color: #3730a3;
+  animation: faSpin 0.85s linear infinite;
+}
+@keyframes faSpin { to { transform: rotate(360deg); } }
+.fa-loading-title {
+  font-size: 1rem; font-weight: 700; color: var(--text-primary);
+}
+.fa-loading-sub {
+  font-size: 0.82rem; color: var(--text-tertiary); text-align: center;
+}
+.fa-progress-wrap {
+  width: 100%; max-width: 340px;
+  height: 8px; border-radius: 9999px;
+  background: var(--border-color); overflow: hidden;
+}
+.fa-progress-fill {
+  height: 100%; border-radius: 9999px;
+  background: linear-gradient(90deg, #4f46e5, #4338ca, #6366f1);
+  transition: width 0.4s ease;
+}
+.fa-progress-step {
+  font-size: 0.78rem; color: var(--text-tertiary); font-style: italic;
+}
+
+/* ── Results ─── */
+.fa-results { animation: faFadeUp 0.5s ease both; }
+@keyframes faFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Event badge ─── */
+.fa-event-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.32rem 1rem; border-radius: 9999px;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  font-size: 0.78rem; font-weight: 700; color: #4338ca;
+  margin-bottom: 1.1rem;
+}
+body.dark .fa-event-badge { background: rgba(79, 70, 229, 0.12); }
+
+/* ── Body type card ─── */
+.fa-body-card {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  border-radius: 1.1rem; padding: 1.4rem 1.5rem;
+  color: #fff; margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+  box-shadow: 0 6px 24px rgba(67, 56, 202, 0.35);
+  animation: faFadeUp 0.4s ease both;
+}
+.fa-body-card-icon {
+  width: 56px; height: 56px; border-radius: 1rem;
+  background: rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; flex-shrink: 0;
+}
+.fa-body-card-type {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; opacity: 0.75; margin-bottom: 0.2rem;
+}
+.fa-body-card-name {
+  font-size: 1.25rem; font-weight: 800; line-height: 1.2;
+}
+.fa-body-card-desc {
+  font-size: 0.8rem; opacity: 0.82; margin-top: 0.3rem; line-height: 1.5;
+}
+
+/* ── Recommendation grid ─── */
+.fa-rec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1rem; margin-top: 0.5rem;
+}
+.fa-rec-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem; padding: 1.1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: faFadeUp 0.4s ease both;
+  position: relative; overflow: hidden;
+}
+.fa-rec-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--fa-accent, linear-gradient(90deg, #4f46e5, #4338ca));
+}
+.fa-rec-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(67, 56, 202, 0.14);
+}
+.fa-rec-card-head {
+  display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem;
+}
+.fa-rec-card-ico {
+  width: 36px; height: 36px; border-radius: 0.6rem; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
+}
+.fa-rec-card-title { font-size: 0.87rem; font-weight: 700; color: var(--text-primary); }
+.fa-rec-card-sub   { font-size: 0.68rem; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.fa-chip-row {
+  display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.65rem;
+}
+.fa-chip {
+  padding: 0.22rem 0.7rem; border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  font-size: 0.71rem; font-weight: 600; color: var(--text-primary);
+}
+.fa-color-chip {
+  display: flex; align-items: center; gap: 0.28rem;
+  padding: 0.2rem 0.65rem 0.2rem 0.28rem;
+  border-radius: 9999px; border: 1px solid var(--border-color);
+  background: var(--bg-tertiary); font-size: 0.71rem; font-weight: 600;
+  color: var(--text-primary);
+}
+.fa-color-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.12); flex-shrink: 0;
+}
+.fa-rec-card-tip {
+  font-size: 0.77rem; color: var(--text-secondary); line-height: 1.56;
+}
+
+/* ── Virtual preview ─── */
+.fa-preview-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 1.1rem; overflow: hidden;
+}
+.fa-preview-header {
+  padding: 1rem 1.25rem 0.8rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.fa-preview-title {
+  font-size: 0.9rem; font-weight: 700; color: var(--text-primary);
+  display: flex; align-items: center; gap: 0.45rem;
+}
+.fa-preview-badge {
+  font-size: 0.67rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.05em; padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff); color: #4338ca;
+}
+body.dark .fa-preview-badge { background: rgba(79, 70, 229, 0.15); }
+.fa-preview-canvas-wrap {
+  background: var(--bg-tertiary); min-height: 260px;
+  display: flex; align-items: center; justify-content: center;
+}
+.fa-preview-canvas-wrap canvas {
+  display: block; max-width: 100%; max-height: 400px;
+}
+.fa-toggle-preview {
+  font-size: 0.78rem; font-weight: 600; color: #4338ca;
+  background: none; border: none; cursor: pointer; padding: 0.2rem 0;
+}
+.fa-toggle-preview:hover { opacity: 0.7; }
+
+/* ── Body tips section ─── */
+.fa-tips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem; margin-top: 0.75rem;
+}
+@media (max-width: 520px) { .fa-tips-grid { grid-template-columns: 1fr; } }
+
+.fa-tips-box {
+  border-radius: 0.85rem; padding: 1rem 1.1rem;
+  border: 1px solid var(--border-color);
+}
+.fa-tips-box-title {
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.05em; margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.fa-tips-box ul {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+.fa-tips-box ul li {
+  font-size: 0.77rem; color: var(--text-secondary);
+  padding-left: 1.1rem; position: relative; line-height: 1.5;
+}
+.fa-tips-box ul li::before {
+  content: '';
+  position: absolute; left: 0; top: 0.48rem;
+  width: 6px; height: 6px; border-radius: 50%;
+}
+.fa-tips-box.do ul li::before   { background: #10b981; }
+.fa-tips-box.dont ul li::before { background: #ef4444; }
+.fa-tips-box.fit  ul li::before { background: #4f46e5; }
+.fa-tips-box.color ul li::before { background: #f59e0b; }
+
+.fa-tips-box.do    { background: rgba(16, 185, 129, 0.06); }
+.fa-tips-box.dont  { background: rgba(239, 68, 68, 0.05); }
+.fa-tips-box.fit   { background: rgba(79, 70, 229, 0.06); }
+.fa-tips-box.color { background: rgba(245, 158, 11, 0.06); }
+
+.fa-tips-box.do    .fa-tips-box-title { color: #059669; }
+.fa-tips-box.dont  .fa-tips-box-title { color: #dc2626; }
+.fa-tips-box.fit   .fa-tips-box-title { color: #4338ca; }
+.fa-tips-box.color .fa-tips-box-title { color: #d97706; }
+
+/* ── Styling guide steps ─── */
+.fa-guide-steps {
+  display: flex; flex-direction: column; gap: 0; margin-top: 0.5rem;
+}
+.fa-guide-step {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 1.05rem 0; border-bottom: 1px solid var(--border-color);
+  animation: faFadeUp 0.4s ease both;
+}
+.fa-guide-step:last-child { border-bottom: none; }
+.fa-guide-num {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: #fff; font-size: 0.8rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 8px rgba(67, 56, 202, 0.3);
+  margin-top: 0.05rem;
+}
+.fa-guide-title {
+  font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.28rem;
+}
+.fa-guide-desc {
+  font-size: 0.79rem; color: var(--text-secondary); line-height: 1.58;
+}
+.fa-guide-tip {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  margin-top: 0.45rem; padding: 0.25rem 0.72rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  font-size: 0.72rem; font-weight: 600; color: #3730a3;
+  border: 1px solid rgba(79, 70, 229, 0.15);
+}
+body.dark .fa-guide-tip { background: rgba(79, 70, 229, 0.1); color: #a5b4fc; }
+
+/* ── Aesthetic tags ─── */
+.fa-aesthetic-row {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;
+}
+.fa-aesthetic-tag {
+  padding: 0.32rem 0.85rem; border-radius: 9999px;
+  font-size: 0.75rem; font-weight: 700;
+  border: 1.5px solid;
+}
+
+/* ── Body-shape card chips ────────────────────────────────────────
+   Inside .fa-body-card the background is a deep indigo gradient, so
+   the per-event accent colors (brown, vivid purple, magenta…) get
+   lost. Render each chip as a high-contrast white pill with a
+   coloured dot + coloured text. The accent comes from --chip-color
+   set inline in the JSX.
+   ────────────────────────────────────────────────────────────────── */
+.fa-body-card .fa-aesthetic-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.36rem 0.85rem 0.36rem 0.7rem;
+  background: #ffffff;
+  color: var(--chip-color, #4338ca);
+  border: 1.5px solid var(--chip-color, #4338ca);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  line-height: 1;
+  white-space: nowrap;
+}
+.fa-body-card .fa-aesthetic-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--chip-color, #4338ca);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* ── Glance summary ─── */
+.fa-glance-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); gap: 0.5rem;
+}
+.fa-glance-row:last-child { border-bottom: none; padding-bottom: 0; }
+.fa-glance-key {
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--text-tertiary); flex-shrink: 0;
+}
+.fa-glance-val {
+  font-size: 0.77rem; font-weight: 600;
+  color: var(--text-primary); text-align: right; max-width: 60%;
+}
+
+/* ── Reset / action buttons ─── */
+.fa-action-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.55rem 1.25rem; border-radius: 9999px;
+  border: 2px solid var(--border-color); background: var(--bg-secondary);
+  font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.18s; font-family: inherit;
+}
+.fa-action-btn:hover { border-color: #4f46e5; color: #4338ca; }
+
+/* ── Divider ─── */
+.fa-divider { height: 1px; background: var(--border-color); margin: 1.6rem 0; }
+
+/* ── Collapsible toggle ─── */
+.fa-collapse-btn {
+  display: flex; width: 100%; align-items: center;
+  justify-content: space-between; background: none;
+  border: none; cursor: pointer; padding: 0; font-family: inherit;
+}
+.fa-collapse-btn-left {
+  display: flex; align-items: center; gap: 0.65rem;
+}
+.fa-collapse-icon {
+  width: 34px; height: 34px; border-radius: 0.65rem;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+.fa-collapse-title {
+  font-weight: 700; font-size: 0.95rem; color: var(--text-primary);
+}
+
+/* ── Upload actions row (Choose + Take Photo) ─── */
+.fa-upload-actions {
+  display: flex; align-items: center; gap: 0.65rem;
+  justify-content: center; flex-wrap: wrap; margin-top: 0.9rem;
+}
+.fa-camera-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.55rem 1.4rem; border-radius: 9999px;
+  font-size: 0.82rem; font-weight: 600;
+  background: transparent;
+  border: 2px solid #4f46e5;
+  color: #4f46e5; cursor: pointer;
+  transition: background 0.18s, color 0.18s, transform 0.15s;
+}
+.fa-camera-btn:hover {
+  background: #4f46e5; color: #fff; transform: translateY(-1px);
+}
+.fa-camera-error {
+  font-size: 0.75rem; color: #ef4444; margin-top: 0.4rem; text-align: center;
+}
+
+/* ── Camera modal ─── */
+.fa-camera-modal-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.72);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.fa-camera-modal {
+  background: var(--bg-secondary); border-radius: 1.25rem;
+  overflow: hidden; width: 100%; max-width: 480px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+  animation: faFadeUp 0.25s ease both;
+}
+.fa-camera-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 700; font-size: 0.95rem; color: var(--text-primary);
+}
+.fa-camera-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-tertiary); display: flex; align-items: center;
+  padding: 0.2rem; border-radius: 0.4rem;
+  transition: color 0.15s;
+}
+.fa-camera-close:hover { color: var(--text-primary); }
+.fa-camera-video-wrap {
+  background: #000; min-height: 280px;
+  display: flex; align-items: center; justify-content: center;
+}
+.fa-camera-video { display: block; width: 100%; max-height: 340px; object-fit: cover; }
+.fa-camera-modal-footer {
+  display: flex; gap: 0.75rem; padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border-color);
+}
+.fa-camera-capture-btn {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.5rem; padding: 0.75rem;
+  border-radius: 9999px; border: none; cursor: pointer;
+  font-size: 0.88rem; font-weight: 700; font-family: inherit;
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: #fff; box-shadow: 0 4px 14px rgba(67, 56, 202, 0.35);
+  transition: opacity 0.2s, transform 0.15s;
+}
+.fa-camera-capture-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.fa-camera-cancel-btn {
+  padding: 0.75rem 1.25rem; border-radius: 9999px;
+  border: 2px solid var(--border-color); background: var(--bg-secondary);
+  font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; font-family: inherit; transition: border-color 0.15s;
+}
+.fa-camera-cancel-btn:hover { border-color: #4f46e5; color: #4338ca; }
+
+/* ── Jewellery-style colour palette cards ─── */
+.fa-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.85rem; margin-top: 0.75rem;
+}
+.fa-palette-card {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 0; overflow: hidden;
+  border-radius: 1.1rem;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  box-shadow: 0 2px 12px rgba(67,56,202,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.fa-palette-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 8px 28px rgba(67,56,202,0.18);
+  border-color: #4f46e5;
+}
+.fa-palette-swatch {
+  width: 100%; height: 80px; position: relative; flex-shrink: 0;
+  border-bottom: 1.5px solid rgba(0,0,0,0.08);
+}
+.fa-palette-swatch::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 60%);
+  pointer-events: none;
+}
+.fa-palette-card-body {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.18rem; padding: 0.55rem 0.4rem 0.6rem; width: 100%;
+}
+.fa-palette-name {
+  font-size: 0.73rem; font-weight: 700; color: var(--text-primary);
+  text-align: center; line-height: 1.35;
+}
+.fa-palette-hex {
+  font-size: 0.6rem; color: var(--text-tertiary); font-family: 'Courier New', monospace;
+  letter-spacing: 0.04em;
+  background: var(--bg-tertiary); padding: 0.1rem 0.45rem;
+  border-radius: 9999px; border: 1px solid var(--border-color);
+}
+
+/* ── Book Salon button ─── */
+.fa-salon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.55rem; padding: 0.78rem 1.75rem;
+  width: 100%; border-radius: 9999px; border: none; cursor: pointer;
+  font-size: 0.9rem; font-weight: 700; font-family: inherit;
+  background: linear-gradient(135deg, #4f46e5, #4338ca, #3730a3);
+  background-size: 200% 200%;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(67, 56, 202, 0.35);
+  transition: opacity 0.2s, transform 0.18s, box-shadow 0.2s;
+  animation: faGradShift 3.5s ease infinite;
+  margin-top: 0.25rem;
+}
+.fa-salon-btn:hover {
+  opacity: 0.92; transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(67, 56, 202, 0.45);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE (≤768px) — Fashion Assistance.
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .fa-main { padding: 1rem 1rem 2.5rem; }
+  .fa-header { flex-direction: column; align-items: flex-start; gap: 0.85rem; }
+  .fa-header h1 { font-size: 1.35rem !important; line-height: 1.2; }
+  .fa-header p  { font-size: 0.85rem; }
+
+  /* Event grid — 2 equal cols, last (odd) cell centred. */
+  .fa-event-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.6rem;
+  }
+  .fa-event-btn {
+    padding: 0.85rem 0.5rem;
+    min-height: 84px;
+    border-radius: 0.85rem;
+  }
+  .fa-event-grid > .fa-event-btn:last-child:nth-child(odd) {
+    grid-column: span 2;
+    justify-self: center;
+    max-width: 60%;
+  }
+  .fa-event-emoji { font-size: 1.4rem; }
+  .fa-event-label { font-size: 0.78rem; }
+
+  .fa-other-input { font-size: 0.9rem; padding: 0.65rem 0.85rem; min-height: 44px; }
+
+  /* Measurements row (bust/waist/hip) — keep 3 cols but tighter. */
+  .fa-other-input[type="number"] { padding: 0.55rem 0.6rem; min-height: 42px; }
+
+  /* Upload zone full-width. */
+  .fa-upload-zone { padding: 1.1rem; min-height: 200px; }
+  .fa-preview-wrap img { max-height: 280px; }
+  .fa-upload-actions { flex-direction: column; gap: 0.5rem; }
+  .fa-upload-btn-label,
+  .fa-camera-btn { width: 100%; justify-content: center; min-height: 44px; }
+
+  .fa-analyze-btn { width: 100%; padding: 0.95rem; min-height: 52px; font-size: 0.95rem; }
+  .fa-reset-btn   { min-height: 38px; }
+
+  /* Recommendation grid → single column. */
+  .fa-rec-grid { grid-template-columns: 1fr !important; gap: 0.85rem; }
+
+  /* Body card — stack the chips row beneath the type info. */
+  .fa-body-card { flex-direction: column; gap: 0.85rem; padding: 1.1rem; }
+  .fa-body-card-name { font-size: 1.1rem; }
+
+  /* Camera modal — full width minus 32px. */
+  .fa-camera-modal { width: calc(100vw - 32px) !important; max-width: 100% !important; }
+  .fa-camera-video-wrap { max-height: 60vh; }
+  .fa-camera-capture-btn,
+  .fa-camera-cancel-btn { width: 100%; min-height: 48px; }
+}

@@ -1,18 +1,17 @@
 // src/services/analysisService.js
-// Analysis API calls
-
+// Real wiring to the Django AI-analysis backend.
 import apiClient from '../api/client';
 import { API_ENDPOINTS } from '../api/config';
 
 export const analysisService = {
   /**
-   * Upload image for analysis
-   * @param {File} imageFile - The image file to upload
-   * @param {string} analysisType - 'skin' or 'scalp'
-   * @returns {Promise<object>} Analysis result
+   * Upload an image to the AI pipeline.
+   * @param {File}   imageFile
+   * @param {string} analysisType  'skin' | 'scalp'
+   * @returns {Promise<object>}    Pipeline result with conditions, severity,
+   *                               recommendations, image URLs, charts, etc.
    */
   uploadImage: async (imageFile, analysisType) => {
-  try {
     const formData = new FormData();
     formData.append('image', imageFile);
     formData.append('analysis_type', analysisType);
@@ -21,59 +20,45 @@ export const analysisService = {
       API_ENDPOINTS.ANALYSIS.UPLOAD,
       formData,
       {
-        headers: {
-          'Accept': 'application/json',
-        },
+        // axios sets multipart boundary automatically when you pass FormData
+        headers: { 'Accept': 'application/json' },
+        // Pipeline can take 30+ seconds (Ollama call). Allow a generous timeout.
+        timeout: 180000,
       }
     );
-
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-},
+    // Backend returns either the context dict directly or { success, data }
+    return response.data?.data || response.data;
+  },
 
   /**
-   * Get analysis history
-   * @param {object} filters - Optional filters { type, severity, startDate, endDate }
-   * @returns {Promise<Array>} List of past analyses
+   * Get the authenticated user's past analyses.
    */
   async getHistory(filters = {}) {
-    try {
-      const response = await apiClient.get(API_ENDPOINTS.ANALYSIS.HISTORY, {
-        params: filters,
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await apiClient.get(API_ENDPOINTS.ANALYSIS.HISTORY, { params: filters });
+    return response.data?.results || response.data || [];
   },
 
   /**
-   * Get single analysis detail by ID
-   * @param {string} id - Analysis ID
-   * @returns {Promise<object>} Analysis details
+   * Get one analysis by ID (full pipeline payload).
    */
   async getAnalysisById(id) {
-    try {
-      const response = await apiClient.get(API_ENDPOINTS.ANALYSIS.DETAIL(id));
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await apiClient.get(API_ENDPOINTS.ANALYSIS.DETAIL(id));
+    return response.data?.data || response.data;
   },
 
   /**
-   * Delete analysis
-   * @param {string} id - Analysis ID
-   * @returns {Promise<object>} Delete confirmation
+   * Delete an analysis record.
    */
   async deleteAnalysis(id) {
-    try {
-      const response = await apiClient.delete(API_ENDPOINTS.ANALYSIS.DETAIL(id));
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await apiClient.delete(API_ENDPOINTS.ANALYSIS.DETAIL(id));
+    return response.data;
+  },
+
+  /**
+   * Aggregate stats for the History/Home dashboard.
+   */
+  async getStats() {
+    const response = await apiClient.get(API_ENDPOINTS.ANALYSIS.STATS);
+    return response.data;
   },
 };

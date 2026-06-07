@@ -1,17 +1,58 @@
+import { Link } from 'react-router-dom';
+import { Instagram, Linkedin } from 'lucide-react';
+import './Footer.css';
+
 export default function Footer() {
   return (
-    <footer className="py-4 px-6 border-t border-gray-100 border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
-      <span>© {new Date().getFullYear()} <strong className="text-gray-300">ME</strong> · AI-Powered Skin, Scalp, Makeup & Fashion Assistant</span>
-      <div className="flex gap-4">
-        <button
-          onClick={() => alert('ME is an AI-powered beauty assistant for skin, scalp, makeup, and fashion analysis.\n\nBuilt by Team:\n• Huda Masood\n• Ali Hassan\n• Aqsa Mustafa\n• Sibgha Shezadi')}
-          className="hover:text-white transition"
-        >
-          About Project
-        </button>
-        <a href="mailto:contact@meapp.placeholder.com" className="hover:text-white transition">
-          Contact / Support
-        </a>
+    <footer className="site-footer">
+      <div className="footer-container">
+        <div className="footer-row">
+          <div className="footer-brand">
+            <span className="footer-logo">ME</span>
+            <span className="footer-tagline">
+              Personalised Skin and Scalp Assistant
+            </span>
+          </div>
+
+          <div className="footer-socials">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+              className="footer-social"
+            >
+              <Instagram size={16} />
+            </a>
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              className="footer-social"
+            >
+              <Linkedin size={16} />
+            </a>
+          </div>
+        </div>
+
+        <nav className="footer-links">
+          <Link to="/privacy">Privacy Policy</Link>
+          <Link to="/consent">Consent Form</Link>
+          <Link to="/scalp-treatment">Scalp Treatment</Link>
+          <Link to="/skin-treatment">Skin Treatment</Link>
+          <Link to="/report">Report</Link>
+          <Link to="/terms">Terms</Link>
+          <Link to="/contact">Contact</Link>
+          {/*
+          // Makeup section removed
+          <Link to="/makeup">Makeup</Link>
+          */}
+        </nav>
+
+        <p className="footer-copy">
+          © {new Date().getFullYear()} ME · All rights reserved.
+        </p>
       </div>
     </footer>
   );

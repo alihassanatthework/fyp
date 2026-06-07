@@ -1,12 +1,15 @@
 import logging
 
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import FashionSuggestion
-from .services import detect_body_type, get_fashion_suggestions
+from .services import (
+    detect_body_type, get_fashion_suggestions, classify_body_type, EVENT_ALIASES,
+)
 from makeup.services import detect_skin_tone  # reuse from makeup app
 
 logger = logging.getLogger(__name__)
@@ -18,15 +21,33 @@ logger = logging.getLogger(__name__)
 def fashion_suggest(request):
     """
     POST /api/fashion/suggest/
-    Body (multipart): image=<file>  event_type=casual|formal|wedding|party|business|outdoor|sports
-    Returns: body_type, skin_tone, suggestions dict
+    Body (multipart):
+        image=<file>
+        event_type=<str>
+        bust=<cm>  waist=<cm>  hip=<cm>     (optional — preferred path)
+        body_type=<explicit pick>           (fallback when measurements missing)
+        season=<spring|summer|autumn|winter|all-season>
+    Returns: body_type, skin_tone, suggestions, etc.
     """
-    image      = request.FILES.get('image')
-    event_type = request.data.get('event_type', 'casual')
+    if getattr(settings, 'RATELIMIT_ENABLE', False):
+        try:
+            from django_ratelimit.core import is_ratelimited
+            limited = is_ratelimited(request, group='fashion_suggest',
+                                     key='user', rate='10/h', increment=True)
+            if limited:
+                return Response({'error': 'Rate limit exceeded — 10 fashion suggestions/hour.'},
+                                status=429)
+        except Exception:
+            pass
 
-    valid_events = {'casual', 'formal', 'wedding', 'party', 'business', 'outdoor', 'sports'}
-    if event_type not in valid_events:
-        event_type = 'casual'
+    image = request.FILES.get('image')
+
+    raw_event = (request.data.get('event_type') or 'casual').lower().strip()
+    event_normalised = EVENT_ALIASES.get(raw_event, 'casual')
+
+    bust  = request.data.get('bust')
+    waist = request.data.get('waist')
+    hip   = request.data.get('hip')
 
     if not image:
         return Response({'error': 'Image is required.'}, status=400)
@@ -38,34 +59,51 @@ def fashion_suggest(request):
     if image.size > 10 * 1024 * 1024:
         return Response({'error': 'Image must be under 10MB.'}, status=400)
 
-    # Save image
-    suggestion = FashionSuggestion(user=request.user, event_type=event_type)
+    # ── Body type resolution ──
+    # 1. Explicit user choice wins (UI fallback selector).
+    user_body_choice = request.data.get('body_type')
+    body_type = detect_body_type(user_body_choice, bust=bust, waist=waist, hip=hip)
+    # 2. If still Unknown and no measurements supplied → tell the UI to ask.
+    if body_type == 'Unknown' and not user_body_choice and not any([bust, waist, hip]):
+        return Response({
+            'error': 'body_type_required',
+            'message': 'Provide bust/waist/hip measurements (cm) OR pick a body_type explicitly.',
+            'valid_body_types': ['Hourglass', 'Pear', 'Apple', 'Rectangle', 'Inverted Triangle'],
+        }, status=400)
+
+    suggestion = FashionSuggestion(user=request.user, event_type=event_normalised)
     suggestion.image.save(image.name, image, save=True)
     image_path = suggestion.image.path
 
-    # Detect body type + skin tone
-    body_type = detect_body_type(image_path)
     skin_tone = detect_skin_tone(image_path)
 
-    # Get LLM suggestions
-    suggestions = get_fashion_suggestions(body_type, skin_tone, event_type)
+    measurements = {'bust': bust, 'waist': waist, 'hip': hip} if any([bust, waist, hip]) else None
+    season = request.data.get('season') or 'all-season'
+    suggestions = get_fashion_suggestions(
+        body_type=body_type,
+        skin_tone=skin_tone,
+        event_type=event_normalised,
+        measurements=measurements,
+        season=season,
+    )
 
-    # Save results
     suggestion.body_type   = body_type
     suggestion.skin_tone   = skin_tone
     suggestion.suggestions = suggestions
     suggestion.save()
 
-    logger.info("Fashion suggestion for user %s: %s / %s / %s",
-                request.user.email, body_type, skin_tone, event_type)
+    logger.info("Fashion suggestion for %s: %s / %s / %s",
+                request.user.email, body_type, skin_tone, event_normalised)
 
     return Response({
-        'id':          suggestion.id,
-        'body_type':   body_type,
-        'skin_tone':   skin_tone,
-        'event_type':  event_type,
-        'suggestions': suggestions,
-        'created_at':  suggestion.created_at,
+        'id':           suggestion.id,
+        'body_type':    body_type,
+        'skin_tone':    skin_tone,
+        'event_type':   event_normalised,
+        'measurements': measurements,
+        'season':       season,
+        'suggestions':  suggestions,
+        'created_at':   suggestion.created_at,
     })
 
 

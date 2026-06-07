@@ -19,10 +19,18 @@ _HEALTH_CONDITION_MAP = {
 
 
 class RegisterSerializer(serializers.Serializer):
-    full_name = serializers.CharField(required=True, max_length=150)
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(write_only=True, required=True)
-    confirm_password = serializers.CharField(write_only=True, required=True)
+    """
+    Accepts EITHER:
+      • Option A (legacy): full_name + confirm_password
+      • Option B (current React form): first_name + last_name
+    Both shapes resolve to a User with first_name + last_name set.
+    """
+    full_name        = serializers.CharField(required=False, max_length=150, allow_blank=True)
+    first_name       = serializers.CharField(required=False, max_length=150, allow_blank=True)
+    last_name        = serializers.CharField(required=False, max_length=150, allow_blank=True)
+    email            = serializers.EmailField(required=True)
+    password         = serializers.CharField(write_only=True, required=True)
+    confirm_password = serializers.CharField(write_only=True, required=False, allow_blank=True)
     health_conditions = serializers.ListField(
         child=serializers.CharField(), required=False, default=list
     )
@@ -34,7 +42,12 @@ class RegisterSerializer(serializers.Serializer):
         return email
 
     def validate(self, attrs):
-        if attrs['password'] != attrs['confirm_password']:
+        # Must have at least one of full_name OR first_name
+        if not attrs.get('full_name') and not attrs.get('first_name'):
+            raise serializers.ValidationError({"first_name": "First name is required."})
+        # confirm_password is optional; check only if it was sent
+        cp = attrs.get('confirm_password')
+        if cp and attrs['password'] != cp:
             raise serializers.ValidationError({"password": "Passwords do not match."})
         try:
             validate_password(attrs['password'])
@@ -44,18 +57,26 @@ class RegisterSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         health_conditions = validated_data.pop('health_conditions', [])
-        validated_data.pop('confirm_password')
-        full_name = validated_data.pop('full_name').strip()
+        validated_data.pop('confirm_password', None)
+
+        # Resolve first/last from either input shape
+        first_name = (validated_data.pop('first_name', '') or '').strip()
+        last_name  = (validated_data.pop('last_name',  '') or '').strip()
+        full_name  = (validated_data.pop('full_name',  '') or '').strip()
+        if not first_name and full_name:
+            parts = full_name.split(' ', 1)
+            first_name = parts[0]
+            last_name  = parts[1] if len(parts) > 1 else last_name
+
         email = validated_data['email']
 
         # Django's auth_user requires a username — we use email as username
-        parts = full_name.split(' ', 1)
         user = User.objects.create_user(
             username=email,
             email=email,
             password=validated_data['password'],
-            first_name=parts[0],
-            last_name=parts[1] if len(parts) > 1 else '',
+            first_name=first_name,
+            last_name=last_name,
         )
 
         # Always create profile + medical history rows at registration
@@ -82,10 +103,14 @@ class RegisterSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
     member_since = serializers.SerializerMethodField()
+    # Expose raw ISO date_joined so the frontend can format it as needed
+    # (Profile page now displays "Month DD, YYYY").
+    date_joined = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'full_name', 'member_since')
+        fields = ('id', 'email', 'first_name', 'last_name', 'full_name',
+                  'member_since', 'date_joined')
 
     def get_full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}".strip() or obj.email

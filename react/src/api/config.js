@@ -3,30 +3,68 @@
 
 // Keep endpoints relative — axios baseURL is already set to '/api' in client.js,
 // so these paths must NOT include '/api' prefix (would become '/api/api/...').
-const API_BASE_URL = '';
 
 export const API_ENDPOINTS = {
-  // Auth endpoints
+  // ── Auth ────────────────────────────────────────────────────────────
   AUTH: {
-    LOGIN: `${API_BASE_URL}/auth/login/`,
-    REGISTER: `${API_BASE_URL}/auth/register/`,
-    LOGOUT: `${API_BASE_URL}/auth/logout/`,
-    ME: `${API_BASE_URL}/auth/me/`,
+    LOGIN:           '/auth/login/',
+    REGISTER:        '/auth/register/',
+    LOGOUT:          '/auth/logout/',
+    ME:              '/auth/me/',
+    REFRESH:         '/auth/token/refresh/',
+    FORGOT_PASSWORD: '/auth/forgot-password/',
+    RESET_PASSWORD:  '/auth/reset-password/',
+    CHANGE_PASSWORD: '/auth/change-password/',
+    MY_ROLE:         '/auth/my-role/',
   },
 
-  // Analysis endpoints
-  ANALYSIS: {
-    UPLOAD: `${API_BASE_URL}/analysis/upload/`,
-    HISTORY: `${API_BASE_URL}/analysis/history/`,
-    DETAIL: (id) => `${API_BASE_URL}/analysis/${id}/`,
-  },
-
-  // Profile endpoints
+  // ── Profile (combined user + profile + medical_history) ────────────
   PROFILE: {
-    GET: `${API_BASE_URL}/profile/`,
-    UPDATE: `${API_BASE_URL}/profile/update/`,
-    HEALTH: `${API_BASE_URL}/profile/health/`,
+    GET:    '/profile/',
+    UPDATE: '/profile/',
+  },
+
+  // ── Skin / scalp analysis pipeline ─────────────────────────────────
+  ANALYSIS: {
+    UPLOAD:  '/analysis/upload/',
+    HISTORY: '/analysis/history/',
+    STATS:   '/analysis/stats/',
+    DETAIL:  (id) => `/analysis/${id}/`,
+  },
+
+  // ── Makeup assistance ─────────────────────────────────────────────
+  MAKEUP: {
+    SUGGEST: '/makeup/suggest/',
+    HISTORY: '/makeup/history/',
+  },
+
+  // ── Fashion assistance ────────────────────────────────────────────
+  FASHION: {
+    SUGGEST: '/fashion/suggest/',
+    HISTORY: '/fashion/history/',
+  },
+
+  // ── Providers (dermatologists / salons) ───────────────────────────
+  PROVIDERS: {
+    LIST:    '/providers/',
+    NEARBY:  '/providers/nearby/',
+    DETAIL:  (id) => `/providers/${id}/`,
+  },
+
+  // ── Bookings ─────────────────────────────────────────────────────
+  BOOKINGS: {
+    LIST:   '/bookings/',
+    CREATE: '/bookings/',
+    DETAIL: (id) => `/bookings/${id}/`,
+    CANCEL: (id) => `/bookings/${id}/cancel/`,
+  },
+
+  // ── Admin (gated by IsAdmin permission) ──────────────────────────
+  ADMIN: {
+    USERS:        '/admin/users/',
+    USER_ROLE:    (id) => `/admin/users/${id}/role/`,
+    MODEL_STATUS: '/admin/models/status/',
   },
 };
 
-export default API_BASE_URL;
+export default API_ENDPOINTS;

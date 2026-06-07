@@ -293,14 +293,30 @@ if _redis_url:
             'LOCATION': _redis_url,
         }
     }
-    # Only register django_ratelimit when Redis is available — the app's
-    # system check blocks startup if the cache doesn't support atomic ops.
     INSTALLED_APPS += ['django_ratelimit']
     RATELIMIT_ENABLE = True
     RATELIMIT_USE_CACHE = 'default'
 else:
-    # No Redis locally — skip ratelimit entirely (no system-check errors).
-    RATELIMIT_ENABLE = False
+    # No Redis: per-process LocMemCache. django_ratelimit's system check
+    # raises E003 because LocMemCache isn't a shared cache — that's only
+    # a concern when running multiple worker processes. For single-process
+    # `runserver` (dev) it's fine, so we silence the check explicitly.
+    # Production MUST set REDIS_URL to get a true shared cache.
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'me-local-cache',
+        }
+    }
+    INSTALLED_APPS += ['django_ratelimit']
+    RATELIMIT_ENABLE = os.getenv('RATELIMIT_DISABLE', '0') != '1'
+    RATELIMIT_USE_CACHE = 'default'
+    SILENCED_SYSTEM_CHECKS = ['django_ratelimit.E003', 'django_ratelimit.W001']
+
+# ── Ollama LLM configuration ────────────────────────────────────────
+# Production must set OLLAMA_URL. Localhost is the dev default.
+OLLAMA_URL    = os.getenv('OLLAMA_URL',   'http://localhost:11434')
+OLLAMA_MODEL  = os.getenv('OLLAMA_MODEL', 'llama3.2')
 
 # Email Settings
 # In development: prints emails to the console (no SMTP needed).

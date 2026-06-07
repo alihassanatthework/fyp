@@ -1,0 +1,207 @@
+.mirror-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: mirrorFade 0.2s ease;
+}
+@keyframes mirrorFade { from { opacity: 0; } to { opacity: 1; } }
+
+.mirror-shell {
+  width: 100%;
+  max-width: 880px;
+  max-height: 90vh;
+  background: #0b1220;
+  border-radius: 1.2rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.mirror-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  color: #f9fafb;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: linear-gradient(90deg, #1e1b4b, #312e81);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.mirror-header span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.mirror-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 9999px;
+  color: white;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.mirror-close:hover { background: rgba(255, 255, 255, 0.22); }
+
+.mirror-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  overflow: hidden;
+}
+
+.mirror-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);  /* mirror flip */
+}
+
+.mirror-scanline {
+  position: absolute;
+  left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #a5b4fc, transparent);
+  box-shadow: 0 0 12px #a5b4fc;
+  animation: mirrorScan 3.6s linear infinite;
+  pointer-events: none;
+}
+@keyframes mirrorScan {
+  0%   { top: 0%; }
+  50%  { top: 100%; }
+  100% { top: 0%; }
+}
+
+.mirror-hotspot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: currentColor;
+  border: none;
+  box-shadow:
+    0 0 12px currentColor,
+    0 0 26px currentColor;
+  cursor: pointer;
+  animation: mirrorHotPulse 1.8s ease-in-out infinite;
+  z-index: 2;
+}
+@keyframes mirrorHotPulse {
+  0%, 100% { box-shadow: 0 0 8px currentColor, 0 0 16px currentColor; }
+  50%      { box-shadow: 0 0 18px currentColor, 0 0 36px currentColor; }
+}
+
+.mirror-error,
+.mirror-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #f9fafb;
+  background: rgba(0, 0, 0, 0.55);
+  gap: 0.6rem;
+  text-align: center;
+  padding: 1.4rem;
+}
+.mirror-error p {
+  max-width: 360px;
+  line-height: 1.45;
+  font-size: 0.92rem;
+}
+.mirror-error-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.mirror-error-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.10);
+  color: #f9fafb;
+  cursor: pointer;
+  text-decoration: none;
+  min-height: 44px;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s;
+}
+.mirror-error-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
+}
+.mirror-error-btn.primary {
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.mirror-error-btn.primary:hover {
+  background: linear-gradient(135deg, #7c3aed, #f472b6);
+}
+
+.mirror-footer {
+  padding: 0.9rem 1.25rem;
+  background: #1e1b4b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.mirror-tip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+.mirror-cta {
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: white;
+  border: none;
+  padding: 0.55rem 1.2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+.mirror-cta:hover { transform: translateY(-1px); }
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE (≤768px) — AI Mirror Mode modal.
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .mirror-overlay { padding: 1rem; }
+  .mirror-shell {
+    width: calc(100vw - 32px);
+    max-width: 100%;
+    max-height: calc(100vh - 32px);
+    border-radius: 1rem;
+  }
+  .mirror-stage { aspect-ratio: 3 / 4; }
+  .mirror-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+  }
+  .mirror-tip  { font-size: 0.74rem; text-align: center; }
+  .mirror-cta  { width: 100%; min-height: 48px; }
+  .mirror-close { width: 44px; height: 44px; }
+}

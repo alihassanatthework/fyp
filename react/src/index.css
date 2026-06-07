@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 * {
   margin: 0;
@@ -15,11 +15,13 @@
   --text-tertiary: #9ca3af;
   --border-color: #e5e7eb;
   --border-color-hover: #d1d5db;
-  --blue-500: #3b82f6;
-  --blue-600: #2563eb;
-  --blue-700: #1d4ed8;
-  --blue-50: #eff6ff;
-  --blue-100: #dbeafe;
+  --blue-500: #4f46e5;
+  --blue-600: #4338ca;
+  --blue-700: #3730a3;
+  --blue-50: #eef2ff;
+  --blue-100: #e0e7ff;
+  --nav-bg: #ffffff;
+  --nav-accent: #4338ca;
   --green-500: #10b981;
   --green-100: #d1fae5;
   --green-700: #047857;
@@ -38,23 +40,94 @@
 }
 
 body.dark {
-  --bg-primary: #030712;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1f2937;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-tertiary: #6b7280;
-  --border-color: #374151;
-  --border-color-hover: #4b5563;
-  --blue-50: #1e3a8a;
-  --blue-100: #1e40af;
-  --green-100: #064e3b;
-  --amber-100: #78350f;
-  --red-100: #7f1d1d;
+  /* Page surfaces — lift cards (--bg-secondary) above the body so they
+     stand out instead of melting into a uniform dark field. */
+  --bg-primary:   #0b1220;
+  --bg-secondary: #131c2e;
+  --bg-tertiary:  #1e293b;
+
+  /* Text — keep primary near-white, lift the secondary/tertiary
+     so dim body copy and labels actually read. The old tertiary
+     (#6b7280) was the same brightness as light-mode's body grey,
+     which is far too dark on a near-black background. */
+  --text-primary:   #f9fafb;
+  --text-secondary: #e2e8f0;
+  --text-tertiary:  #94a3b8;
+
+  /* Borders — brighter so card outlines are visible on the
+     near-black body. */
+  --border-color:       #334155;
+  --border-color-hover: #475569;
+
+  --nav-bg:     #0f172a;
+  --nav-accent: #a5b4fc;
+
+  /* Tinted backgrounds for chips, badges, and severity bars.
+     The old values used full-saturation 800-shade hexes which
+     read as solid coloured blocks; the new values use a translucent
+     accent over the dark body so the text in the chip is legible. */
+  --blue-50:    rgba(99, 102, 241, 0.18);
+  --blue-100:   rgba(99, 102, 241, 0.28);
+  --green-100:  rgba(16, 185, 129, 0.18);
+  --amber-100:  rgba(245, 158, 11, 0.20);
+  --red-100:    rgba(239, 68, 68, 0.20);
+  --green-700:  #34d399;
+  --amber-700:  #fbbf24;
+  --red-600:    #f87171;
+
+  /* Stronger shadows so cards have depth against the deep body. */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 14px -2px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 12px 28px -6px rgba(0, 0, 0, 0.6);
 }
 
+/* Card outlines feel crisper with a faint highlight on top in dark mode. */
+body.dark .card,
+body.dark .info-card {
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+body.dark .card:hover,
+body.dark .info-card:hover {
+  border-color: var(--border-color-hover);
+}
+
+/* Form fields — lift their background slightly above the card so the
+   user can tell an input from a static row. */
+body.dark .input-field,
+body.dark select,
+body.dark textarea {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+body.dark .input-field::placeholder { color: var(--text-tertiary); }
+
+/* Secondary buttons need a clearer outline in dark mode so they don't
+   look like static text. */
+body.dark .btn-secondary {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color-hover);
+  color: var(--text-primary);
+}
+body.dark .btn-secondary:hover {
+  background: var(--blue-50);
+  border-color: var(--nav-accent);
+  color: var(--nav-accent);
+}
+
+/* Severity chips — keep them legible after the --blue-50 etc. changes. */
+body.dark .badge-mild     { color: #6ee7b7; }
+body.dark .badge-moderate { color: #fcd34d; }
+body.dark .badge-severe   { color: #fca5a5; }
+
+/* Brighter scrollbar in dark mode so users can grab it. */
+body.dark ::-webkit-scrollbar-thumb       { background: #475569; }
+body.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -62,19 +135,196 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Typography */
-h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
+/* ──────────────────────────────────────────────────────────────────
+   Buttons and labels inherit from the page. Without this, <button>
+   elements fall back to the OS "buttontext" colour (near-black on
+   macOS), which makes their text invisible in dark mode — visible on
+   the Book Appointment "Dermatology / Salon" tiles in the screenshot.
+   Buttons that need a different colour set it explicitly (e.g.
+   .btn-primary, .info-card-btn) so this rule is safe.
+   ────────────────────────────────────────────────────────────────── */
+button, input, select, textarea, label {
+  color: inherit;
+  font-family: inherit;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Tailwind-ish text-colour utility shims.
+   Several pages were written as if Tailwind was loaded — using class
+   pairs like `text-gray-900 text-white` to mean "dark text in light
+   mode, white in dark mode". The project does NOT ship Tailwind, so
+   those classes were no-ops and text fell back to inherited color.
+   We map them to the theme variables so the same JSX behaves
+   correctly in both modes without touching every page.
+   ────────────────────────────────────────────────────────────────── */
+.text-white,
+.text-gray-50,
+.text-gray-100,
+.text-gray-200,
+.text-gray-800,
+.text-gray-900            { color: var(--text-primary); }
+
+.text-gray-600,
+.text-gray-700            { color: var(--text-secondary); }
+
+.text-gray-300,
+.text-gray-400,
+.text-gray-500            { color: var(--text-tertiary); }
+
+/* Common accent colours used inline — light variants kept, dark mode
+   brightens them so they survive against the deep body. */
+.text-blue-500            { color: #3b82f6; }
+.text-green-500           { color: #10b981; }
+.text-amber-500           { color: #f59e0b; }
+.text-red-500             { color: #ef4444; }
+
+body.dark .text-blue-500  { color: #93c5fd; }
+body.dark .text-green-500 { color: #6ee7b7; }
+body.dark .text-amber-500 { color: #fcd34d; }
+body.dark .text-red-500   { color: #fca5a5; }
+
+/* Typography — single Inter family for the entire site */
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
 .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 0.75rem; }
 
 /* Layout */
-.container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+.container, .page-container { max-width: 1200px; margin: 0 auto; padding: 0 1.75rem; width: 100%; }
+@media (min-width: 768px) { .container, .page-container { padding: 0 2.5rem; } }
 .card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 1rem; box-shadow: var(--shadow-sm); }
 .page-enter { animation: slideUp 0.35s ease both; }
 
+/* Info card (Diagnosis Reports / Last Scan) — matches AnalysisCard */
+.info-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+.info-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--nav-accent);
+  opacity: 0.85;
+}
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.info-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.info-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.info-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.info-card-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.info-card-bullets li {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding-left: 1.1rem;
+  position: relative;
+}
+.info-card-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nav-accent);
+}
+.info-card-btn {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: white;
+  background: var(--nav-accent);
+  border: none;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.15s;
+}
+.info-card-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+/* History action buttons */
+.history-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: 1px solid transparent;
+  width: 100%;
+  white-space: nowrap;
+}
+.history-btn-primary {
+  background: var(--nav-accent);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(67, 56, 202, 0.18);
+}
+.history-btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 4px 10px rgba(67, 56, 202, 0.22);
+  transform: translateY(-1px);
+}
+.history-btn-ghost {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+.history-btn-ghost:hover {
+  color: var(--nav-accent);
+  border-color: var(--nav-accent);
+  background: var(--blue-50);
+}
+
 /* Buttons */
 .btn {
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.75rem;
+  padding: 0.625rem 1.4rem;
+  border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -88,6 +338,17 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
 }
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.4rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
   background: var(--blue-600);
   color: white;
   box-shadow: var(--shadow-sm);
@@ -98,6 +359,16 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
   background: var(--bg-secondary);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
@@ -134,12 +405,15 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
 .input-field::placeholder { color: var(--text-tertiary); }
 
 /* Badges */
-.badge {
-  display: inline-block;
-  padding: 0.25rem 0.625rem;
+.badge, .badge-mild, .badge-moderate, .badge-severe {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.6rem;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
 }
 
 .badge-mild { background: var(--green-100); color: var(--green-700); }
@@ -237,3 +511,497 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
 .rounded-xl { border-radius: 0.75rem; }
 .rounded-2xl { border-radius: 1rem; }
 .rounded-full { border-radius: 9999px; }
+
+/* ══════════════════════════════════════════════════════════
+   GLOBAL BUTTON CONSISTENCY
+   All primary action buttons share the same gradient theme,
+   border-radius, hover elevation, and shadow style.
+══════════════════════════════════════════════════════════ */
+:root {
+  --btn-primary-bg: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+  --btn-primary-shadow: 0 6px 20px rgba(79, 70, 229, 0.38);
+  --btn-primary-shadow-hover: 0 10px 28px rgba(79, 70, 229, 0.5);
+  --btn-radius: 9999px;
+}
+
+/* Override btn-primary with unified gradient */
+.btn-primary {
+  background: var(--btn-primary-bg) !important;
+  background-size: 200% 200% !important;
+  border-radius: var(--btn-radius) !important;
+  box-shadow: var(--btn-primary-shadow) !important;
+  transition: opacity 0.2s, transform 0.18s, box-shadow 0.2s !important;
+  animation: globalBtnShift 4s ease infinite;
+}
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.93 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--btn-primary-shadow-hover) !important;
+  filter: none !important;
+}
+@keyframes globalBtnShift {
+  0%,100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* info-card buttons consistent */
+.info-card-btn {
+  background: var(--btn-primary-bg) !important;
+  background-size: 200% 200% !important;
+  border-radius: var(--btn-radius) !important;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.3) !important;
+  animation: globalBtnShift 4s ease infinite;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s !important;
+}
+.info-card-btn:hover {
+  opacity: 0.92 !important; transform: translateY(-2px) !important;
+  filter: none !important;
+  box-shadow: var(--btn-primary-shadow-hover) !important;
+}
+
+/* analysis-card button consistent */
+.analysis-card-btn {
+  background: var(--btn-primary-bg) !important;
+  background-size: 200% 200% !important;
+  border-radius: var(--btn-radius) !important;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.3) !important;
+  animation: globalBtnShift 4s ease infinite;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s !important;
+}
+.analysis-card-btn:hover {
+  opacity: 0.92 !important; transform: translateY(-2px) !important;
+  filter: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   HOME PAGE FEATURE ILLUSTRATIONS
+══════════════════════════════════════════════════════════ */
+.home-feature-card { overflow: visible; }
+
+.home-feature-illustration {
+  position: relative;
+  width: 88px; height: 88px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.5rem;
+}
+.hfi-ring {
+  position: absolute; border-radius: 50%; border: 2px solid currentColor;
+  opacity: 0.15;
+}
+.makeup-illustration .hfi-ring { color: #4f46e5; }
+.fashion-illustration .hfi-ring { color: #6366f1; }
+.hfi-ring-1 { width: 88px; height: 88px; }
+.hfi-ring-2 { width: 66px; height: 66px; opacity: 0.09; }
+.hfi-icon-wrap {
+  width: 58px; height: 58px; border-radius: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+  position: relative; z-index: 1;
+}
+.hfi-dot {
+  position: absolute; border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.hfi-dot-1 { width: 10px; height: 10px; top: 4px; right: 6px; }
+.hfi-dot-2 { width: 8px;  height: 8px;  bottom: 8px; right: 4px; }
+.hfi-dot-3 { width: 7px;  height: 7px;  bottom: 10px; left: 6px; }
+
+
+/* ══════════════════════════════════════════════════════════════════
+   GLOBAL BUTTON POLISH
+   Layered on top of existing button styles (.btn-primary, .btn-secondary,
+   .btn-outline, .info-card-btn, .history-btn-*, .npm-btn-*, .ia-action-btn,
+   .mua-* / .fa-* event/camera/reset buttons, .provider-type-tab, etc.)
+   without overriding their colour identity. Adds:
+     • tactile press scale-down on :active
+     • visible focus ring for keyboard users (focus-visible only)
+     • polished .btn-secondary with subtle gradient + hover lift
+     • subtle animated sheen sweep on primary/gradient buttons on hover
+     • cleaner disabled state
+     • crisper icon alignment
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Make every "button-shaped" class behave consistently.
+   The list intentionally targets every named button family in the app. */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-outline,
+.info-card-btn,
+.analysis-card-btn,
+.history-btn,
+.npm-btn,
+.mua-analyze-btn,
+.mua-camera-btn,
+.mua-upload-btn-label,
+.mua-reset-btn,
+.mua-salon-btn,
+.mua-event-btn,
+.fa-analyze-btn,
+.fa-camera-btn,
+.fa-upload-btn-label,
+.fa-reset-btn,
+.fa-shopping-btn,
+.fa-event-btn,
+.ia-action-btn,
+.ia-analyse-btn,
+.provider-type-tab,
+.theme-btn,
+.profile-btn,
+.logout-btn,
+.dr-modal-quick-btn,
+.bookings-back-btn {
+  position: relative;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  letter-spacing: 0.01em;
+  will-change: transform;
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+/* Tactile press — every button "presses in" slightly when clicked. */
+.btn:not(:disabled):active,
+.btn-primary:not(:disabled):active,
+.btn-secondary:not(:disabled):active,
+.btn-outline:not(:disabled):active,
+.info-card-btn:not(:disabled):active,
+.analysis-card-btn:not(:disabled):active,
+.history-btn:not(:disabled):active,
+.npm-btn:not(:disabled):active,
+.mua-analyze-btn:not(:disabled):active,
+.mua-camera-btn:active,
+.mua-upload-btn-label:active,
+.mua-reset-btn:active,
+.mua-salon-btn:active,
+.mua-event-btn:active,
+.fa-analyze-btn:not(:disabled):active,
+.fa-camera-btn:active,
+.fa-upload-btn-label:active,
+.fa-reset-btn:active,
+.fa-shopping-btn:active,
+.fa-event-btn:active,
+.ia-action-btn:not(:disabled):active,
+.ia-analyse-btn:not(:disabled):active,
+.provider-type-tab:active,
+.theme-btn:active,
+.profile-btn:active,
+.logout-btn:active,
+.dr-modal-quick-btn:active,
+.bookings-back-btn:active {
+  transform: translateY(0) scale(0.97) !important;
+  transition-duration: 0.06s;
+}
+
+/* Accessible focus ring — only when keyboard-focused, never on click. */
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-outline:focus-visible,
+.info-card-btn:focus-visible,
+.analysis-card-btn:focus-visible,
+.history-btn:focus-visible,
+.npm-btn:focus-visible,
+.mua-analyze-btn:focus-visible,
+.fa-analyze-btn:focus-visible,
+.ia-action-btn:focus-visible,
+.ia-analyse-btn:focus-visible,
+.provider-type-tab:focus-visible,
+.theme-btn:focus-visible,
+.profile-btn:focus-visible,
+.logout-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(79, 70, 229, 0.35),
+    0 6px 18px rgba(79, 70, 229, 0.25) !important;
+}
+
+/* ── Polished .btn-secondary ──
+   The old style was a flat white pill with a thin border — fine but
+   forgettable. Give it a subtle gradient base, a soft shadow, and a
+   crisp hover that lifts and tints toward the accent. */
+.btn-secondary {
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.04) !important;
+}
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--nav-accent) !important;
+  color: var(--nav-accent) !important;
+  background: var(--blue-50) !important;
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 12px rgba(67, 56, 202, 0.18),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Dark-mode-specific tweak: keep the hover background subtle. */
+body.dark .btn-secondary:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.14) !important;
+  color: #c7d2fe !important;
+}
+
+/* ── .btn-outline polish ── */
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--blue-600);
+  color: var(--blue-600);
+  font-weight: 600;
+}
+.btn-outline:hover:not(:disabled) {
+  background: var(--blue-50);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.18);
+}
+body.dark .btn-outline {
+  border-color: var(--nav-accent);
+  color: var(--nav-accent);
+}
+
+/* ── Animated sheen sweep on gradient/primary buttons ──
+   A soft diagonal light moves once across the button on hover, giving
+   the gradient buttons a premium, polished feel without distracting
+   when idle. Uses an ::after overlay scoped to gradient buttons so the
+   existing animated background-position shift is untouched. */
+.btn-primary,
+.info-card-btn,
+.analysis-card-btn,
+.mua-analyze-btn,
+.fa-analyze-btn,
+.ia-analyse-btn,
+.mua-salon-btn,
+.fa-shopping-btn {
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-primary::after,
+.info-card-btn::after,
+.analysis-card-btn::after,
+.mua-analyze-btn::after,
+.fa-analyze-btn::after,
+.ia-analyse-btn::after,
+.mua-salon-btn::after,
+.fa-shopping-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 70%
+  );
+  transform: translateX(-110%);
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.btn-primary:hover:not(:disabled)::after,
+.info-card-btn:hover::after,
+.analysis-card-btn:hover::after,
+.mua-analyze-btn:hover:not(:disabled)::after,
+.fa-analyze-btn:hover:not(:disabled)::after,
+.ia-analyse-btn:hover:not(:disabled)::after,
+.mua-salon-btn:hover::after,
+.fa-shopping-btn:hover::after {
+  transform: translateX(110%);
+}
+/* Ensure label and icons sit ABOVE the sheen overlay. */
+.btn-primary > *,
+.info-card-btn > *,
+.analysis-card-btn > *,
+.mua-analyze-btn > *,
+.fa-analyze-btn > *,
+.ia-analyse-btn > *,
+.mua-salon-btn > *,
+.fa-shopping-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Disabled state — uniform across every button family ── */
+.btn:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-outline:disabled,
+.info-card-btn:disabled,
+.history-btn:disabled,
+.npm-btn:disabled,
+.mua-analyze-btn:disabled,
+.fa-analyze-btn:disabled,
+.ia-action-btn:disabled,
+.ia-analyse-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.25);
+  transform: none !important;
+  animation-play-state: paused;
+}
+.btn:disabled::after,
+.btn-primary:disabled::after,
+.info-card-btn:disabled::after,
+.mua-analyze-btn:disabled::after,
+.fa-analyze-btn:disabled::after,
+.ia-analyse-btn:disabled::after {
+  display: none;
+}
+
+/* ── Icon-button helper (for icon-only buttons like .bell-btn, etc.) ── */
+.btn svg,
+.btn-primary svg,
+.btn-secondary svg,
+.btn-outline svg,
+.info-card-btn svg,
+.history-btn svg,
+.npm-btn svg,
+.ia-action-btn svg,
+.ia-analyse-btn svg,
+.mua-analyze-btn svg,
+.fa-analyze-btn svg,
+.dr-modal-quick-btn svg {
+  transition: transform 0.18s ease;
+  flex-shrink: 0;
+}
+.btn:hover svg,
+.btn-primary:hover svg,
+.btn-secondary:hover svg,
+.btn-outline:hover svg,
+.info-card-btn:hover svg,
+.history-btn:hover svg,
+.ia-analyse-btn:hover svg,
+.mua-analyze-btn:hover svg,
+.fa-analyze-btn:hover svg {
+  transform: translateX(2px);
+}
+/* Icons that visually represent the action (download, calendar, etc.)
+   nudge slightly when hovered — but a pure right-arrow icon shouldn't
+   nudge inside a left-pointing back button. Override below: */
+.bookings-back-btn:hover svg { transform: translateX(-2px); }
+
+/* ── Loading spinner helper — used by buttons that show <Loader2 className="spin"/>. */
+.spin { animation: btnSpin 0.9s linear infinite; }
+@keyframes btnSpin { to { transform: rotate(360deg); } }
+
+/* ════════════════════════════════════════════════════════════════
+   Consistent 24px breathing room below the sticky <Navbar />.
+   Targets every page's first <main> that sits directly after the
+   .navbar header — so the same gap applies to Home, Diagnosis,
+   Bookings, Profile, Makeup, Fashion, History, ImageAnalysis, etc.
+   Uses !important to defeat page-specific padding-top values that
+   currently leave zero gap.
+   ════════════════════════════════════════════════════════════════ */
+.navbar + main {
+  padding-top: 24px !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   GLOBAL MOBILE RULES (≤768px)
+   Strict mobile-only. Every rule below is wrapped in the media query.
+   Goals: 16px gutters, 44px touch targets, no horizontal scroll at
+   320 / 375 / 430px, font scale reduced, no mid-word breaks.
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* No page should ever scroll horizontally on a phone. */
+  html, body { overflow-x: hidden; max-width: 100vw; }
+
+  /* Default page container — 16px horizontal gutters. */
+  .page-container,
+  .container { padding-left: 1rem !important; padding-right: 1rem !important; }
+
+  /* Headings — single sensible scale across the app. */
+  h1 { font-size: 1.45rem !important; line-height: 1.2; }
+  h2 { font-size: 1.15rem !important; line-height: 1.25; }
+  h3 { font-size: 1rem    !important; line-height: 1.3; }
+
+  /* Text should wrap naturally — never mid-word. */
+  p, .card, .btn, .btn-primary, .btn-secondary, label, span {
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: none;
+  }
+
+  /* Touch targets — every interactive element ≥ 44×44px. */
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline,
+  .info-card-btn,
+  .analysis-card-btn,
+  .npm-btn,
+  .history-btn,
+  .ia-action-btn,
+  .ia-analyse-btn,
+  .mua-analyze-btn,
+  .fa-analyze-btn,
+  .dr-modal-quick-btn,
+  .provider-type-tab,
+  .theme-btn,
+  .profile-btn,
+  .logout-btn {
+    min-height: 44px;
+  }
+  /* Icon-only buttons (bell, close, hamburger, password toggle) too. */
+  .bell-btn,
+  .mua-camera-close,
+  .password-toggle,
+  .modal-close,
+  .dr-modal-close,
+  .mirror-close,
+  .wrapped-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Form inputs — 16px font prevents iOS auto-zoom on focus. */
+  .input-field,
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+
+  /* Cards — keep them inside the gutter. */
+  .card { padding: 1rem; border-radius: 0.85rem; }
+
+  /* Footer cleanups. */
+  .site-footer { padding: 1.25rem 1rem; }
+  .footer-container { padding: 0; }
+  .footer-row { flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 0.85rem !important;
+    font-size: 0.78rem;
+  }
+
+  /* Any inline grid-template-columns hardcoded as multi-column on a card
+     should collapse to single column on mobile. */
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 { grid-template-columns: 1fr !important; }
+
+  /* Generic modal width-bound (anything using .modal-overlay > .modal-content). */
+  .modal-overlay { padding: 1rem; }
+  .modal-content {
+    width: calc(100vw - 32px);
+    max-width: 100%;
+  }
+}
+
+/* Extra-narrow phones (≤375px) — slightly smaller headings + tighter padding. */
+@media (max-width: 375px) {
+  h1 { font-size: 1.3rem !important; }
+  h2 { font-size: 1.05rem !important; }
+  .page-container, .container { padding-left: 0.85rem !important; padding-right: 0.85rem !important; }
+}
+

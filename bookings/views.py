@@ -4,8 +4,71 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from providers.models import Provider
 from .models import Booking
 from .serializers import BookingSerializer
+
+
+def _rate_limited(request, group, rate='10/h'):
+    """Return True if the user has exceeded `rate` for this `group`."""
+    if not getattr(settings, 'RATELIMIT_ENABLE', False):
+        return False
+    try:
+        from django_ratelimit.core import is_ratelimited
+        return is_ratelimited(request, group=group, key='user',
+                              rate=rate, increment=True)
+    except Exception:
+        return False
+
+
+def _resolve_provider(request):
+    """
+    Returns a (Provider | None, error_dict | None) tuple.
+
+    Bookings can come from two sources:
+      • Internal directory  → request.data['provider'] is an int pk.
+      • Google Places result → request.data['google_place'] is a dict.
+        In that case we get_or_create a Provider row so the FK works.
+    """
+    raw_provider = request.data.get('provider')
+
+    # Case 1 — internal Provider pk
+    if raw_provider not in (None, '', 'null'):
+        try:
+            pk = int(raw_provider)
+            return Provider.objects.get(pk=pk), None
+        except (ValueError, TypeError):
+            # Not an int → fall through and try the Google-Place branch
+            pass
+        except Provider.DoesNotExist:
+            return None, {'provider': 'Provider not found.'}
+
+    # Case 2 — Google Place payload
+    gp = request.data.get('google_place') or {}
+    if gp and gp.get('name'):
+        provider_type = (request.data.get('provider_type')
+                         or gp.get('provider_type')
+                         or 'dermatologist')
+        if provider_type not in {'dermatologist', 'salon', 'clinic'}:
+            provider_type = 'dermatologist'
+
+        # Dedup by name + lat/lng if available, otherwise by name + address.
+        lookup = {'name': gp.get('name')[:200]}
+        if gp.get('lat') and gp.get('lng'):
+            lookup['latitude']  = float(gp['lat'])
+            lookup['longitude'] = float(gp['lng'])
+
+        defaults = {
+            'provider_type': provider_type,
+            'address':       gp.get('vicinity') or gp.get('address') or '',
+            'city':          gp.get('city') or '',
+            'phone':         gp.get('formatted_phone_number') or gp.get('phone') or '',
+            'is_active':     True,
+        }
+        provider, _ = Provider.objects.get_or_create(defaults=defaults, **lookup)
+        return provider, None
+
+    return None, {'provider': 'A provider id or google_place payload is required.'}
 
 
 @api_view(['GET', 'POST'])
@@ -22,8 +85,21 @@ def bookings_list(request):
             qs = qs.filter(status=status_filter)
         return Response(BookingSerializer(qs, many=True).data)
 
-    # POST — create booking
-    serializer = BookingSerializer(data=request.data)
+    # Rate limit booking creation (10/h per user).
+    if _rate_limited(request, 'booking_create', '10/h'):
+        return Response({'error': 'Rate limit exceeded — 10 bookings/hour.'}, status=429)
+
+    # POST — create booking. Resolve provider FK from either an internal pk
+    # or a Google Places payload before running the serializer.
+    provider, err = _resolve_provider(request)
+    if err:
+        return Response(err, status=400)
+
+    # Inject the resolved pk so the serializer accepts it as a valid FK.
+    payload = dict(request.data)
+    payload['provider'] = provider.pk
+
+    serializer = BookingSerializer(data=payload)
     if not serializer.is_valid():
         return Response(serializer.errors, status=400)
 

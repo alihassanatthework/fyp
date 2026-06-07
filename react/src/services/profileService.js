@@ -1,80 +1,48 @@
 // src/services/profileService.js
-// Profile API calls
-
+// Wired to /api/profile/ which returns and accepts a combined object:
+//   { user, profile, medical_history }
 import apiClient from '../api/client';
 import { API_ENDPOINTS } from '../api/config';
 
 export const profileService = {
   /**
-   * Get user profile
-   * @returns {Promise<object>} User profile data
+   * Fetch the full profile bundle.
+   * Returns { user, profile, medical_history }.
    */
   async getProfile() {
-    try {
-      const response = await apiClient.get(API_ENDPOINTS.PROFILE.GET);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await apiClient.get(API_ENDPOINTS.PROFILE.GET);
+    return response.data;
   },
 
   /**
-   * Update user profile
-   * @param {object} profileData - Profile data to update
-   * @returns {Promise<object>} Updated profile
+   * Update the user, profile, or medical_history.
+   * Send any subset of {user, profile, medical_history}. Each sub-object
+   * is PATCHed (partial update) on the backend.
    */
   async updateProfile(profileData) {
-    try {
-      // Backend ProfileView accepts PATCH (partial update)
-      const response = await apiClient.patch(
-        API_ENDPOINTS.PROFILE.UPDATE,
-        profileData
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await apiClient.patch(API_ENDPOINTS.PROFILE.UPDATE, profileData);
+    return response.data;
   },
 
   /**
-   * Update health profile
-   * @param {object} healthData - Health profile data
-   * @returns {Promise<object>} Updated health profile
+   * Convenience wrapper for editing only the medical_history block.
    */
-  async updateHealthProfile(healthData) {
-    try {
-      const response = await apiClient.put(
-        API_ENDPOINTS.PROFILE.HEALTH,
-        healthData
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+  async updateHealthProfile(medicalHistory) {
+    const response = await apiClient.patch(
+      API_ENDPOINTS.PROFILE.UPDATE,
+      { medical_history: medicalHistory }
+    );
+    return response.data;
   },
 
   /**
-   * Upload profile picture
-   * @param {File} imageFile - Profile image file
-   * @returns {Promise<object>} Updated profile with new image URL
+   * Profile picture is not supported by the backend yet. Stub kept so
+   * existing UI code does not crash. Returns the local object URL so the
+   * user still sees an immediate preview; the upload is a no-op until the
+   * backend adds a profile_picture field on UserProfile.
    */
   async uploadProfilePicture(imageFile) {
-    try {
-      const formData = new FormData();
-      formData.append('profile_picture', imageFile);
-
-      const response = await apiClient.post(
-        `${API_ENDPOINTS.PROFILE.UPDATE}/picture/`,
-        formData,
-        {
-          headers: {
-            // Let the browser set the correct multipart boundary.
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    // TODO: backend endpoint not implemented yet.
+    return { profile_picture: URL.createObjectURL(imageFile), _unsynced: true };
   },
 };

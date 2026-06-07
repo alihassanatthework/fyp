@@ -15,31 +15,45 @@ export const useCamera = () => {
    * @returns {Promise<object>} { success, error }
    */
   const openCamera = async () => {
-    try {
-      setError(null);
+    setError(null);
 
-      // Request camera access
+    // ── HTTPS guard. mediaDevices is undefined on insecure origins
+    // (http://) on every modern mobile browser — without this guard,
+    // accessing .getUserMedia throws an uncaught TypeError.
+    const hasSecureContext =
+      typeof window !== 'undefined' ? window.isSecureContext !== false : true;
+    const hasApi =
+      typeof navigator !== 'undefined' &&
+      navigator.mediaDevices &&
+      typeof navigator.mediaDevices.getUserMedia === 'function';
+    if (!hasSecureContext || !hasApi) {
+      const msg = 'Camera requires HTTPS or localhost. Please upload a photo instead.';
+      setError(msg);
+      return { success: false, error: msg };
+    }
+
+    try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user' }, // Use front camera
         audio: false,
       });
 
       streamRef.current = stream;
-      
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
-
       setIsCameraOpen(true);
       return { success: true };
     } catch (err) {
-      const errorMessage = 
-        err.name === 'NotAllowedError' 
-          ? 'Camera access denied. Please allow camera access in your browser settings.'
-          : err.name === 'NotFoundError'
-          ? 'No camera found on this device.'
-          : 'Failed to access camera. Please try again.';
-      
+      const map = {
+        NotAllowedError:      'Camera access denied. Please allow camera access in your browser settings.',
+        NotFoundError:        'No camera found on this device.',
+        NotReadableError:     'Camera is in use by another app. Close it and retry.',
+        OverconstrainedError: 'Camera does not support the requested settings.',
+        SecurityError:        'Camera requires HTTPS or localhost.',
+        AbortError:           'Camera start was interrupted. Please retry.',
+      };
+      const errorMessage = map[err?.name] || `Failed to access camera: ${err?.message || 'unknown error'}.`;
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }

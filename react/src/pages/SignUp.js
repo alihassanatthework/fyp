@@ -1,17 +1,30 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Sun, Moon, Eye, EyeOff, CheckSquare, Square } from 'lucide-react';
+import { Sun, Moon, Eye, EyeOff, CheckSquare, Square, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
+import AuthShaderBackground from '../components/AuthShaderBackground';
 import './SignUp.css';
 
-const healthOptions = ['Allergies', 'Diabetes', 'Pregnancy', 'Heart-related condition', 'Other medical condition', 'None'];
+// Maps each user-facing label to the boolean flag the backend stores on MedicalHistory.
+const HEALTH_OPTIONS = [
+  { label: 'Allergies',               field: 'has_allergies'        },
+  { label: 'Diabetes',                field: 'is_diabetic'          },
+  { label: 'Pregnancy',               field: 'is_pregnant'          },
+  { label: 'Heart-related condition', field: 'has_cardio_issues'    },
+  { label: 'Hypertension',            field: 'has_hypertension'     },
+  { label: 'Asthma',                  field: 'has_asthma'           },
+  { label: 'Skin Condition',          field: 'has_skin_conditions'  },
+  { label: 'Scalp Condition',         field: 'has_scalp_conditions' },
+  { label: 'None',                    field: '__none__'             }, // sentinel — clears the rest
+];
 
 export default function SignUp() {
-  const [form, setForm] = useState({ fullName: '', email: '', password: '', confirmPassword: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
   const [accountType, setAccountType] = useState('free');
-  const [healthConditions, setHealthConditions] = useState([]);
+  const [healthConditions, setHealthConditions] = useState([]);  // array of label strings
   const [agreed, setAgreed] = useState(false);
+  const [showConsent, setShowConsent] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [serverError, setServerError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -19,14 +32,32 @@ export default function SignUp() {
   const { theme, toggleTheme } = useTheme();
   const { register } = useAuth();
 
-  const toggleHealth = (item) => {
-    setHealthConditions(prev => prev.includes(item) ? prev.filter(h => h !== item) : [...prev, item]);
+  const toggleHealth = (label) => {
+    setHealthConditions(prev => {
+      if (label === 'None') return prev.includes('None') ? [] : ['None'];
+      const next = prev.filter(h => h !== 'None');
+      return next.includes(label) ? next.filter(h => h !== label) : [...next, label];
+    });
+  };
+
+  // Build the medical_history object the backend expects.
+  const buildMedicalHistory = () => {
+    const out = {};
+    HEALTH_OPTIONS.forEach(({ label, field }) => {
+      if (field === '__none__') return;
+      out[field] = healthConditions.includes(label);
+    });
+    return out;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError('');
 
+    if (!form.firstName.trim()) {
+      setServerError('First name is required.');
+      return;
+    }
     if (form.password !== form.confirmPassword) {
       setServerError('Passwords do not match.');
       return;
@@ -38,11 +69,11 @@ export default function SignUp() {
 
     setSubmitting(true);
     const result = await register({
-      fullName: form.fullName,
-      email: form.email,
-      password: form.password,
-      confirmPassword: form.confirmPassword,
-      healthConditions,
+      firstName: form.firstName.trim(),
+      lastName:  form.lastName.trim(),
+      email:     form.email.trim().toLowerCase(),
+      password:  form.password,
+      medical_history: buildMedicalHistory(),
     });
     setSubmitting(false);
 
@@ -55,15 +86,16 @@ export default function SignUp() {
 
   return (
     <div className="signup-page">
+      <AuthShaderBackground />
       <div className="signup-container">
         <div className="signup-grid">
           <div className="card signup-form-panel p-8">
             <div className="signup-header">
               <div>
                 <h1 className="signup-title">
-                  AI-Powered Skin, Scalp, Makeup &<br/>Fashion Personalized Assistant
+                  Personalised Skin and Scalp Assistant
                 </h1>
-                <p className="signup-subtitle">Sign up once, sync your profile across light & dark themes.</p>
+                <p className="signup-subtitle">One profile, synced across light and dark themes.</p>
               </div>
               <div className="theme-toggle">
                 <button onClick={() => toggleTheme('light')} className={`theme-btn ${theme==='light' ? 'active' : ''}`}>
@@ -83,17 +115,21 @@ export default function SignUp() {
                 <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
                   <p className="section-label">Basic Information</p>
                   <div className="form-group">
-                    <label>Full Name</label>
-                    <input type="text" placeholder="Jane Doe" value={form.fullName} onChange={e => setForm({...form, fullName: e.target.value})} className="input-field" required />
+                    <label>First Name</label>
+                    <input type="text" placeholder="Jane" value={form.firstName} onChange={e => setForm({...form, firstName: e.target.value})} className="input-field" required autoComplete="given-name" />
+                  </div>
+                  <div className="form-group">
+                    <label>Last Name</label>
+                    <input type="text" placeholder="Doe" value={form.lastName} onChange={e => setForm({...form, lastName: e.target.value})} className="input-field" autoComplete="family-name" />
                   </div>
                   <div className="form-group">
                     <label>Email Address</label>
-                    <input type="email" placeholder="jane@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} className="input-field" required />
+                    <input type="email" placeholder="jane@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} className="input-field" required autoComplete="email" />
                   </div>
                   <div className="form-group">
                     <label>Password</label>
                     <div className="password-wrapper">
-                      <input type={showPass ? 'text' : 'password'} placeholder="••••••••" value={form.password} onChange={e => setForm({...form, password: e.target.value})} className="input-field" style={{paddingRight:'2.5rem'}} required />
+                      <input type={showPass ? 'text' : 'password'} placeholder="••••••••" value={form.password} onChange={e => setForm({...form, password: e.target.value})} className="input-field" style={{paddingRight:'2.5rem'}} required autoComplete="new-password" />
                       <button type="button" onClick={() => setShowPass(!showPass)} className="password-toggle">
                         {showPass ? <EyeOff size={16}/> : <Eye size={16}/>}
                       </button>
@@ -101,7 +137,7 @@ export default function SignUp() {
                   </div>
                   <div className="form-group">
                     <label>Confirm Password</label>
-                    <input type="password" placeholder="••••••••" value={form.confirmPassword} onChange={e => setForm({...form, confirmPassword: e.target.value})} className="input-field" required />
+                    <input type="password" placeholder="••••••••" value={form.confirmPassword} onChange={e => setForm({...form, confirmPassword: e.target.value})} className="input-field" required autoComplete="new-password" />
                   </div>
                   <div>
                     <p className="section-label">Account Type</p>
@@ -120,9 +156,9 @@ export default function SignUp() {
                     <p className="section-label">Health Profile</p>
                     <p className="text-xs" style={{color:'var(--text-tertiary)',marginBottom:'0.75rem'}}>Treatment suggestions are adjusted according to your health condition.</p>
                     <div className="health-options">
-                      {healthOptions.map(opt => (
-                        <button key={opt} type="button" onClick={() => toggleHealth(opt)} className={`health-option-btn ${healthConditions.includes(opt) ? 'selected' : ''}`}>
-                          {opt}
+                      {HEALTH_OPTIONS.map(({ label }) => (
+                        <button key={label} type="button" onClick={() => toggleHealth(label)} className={`health-option-btn ${healthConditions.includes(label) ? 'selected' : ''}`}>
+                          {label}
                         </button>
                       ))}
                     </div>
@@ -133,9 +169,29 @@ export default function SignUp() {
                       {agreed ? <CheckSquare size={18}/> : <Square size={18}/>}
                     </span>
                     <span className="terms-text">
-                      I agree to upload my face/scalp images for AI-based analysis and accept the terms of service.
+                      I agree to the <Link to="/terms" onClick={(e) => e.stopPropagation()}>Terms and Conditions</Link> and consent to upload my face or scalp images for AI-based analysis.
                     </span>
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowConsent((s) => !s)}
+                    className="consent-see-more"
+                  >
+                    {showConsent ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
+                    {showConsent ? 'Hide details' : 'See more'}
+                  </button>
+
+                  {showConsent && (
+                    <div className="consent-details">
+                      <ul>
+                        <li><strong>No third-party sharing.</strong> Your images and personal data are never shared with advertisers, insurers, or external partners.</li>
+                        <li><strong>LLM binary masks only.</strong> AI models receive de-identified binary masks derived from your image, not the raw photo, for inference.</li>
+                        <li><strong>Exclusive processing.</strong> All analysis runs on our isolated infrastructure; data is processed exclusively for your personalised diagnosis.</li>
+                        <li><strong>Right to withdraw.</strong> You may revoke consent and request deletion at any time from your profile settings.</li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -158,28 +214,6 @@ export default function SignUp() {
                 </p>
               </div>
             </form>
-          </div>
-
-          <div className="card signup-info-panel p-8">
-            <div>
-              <h2 className="info-panel-title">All-in-one beauty &<br/>wellness profile</h2>
-              <p className="info-panel-desc">Your skin, scalp, makeup, and fashion preferences live in a single AI-powered hub.</p>
-              <ul className="info-list">
-                {[
-                  'Health-aware recommendations that respect allergies, diabetes, pregnancy, and heart conditions.',
-                  'Guided skin & scalp analysis to match treatments, routines, and styles to your goals.',
-                  'Switch seamlessly between free and premium plans as your needs evolve.',
-                ].map((item, i) => (
-                  <li key={i} className="info-list-item">
-                    <span className="info-bullet"/>
-                    <span className="info-list-text">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <p className="info-footer">
-              Your theme preference and profile details are securely saved to your account so you can pick up where you left off on any device.
-            </p>
           </div>
         </div>
       </div>

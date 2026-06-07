@@ -32,7 +32,7 @@
 }
 
 .history-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--blue-600);
@@ -180,4 +180,49 @@
 .history-footer p {
   font-size: 0.75rem;
   color: var(--text-tertiary);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE (≤768px) — History + AnalysisHistory.
+   AnalysisHistory uses mostly inline styles; we target shared class
+   hooks (.history-btn, .scan-card, .page-container) below.
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .history-page .page-container,
+  .page-container { padding: 0 1rem; }                /* 16px */
+
+  /* Filters panel + scan list stack. */
+  .history-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem;
+  }
+  .history-filters { padding: 0.85rem; }
+  .history-filters .input-field { min-height: 44px; font-size: 16px; }
+
+  /* Scan-card grid → single column. */
+  .scan-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+  }
+  .scan-card { padding: 0.85rem; }
+  .scan-card-actions { flex-direction: column; gap: 0.45rem; }
+  .scan-card-actions .btn { width: 100%; min-height: 44px; }
+
+  /* AnalysisHistory action column — stack inside the card on mobile. */
+  .history-actions {
+    margin-left: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+  }
+  .history-btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  /* Page heading scaling. */
+  .history-title { font-size: 1.35rem; }
 }

@@ -1,42 +1,112 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
-  Smile, Scissors, FileText, Calendar, Bell,
-  Palette, Sparkles, Grid, ArrowRight,
-  TrendingUp, AlertTriangle, CheckCircle, Activity,
+  HeartPulse, Scissors, Sparkles, Shirt, ScanLine,
+  History as HistoryIcon, ChevronRight, Flame, Trophy, Command,
+  Calendar, Camera, AlertTriangle,
 } from 'lucide-react';
 import Navbar   from '../components/Navbar';
 import Footer   from '../components/Footer';
 import apiClient from '../api/client';
+import { API_ENDPOINTS } from '../api/config';
 import { useAuth } from '../contexts/AuthContext';
 
-// Build smart notifications from real API stats — no hardcoding
-function buildNotifications(stats) {
-  if (!stats) return [];
-  const notes = [];
+// Bento dashboard widgets
+import AuroraBackground   from '../components/dashboard/AuroraBackground';
+import SkinCopilot        from '../components/dashboard/SkinCopilot';
+import SkinTwin           from '../components/dashboard/SkinTwin';
+import TimeMachine        from '../components/dashboard/TimeMachine';
+import SkinConstellation  from '../components/dashboard/SkinConstellation';
+import FutureSelf         from '../components/dashboard/FutureSelf';
+import MirrorMode         from '../components/dashboard/MirrorMode';
+import SkinWrapped        from '../components/dashboard/SkinWrapped';
+import CommandPalette     from '../components/dashboard/CommandPalette';
 
-  if (stats.total_scans === 0) {
-    notes.push({ color: 'bg-blue-500', text: 'Run your first skin or scalp analysis to get personalised recommendations.' });
-    return notes;
-  }
+import './Home.css';
 
-  if (stats.needs_followup) {
-    notes.push({ color: 'bg-amber-400', text: `Follow-up check recommended after your last ${stats.last_scan_type} analysis.` });
-  }
+// Animated counter — counts a number from 0 to target over `duration` ms.
+function useCountUp(target, duration = 700) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (target === null || target === undefined) { setVal(0); return; }
+    const start = performance.now();
+    let raf;
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      // Ease-out quart
+      const eased = 1 - Math.pow(1 - t, 4);
+      setVal(Math.round(target * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+  return val;
+}
 
-  if (stats.severity_counts?.Severe > 0) {
-    notes.push({ color: 'bg-red-500', text: `${stats.severity_counts.Severe} severe result${stats.severity_counts.Severe > 1 ? 's' : ''} found — consider consulting a dermatologist.` });
-  }
+function StatTile({ label, value, sub, accent }) {
+  const animated = useCountUp(typeof value === 'number' ? value : 0);
+  return (
+    <div className="bento-stat" style={{ '--accent': accent }}>
+      <span className="bento-stat-label">{label}</span>
+      <span className="bento-stat-value">{typeof value === 'number' ? animated : '—'}</span>
+      <span className="bento-stat-sub">{sub}</span>
+      <span className="bento-stat-glow" aria-hidden="true"/>
+    </div>
+  );
+}
 
-  if (stats.severity_counts?.Moderate > 0) {
-    notes.push({ color: 'bg-amber-400', text: `${stats.severity_counts.Moderate} moderate condition${stats.severity_counts.Moderate > 1 ? 's' : ''} detected — new treatment recommendations are available.` });
-  }
+function HealthScoreCard({ score, trend, streak, onWrapped }) {
+  const animated = useCountUp(score || 0);
+  const ringPct = (score || 0) / 100;
+  const ringColor = score >= 80 ? '#10b981'
+                  : score >= 60 ? '#6366f1'
+                  : score >= 40 ? '#f59e0b'
+                  : '#ef4444';
+  const trendLabel = trend > 0 ? `▲ +${trend}`
+                    : trend < 0 ? `▼ ${trend}`
+                    : '— stable';
+  const trendColor = trend > 0 ? '#10b981'
+                   : trend < 0 ? '#ef4444' : 'var(--text-tertiary)';
 
-  if (stats.total_scans > 0 && !stats.needs_followup && stats.severity_counts?.Severe === 0) {
-    notes.push({ color: 'bg-green-500', text: 'Your skin health looks stable. Keep following your daily routine.' });
-  }
-
-  return notes.slice(0, 3); // max 3
+  return (
+    <div className="bento-health">
+      <div className="bento-health-left">
+        <p className="bento-health-label">Skin Health</p>
+        <div className="bento-health-value">
+          <span>{animated}</span>
+          <span className="bento-health-out">/100</span>
+        </div>
+        <div className="bento-health-trend" style={{ color: trendColor }}>
+          {trendLabel} vs last month
+        </div>
+        {streak > 0 && (
+          <div className="bento-health-streak">
+            <Flame size={14} color="#f97316"/> {streak}-day streak
+          </div>
+        )}
+        <button className="bento-health-wrapped" onClick={onWrapped}>
+          <Trophy size={13}/> Open Skin Wrapped
+        </button>
+      </div>
+      <div className="bento-health-ring">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" stroke="rgba(255,255,255,0.12)" strokeWidth="10" fill="none"/>
+          <circle
+            cx="60" cy="60" r="50"
+            stroke={ringColor}
+            strokeWidth="10"
+            strokeLinecap="round"
+            fill="none"
+            strokeDasharray={2 * Math.PI * 50}
+            strokeDashoffset={2 * Math.PI * 50 * (1 - ringPct)}
+            style={{ transition: 'stroke-dashoffset 1s cubic-bezier(0.2, 0.8, 0.2, 1)' }}
+            transform="rotate(-90 60 60)"
+          />
+        </svg>
+      </div>
+    </div>
+  );
 }
 
 export default function HomePage() {
@@ -44,323 +114,262 @@ export default function HomePage() {
   const { user } = useAuth();
   const [stats, setStats]     = useState(null);
   const [loading, setLoading] = useState(true);
+  const [bookingChoice, setBookingChoice] = useState('dermatology');
 
+  // Modal/overlay state
+  const [mirrorOpen,  setMirrorOpen]  = useState(false);
+  const [wrappedOpen, setWrappedOpen] = useState(false);
+  const [cmdOpen,     setCmdOpen]     = useState(false);
+
+  // Fetch stats
   useEffect(() => {
-    apiClient.get('/analysis/stats/')
+    apiClient.get(API_ENDPOINTS.ANALYSIS.STATS)
       .then(res => setStats(res.data))
-      .catch(() => {})
+      .catch(() => setStats({
+        total_scans: 0, skin_scans: 0, scalp_scans: 0,
+        severity_counts: { Mild: 0, Moderate: 0, Severe: 0 },
+        needs_followup: false, last_scan_date: null, last_scan_type: null,
+        health_score: 50, health_trend: 0, projection_30d: 50, streak_days: 0,
+        daily_timeline: [], recurring_conditions: [], recent_scans: [],
+      }))
       .finally(() => setLoading(false));
   }, []);
 
-  const notifications = buildNotifications(stats);
-  const firstName = user?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || '';
+  // Global ⌘K / Ctrl+K listener
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setCmdOpen((s) => !s);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
-  // Severity colours
-  const severityColor = {
-    Mild:     { bg: 'bg-green-100 bg-green-900/20',  text: 'text-green-600 text-green-400',  dot: 'bg-green-500' },
-    Moderate: { bg: 'bg-amber-100 bg-amber-900/20',  text: 'text-amber-600 text-amber-400',  dot: 'bg-amber-400' },
-    Severe:   { bg: 'bg-red-100   bg-red-900/20',    text: 'text-red-600   text-red-400',    dot: 'bg-red-500'   },
+  const firstName = user?.first_name || user?.full_name?.split(' ')[0]
+                    || user?.email?.split('@')[0] || '';
+
+  // Copilot action router
+  const handleCopilotAction = (action) => {
+    if (action === 'mirror')   setMirrorOpen(true);
+    if (action === 'wrapped')  setWrappedOpen(true);
+    if (action === 'time')     window.scrollTo({ top: 800, behavior: 'smooth' });
+    if (action === 'tip')      alert('💡 Tip: Hydrated skin reflects more light — moisturise within 60 seconds of cleansing.');
+    if (action === 'reminder') navigate('/diagnosis');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 bg-gray-950 flex flex-col">
+    <div className="bento-page">
+      {/* Aurora ambient background — only mounted after stats arrive so
+          the hue intensity prop is meaningful on first paint. */}
+      {!loading && <AuroraBackground score={stats?.health_score ?? 70}/>}
+
       <Navbar title={null} subtitle={null} />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
+      <main className="bento-main">
+        {/* Severe alert banner */}
+        {stats?.severity_counts?.Severe > 0 && (
+          <div className="bento-alert">
+            <AlertTriangle size={18}/>
+            <span>
+              You have <strong>{stats.severity_counts.Severe}</strong> severe finding{stats.severity_counts.Severe>1?'s':''} —
+              consider booking a dermatologist.
+            </span>
+            <button className="bento-alert-btn" onClick={() => navigate('/bookings?type=dermatologist')}>
+              Book now <ChevronRight size={14}/>
+            </button>
+          </div>
+        )}
 
-        {/* ── Page header ─────────────────────────────────────────── */}
-        <div className="mb-7">
-          <h1 className="font-display text-2xl font-bold text-gray-900 text-white">
-            AI-Powered Skin &amp; Scalp Assistant
-          </h1>
-          <p className="text-sm text-gray-400 text-gray-500 mt-0.5">
-            Welcome back{firstName ? `, ${firstName}` : ''} — here's your health overview
-          </p>
-        </div>
+        {/* ── Bento grid ─────────────────────────────────────────── */}
+        <section className="bento-grid">
 
-        {/* ── Stat cards row ──────────────────────────────────────── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          {[
-            {
-              label: 'Total Scans',
-              value: loading ? '—' : stats?.total_scans ?? 0,
-              sub:   loading ? '' : `${stats?.skin_scans ?? 0} skin · ${stats?.scalp_scans ?? 0} scalp`,
-              icon:  <Activity size={18} className="text-blue-500"/>,
-              bg:    'bg-blue-50 bg-blue-900/10',
-            },
-            {
-              label: 'Mild',
-              value: loading ? '—' : stats?.severity_counts?.Mild ?? 0,
-              sub:   'low severity results',
-              icon:  <CheckCircle size={18} className="text-green-500"/>,
-              bg:    'bg-green-50 bg-green-900/10',
-            },
-            {
-              label: 'Moderate',
-              value: loading ? '—' : stats?.severity_counts?.Moderate ?? 0,
-              sub:   'needs attention',
-              icon:  <TrendingUp size={18} className="text-amber-500"/>,
-              bg:    'bg-amber-50 bg-amber-900/10',
-            },
-            {
-              label: 'Severe',
-              value: loading ? '—' : stats?.severity_counts?.Severe ?? 0,
-              sub:   'consult dermatologist',
-              icon:  <AlertTriangle size={18} className="text-red-500"/>,
-              bg:    'bg-red-50 bg-red-900/10',
-            },
-          ].map((card, i) => (
-            <div key={i} className={`card p-4 ${card.bg}`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-gray-500 text-gray-400 uppercase tracking-wide">{card.label}</span>
-                {card.icon}
-              </div>
-              <p className="text-3xl font-bold text-gray-900 text-white">{card.value}</p>
-              <p className="text-xs text-gray-400 text-gray-500 mt-1">{card.sub}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-
-          {/* ── Main column ─────────────────────────────────────── */}
-          <div className="xl:col-span-2 space-y-5">
-
-            {/* Quick Actions */}
-            <section>
-              <p className="text-sm font-semibold text-gray-500 text-gray-400 mb-3">Quick actions</p>
-              <div className="flex flex-col gap-4">
-                {[
-                  {
-                    icon:     <Smile size={28} className="text-blue-500"/>,
-                    title:    'Skin Analysis',
-                    desc:     'Upload a face image for AI-based skin detection. Get instant insights on skin conditions, texture, and personalised care.',
-                    btn:      'Analyze Skin',
-                    to:       '/analysis?type=skin',
-                    accent:   'border-blue-500',
-                    bg:       'bg-blue-50 bg-blue-900/10',
-                    btnClass: 'bg-blue-500 hover:bg-blue-600 text-white',
-                  },
-                  {
-                    icon:     <Scissors size={28} className="text-indigo-500"/>,
-                    title:    'Scalp Analysis',
-                    desc:     'Upload a scalp image to detect dandruff, dryness & more. Receive targeted scalp health recommendations.',
-                    btn:      'Analyze Scalp',
-                    to:       '/analysis?type=scalp',
-                    accent:   'border-indigo-500',
-                    bg:       'bg-indigo-50 bg-indigo-900/10',
-                    btnClass: 'bg-indigo-500 hover:bg-indigo-600 text-white',
-                  },
-                  {
-                    icon:     <FileText size={28} className="text-violet-500"/>,
-                    title:    'Diagnosis Reports',
-                    desc:     'View your history and AI-generated diagnosis summaries. Track your skin and scalp health over time.',
-                    btn:      'My Reports',
-                    to:       '/analysis-history',
-                    accent:   'border-violet-500',
-                    bg:       'bg-violet-50 bg-violet-900/10',
-                    btnClass: 'bg-violet-500 hover:bg-violet-600 text-white',
-                  },
-                ].map((item, i) => (
-                  <div key={i} className={`card p-6 flex items-center justify-between gap-6 border-l-4 ${item.accent} ${item.bg} shadow-md hover:shadow-lg transition-shadow`}>
-                    <div className="flex items-center gap-5 flex-1">
-                      <div className="w-14 h-14 rounded-2xl bg-white bg-gray-800 flex items-center justify-center shadow-sm shrink-0">
-                        {item.icon}
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-gray-800 text-gray-100 text-base mb-1">{item.title}</h3>
-                        <p className="text-sm text-gray-500 text-gray-400 leading-relaxed">{item.desc}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => navigate(item.to)}
-                      className={`shrink-0 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${item.btnClass}`}
-                    >
-                      {item.btn} →
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Severity breakdown — only if user has scans */}
-            {stats?.total_scans > 0 && (
-              <div className="card p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-semibold text-gray-900 text-white">Severity breakdown</h2>
-                  <button
-                    onClick={() => navigate('/analysis-history')}
-                    className="text-xs font-semibold text-blue-500 flex items-center gap-1"
-                  >
-                    View all <ArrowRight size={12}/>
-                  </button>
-                </div>
-                <div className="space-y-3">
-                  {['Mild', 'Moderate', 'Severe'].map(level => {
-                    const count = stats.severity_counts?.[level] ?? 0;
-                    const pct   = stats.total_scans > 0 ? Math.round((count / stats.total_scans) * 100) : 0;
-                    const c     = severityColor[level];
-                    return (
-                      <div key={level}>
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="flex items-center gap-2">
-                            <span className={`w-2 h-2 rounded-full ${c.dot}`}/>
-                            <span className={`text-sm font-medium ${c.text}`}>{level}</span>
-                          </div>
-                          <span className="text-xs text-gray-400">{count} scan{count !== 1 ? 's' : ''} · {pct}%</span>
-                        </div>
-                        <div className="w-full bg-gray-100 bg-gray-800 rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full ${c.dot} transition-all duration-500`}
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Treatment Plan — linked to last diagnosis */}
-            <div className="card p-6">
-              <h2 className="font-semibold text-gray-900 text-white text-base mb-2">Your Personalised Treatment Plan</h2>
-              <p className="text-sm text-gray-500 text-gray-400 leading-relaxed mb-4">
-                Based on your health profile and AI analysis, we generate safe, step-by-step skin and scalp treatment recommendations tailored to you.
-              </p>
-              {stats?.total_scans > 0 ? (
-                <button
-                  onClick={() => navigate('/analysis-history')}
-                  className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 text-blue-400 transition hover:underline"
-                >
-                  View your treatment recommendations <ArrowRight size={15}/>
-                </button>
-              ) : (
-                <button
-                  onClick={() => navigate('/analysis?type=skin')}
-                  className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 text-blue-400 transition hover:underline"
-                >
-                  Run your first analysis to generate a plan <ArrowRight size={15}/>
-                </button>
-              )}
-            </div>
-
-            {/* Makeup & Fashion */}
-            <section>
-              <p className="text-sm font-semibold text-gray-500 text-gray-400 mb-3">Makeup &amp; Fashion Assistance</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  { icon: <Palette size={20}/>,   title: 'Shade Matching' },
-                  { icon: <Sparkles size={20}/>,  title: 'Face-shape Styling Guidance' },
-                ].map((item, i) => (
-                  <button key={i} className="card p-5 flex items-center justify-between shadow-md transition-all text-left group">
-                    <span className="font-semibold text-gray-800 text-gray-100">{item.title}</span>
-                    <span className="text-gray-400 transition">{item.icon}</span>
-                  </button>
-                ))}
-              </div>
-            </section>
-
+          {/* Skin Copilot (hero) — spans 2 cols */}
+          <div className="bento-cell bento-glass span-col-2">
+            {loading
+              ? <div className="bento-skeleton h-copilot"/>
+              : <SkinCopilot stats={stats} firstName={firstName} onAction={handleCopilotAction}/>}
           </div>
 
-          {/* ── Sidebar ─────────────────────────────────────────── */}
-          <div className="space-y-5">
-
-            {/* Last scan summary */}
-            <div className="card p-5">
-              <h2 className="font-semibold text-gray-900 text-white mb-3">Last scan</h2>
-              {loading ? (
-                <p className="text-sm text-gray-400">Loading…</p>
-              ) : stats?.last_scan_date ? (
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-xs text-gray-400 text-gray-500">Date</p>
-                    <p className="text-sm font-medium text-gray-700 text-gray-200">{stats.last_scan_date}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 text-gray-500">Type</p>
-                    <p className="text-sm font-medium text-gray-700 text-gray-200 capitalize">{stats.last_scan_type} analysis</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 text-gray-500">Follow-up</p>
-                    <p className={`text-sm font-medium ${stats.needs_followup ? 'text-amber-500' : 'text-green-500'}`}>
-                      {stats.needs_followup ? '⚠️ Recommended' : '✅ Not required'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => navigate('/analysis-history')}
-                    className="btn-secondary w-full mt-2 text-xs py-1.5"
-                  >
-                    View full history
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-sm text-gray-400 text-gray-500 mb-3">No scans yet. Run your first analysis to see results here.</p>
-                  <button onClick={() => navigate('/analysis?type=skin')} className="btn-primary w-full text-xs py-1.5">
-                    Start first scan →
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Smart Notifications — derived from real stats */}
-            <div className="card p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <Bell size={17} className="text-blue-500"/>
-                <h2 className="font-semibold text-gray-900 text-white">Notifications</h2>
-              </div>
-              {notifications.length > 0 ? (
-                <ul className="space-y-3">
-                  {notifications.map((n, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${n.color}`}/>
-                      <span className="text-xs text-gray-600 text-gray-400 leading-relaxed">{n.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-xs text-gray-400">No notifications right now.</p>
-              )}
-            </div>
-
-            {/* Book Appointment */}
-            <div className="card p-5">
-              <h2 className="font-semibold text-gray-900 text-white mb-1">Book Appointment</h2>
-              <p className="text-xs text-gray-400 text-gray-500 mb-4">
-                Connect with dermatology experts or salon services based on your diagnosis.
-              </p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {['Dermatology', 'Salon', 'Fashion'].map(tag => (
-                  <span key={tag} className="bg-gray-100 bg-gray-800 text-gray-600 text-gray-300 text-xs font-medium px-3 py-1 rounded-full">{tag}</span>
-                ))}
-              </div>
-              <button className="btn-secondary w-full">
-                <Calendar size={15}/> Book an appointment
-              </button>
-            </div>
-
-            {/* AR Try-On */}
-            <div className="card p-5">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h2 className="font-semibold text-gray-900 text-white">
-                    AR Try-On <span className="text-xs text-amber-500 font-bold ml-1">(Premium)</span>
-                  </h2>
-                  <p className="text-xs text-gray-400 text-gray-500 mt-1 leading-relaxed">
-                    AI-assisted virtual try-on for makeup looks and hairstyles before real-world application.
-                  </p>
-                </div>
-                <Grid size={20} className="text-gray-300 text-gray-600 shrink-0 ml-3"/>
-              </div>
-              <button className="btn-outline w-full mt-3 text-sm">
-                <Sparkles size={14}/> Explore AR
-              </button>
-            </div>
-
+          {/* Health Score */}
+          <div className="bento-cell bento-glass span-col-2">
+            {loading
+              ? <div className="bento-skeleton h-health"/>
+              : <HealthScoreCard
+                  score={stats?.health_score}
+                  trend={stats?.health_trend}
+                  streak={stats?.streak_days}
+                  onWrapped={() => setWrappedOpen(true)}/>}
           </div>
-        </div>
+
+          {/* Stats row — 4 small tiles */}
+          <div className="bento-cell bento-glass">
+            <StatTile label="Total Scans"
+              value={stats?.total_scans ?? 0}
+              sub={loading ? '' : `${stats?.skin_scans ?? 0} skin · ${stats?.scalp_scans ?? 0} scalp`}
+              accent="#6366f1"/>
+          </div>
+          <div className="bento-cell bento-glass">
+            <StatTile label="Mild" value={stats?.severity_counts?.Mild ?? 0}
+              sub="low severity" accent="#10b981"/>
+          </div>
+          <div className="bento-cell bento-glass">
+            <StatTile label="Moderate" value={stats?.severity_counts?.Moderate ?? 0}
+              sub="needs attention" accent="#f59e0b"/>
+          </div>
+          <div className="bento-cell bento-glass">
+            <StatTile label="Severe" value={stats?.severity_counts?.Severe ?? 0}
+              sub="consult derma" accent="#ef4444"/>
+          </div>
+
+          {/* Digital Skin Twin — anatomical hero (2x2) */}
+          <div className="bento-cell bento-glass span-col-2 span-row-2">
+            {loading
+              ? <div className="bento-skeleton h-twin"/>
+              : <SkinTwin
+                  recurringConditions={stats?.recurring_conditions || []}
+                  healthScore={stats?.health_score}
+                  onZoneClick={() => navigate('/analysis-history')}/>}
+          </div>
+
+          {/* Predictive Future Self */}
+          <div className="bento-cell bento-glass span-col-2">
+            {loading
+              ? <div className="bento-skeleton h-future"/>
+              : <FutureSelf stats={stats}/>}
+          </div>
+
+          {/* Time Machine scrubber */}
+          <div className="bento-cell bento-glass span-col-2">
+            {loading
+              ? <div className="bento-skeleton h-time"/>
+              : <TimeMachine recentScans={stats?.recent_scans || []}/>}
+          </div>
+
+          {/* ── Row 1 — Skin → Scalp → Makeup → Fashion ───────────── */}
+
+          {/* Skin scan */}
+          <div className="bento-cell bento-glass bento-feature" onClick={() => navigate('/analysis?type=skin')}>
+            <div className="bento-feature-icon">
+              <ScanLine size={20} color="#fff"/>
+            </div>
+            <p className="bento-feature-title">Skin Analysis</p>
+            <p className="bento-feature-sub">Acne, pigmentation, texture.</p>
+            <ChevronRight size={16} className="bento-feature-arrow"/>
+          </div>
+
+          {/* Scalp scan */}
+          <div className="bento-cell bento-glass bento-feature" onClick={() => navigate('/analysis?type=scalp')}>
+            <div className="bento-feature-icon">
+              <ScanLine size={20} color="#fff"/>
+            </div>
+            <p className="bento-feature-title">Scalp Analysis</p>
+            <p className="bento-feature-sub">Dandruff, dryness, density.</p>
+            <ChevronRight size={16} className="bento-feature-arrow"/>
+          </div>
+
+          {/* Makeup */}
+          <div className="bento-cell bento-glass bento-feature" onClick={() => navigate('/makeup-assistance')}>
+            <div className="bento-feature-icon">
+              <Sparkles size={20} color="#fff"/>
+            </div>
+            <p className="bento-feature-title">Makeup Assistance</p>
+            <p className="bento-feature-sub">AI-personalised palettes for any event.</p>
+            <ChevronRight size={16} className="bento-feature-arrow"/>
+          </div>
+
+          {/* Fashion */}
+          <div className="bento-cell bento-glass bento-feature" onClick={() => navigate('/fashion-assistance')}>
+            <div className="bento-feature-icon">
+              <Shirt size={20} color="#fff"/>
+            </div>
+            <p className="bento-feature-title">Fashion Assistance</p>
+            <p className="bento-feature-sub">Body-aware outfit ideas tailored to you.</p>
+            <ChevronRight size={16} className="bento-feature-arrow"/>
+          </div>
+
+          {/* ── Row 2 — AI Mirror → Diagnosis History → Book Appointment widget ── */}
+
+          {/* AI Mirror Mode */}
+          <div className="bento-cell bento-glass bento-feature" onClick={() => setMirrorOpen(true)}>
+            <div className="bento-feature-icon">
+              <Camera size={20} color="#fff"/>
+            </div>
+            <p className="bento-feature-title">AI Mirror Mode</p>
+            <p className="bento-feature-sub">Open your camera — see live overlays of past hotspots.</p>
+            <ChevronRight size={16} className="bento-feature-arrow"/>
+          </div>
+
+          {/* Diagnosis History */}
+          <div className="bento-cell bento-glass bento-feature" onClick={() => navigate('/analysis-history')}>
+            <div className="bento-feature-icon">
+              <HistoryIcon size={20} color="#fff"/>
+            </div>
+            <p className="bento-feature-title">Diagnosis History</p>
+            <p className="bento-feature-sub">Browse every report, filter by type.</p>
+            <ChevronRight size={16} className="bento-feature-arrow"/>
+          </div>
+
+          {/* Book Appointment quick choice */}
+          <div className="bento-cell bento-glass bento-book span-col-2">
+            <div className="bento-book-head">
+              <Calendar size={16}/>
+              <span>Book Appointment</span>
+            </div>
+            <div className="bento-book-options">
+              {[
+                { id: 'dermatology', label: 'Dermatology', icon: <HeartPulse size={18}/>, type: 'dermatologist' },
+                { id: 'salon',       label: 'Salon',       icon: <Scissors  size={18}/>, type: 'salon'         },
+              ].map((opt) => {
+                const active = bookingChoice === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    className={`bento-book-opt ${active ? 'active' : ''}`}
+                    onClick={() => setBookingChoice(opt.id)}
+                  >
+                    {opt.icon}<span>{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              className="bento-book-cta"
+              onClick={() => navigate(`/bookings?type=${bookingChoice === 'salon' ? 'salon' : 'dermatologist'}`)}
+            >
+              <Calendar size={14}/> Book {bookingChoice === 'salon' ? 'salon' : 'dermatology'} appointment
+              <ChevronRight size={14}/>
+            </button>
+          </div>
+
+        </section>
+
+        {/* ── Skin Constellation — dedicated full-width section, taken
+            out of the bento grid so its tall starfield doesn't break
+            row alignment with the smaller feature tiles. */}
+        <section className="bento-constellation-section bento-glass">
+          {loading
+            ? <div className="bento-skeleton h-const"/>
+            : <SkinConstellation recentScans={stats?.recent_scans || []}/>}
+        </section>
+
+        {/* Floating Cmd+K hint */}
+        <button className="bento-cmdk-fab" onClick={() => setCmdOpen(true)} aria-label="Open command palette">
+          <Command size={14}/> <kbd>⌘K</kbd>
+        </button>
       </main>
+
+      {/* Modals */}
+      <MirrorMode    open={mirrorOpen}  onClose={() => setMirrorOpen(false)}
+                     recurringConditions={stats?.recurring_conditions || []}/>
+      <SkinWrapped   open={wrappedOpen} onClose={() => setWrappedOpen(false)} stats={stats}/>
+      <CommandPalette open={cmdOpen}    onClose={() => setCmdOpen(false)}
+                      onAction={(a) => {
+                        if (a === 'mirror')  setMirrorOpen(true);
+                        if (a === 'wrapped') setWrappedOpen(true);
+                        if (a === 'reminder') navigate('/diagnosis');
+                      }}/>
 
       <Footer />
     </div>

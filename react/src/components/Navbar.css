@@ -2,19 +2,22 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  background: var(--bg-secondary);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-color);
+  padding: 0.6rem 1rem 0;
+  background: var(--bg-primary);
 }
 
 .navbar-container {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
-  height: 4rem;
+  height: 3.6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: linear-gradient(135deg, #3730a3, #4338ca, #4f46e5);
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px rgba(67, 56, 202, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .navbar-left {
@@ -24,28 +27,82 @@
 }
 
 .navbar-logo {
-  font-size: 22px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 24px;
   font-weight: 800;
   letter-spacing: 1px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ffffff;
   cursor: pointer;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  transition: opacity 0.2s;
 }
+.navbar-logo:hover { opacity: 0.85; }
+
+.bell-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.bell-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
 .navbar-divider {
-  color: var(--border-color-hover);
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-title-wrap {
+  margin-left: 0.75rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 0.15rem;
+  align-items: center;
+}
+
+.navbar-link {
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.78);
+  transition: all 0.2s;
+}
+
+.navbar-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.navbar-link.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 700;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.12);
 }
 
 .navbar-title {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .navbar-subtitle {
   font-size: 0.75rem;
-  color: var(--text-tertiary);
+  color: rgba(255, 255, 255, 0.65);
   margin-top: 0.125rem;
 }
 
@@ -58,71 +115,199 @@
 .theme-toggle {
   display: flex;
   align-items: center;
-  background: var(--bg-tertiary);
-  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
   padding: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .theme-btn {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.375rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 500;
   transition: all 0.2s;
   cursor: pointer;
   background: transparent;
   border: none;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .theme-btn:hover {
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .theme-btn.active {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  box-shadow: var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
 }
 
 .profile-btn {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-secondary);
-  background: transparent;
-  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .profile-btn:hover {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
 }
+
 .logout-btn {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #ef4444;
-  background: transparent;
-  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .logout-btn:hover {
-  background: #fee2e2;
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Hamburger button — hidden on desktop, shown only ≤768px.
+   The drawer + backdrop are positioned offscreen by default.
+   ──────────────────────────────────────────────────────────────── */
+.navbar-hamburger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s;
+}
+.navbar-hamburger:hover { background: rgba(255, 255, 255, 0.22); }
+
+.navbar-drawer,
+.navbar-drawer-backdrop { display: none; }
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE (≤768px) — strict mobile-only overrides.
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Tighten outer padding to maximise the navbar pill width. */
+  .navbar { padding: 0.5rem 0.75rem 0; }
+  .navbar-container {
+    padding: 0 0.85rem;
+    height: 3.2rem;
+    border-radius: 0.85rem;
+  }
+  /* Top-row simplification — logo + theme + hamburger only. */
+  .navbar-links,
+  .navbar-right .profile-btn,
+  .navbar-right .logout-btn { display: none !important; }
+  .navbar-right { gap: 0.4rem; }
+  .navbar-logo { font-size: 22px; }
+  .theme-toggle { padding: 0.18rem; }
+  .theme-btn {
+    padding: 0.28rem 0.55rem;
+    font-size: 0.7rem;
+    gap: 0.25rem;
+  }
+  .theme-btn svg { width: 11px; height: 11px; }
+
+  .navbar-hamburger { display: inline-flex; }
+
+  /* ── Drawer + backdrop ── */
+  .navbar-drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+    z-index: 40;
+  }
+  .navbar-drawer-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .navbar-drawer {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 78vw;
+    max-width: 320px;
+    background: linear-gradient(180deg, #1e1b4b 0%, #0b1220 100%);
+    border-left: 1px solid rgba(165, 180, 252, 0.18);
+    box-shadow: -20px 0 50px rgba(0, 0, 0, 0.55);
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+    padding: 4.2rem 1.25rem 1.5rem;
+    z-index: 41;
+    overflow-y: auto;
+  }
+  .navbar-drawer.open { transform: translateX(0); }
+
+  .navbar-drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .navbar-drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.85rem 0.95rem;
+    border-radius: 0.7rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+    min-height: 44px;
+  }
+  .navbar-drawer-link:hover,
+  .navbar-drawer-link.active {
+    background: rgba(99, 102, 241, 0.22);
+    color: #ffffff;
+    border-color: rgba(165, 180, 252, 0.35);
+  }
+  .navbar-drawer-logout {
+    margin-top: 0.6rem;
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.10);
+    border-color: rgba(239, 68, 68, 0.28);
+  }
+  .navbar-drawer-logout:hover {
+    background: rgba(239, 68, 68, 0.22);
+    color: #fecaca;
+  }
 }

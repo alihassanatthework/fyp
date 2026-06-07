@@ -1,0 +1,582 @@
+/* ════════════════════════════════════════════════════════════════
+   BENTO DASHBOARD
+   visionOS-inspired layout — glass cards on top of the Aurora
+   ambient background. 12-column grid that gracefully collapses on
+   smaller screens.
+   ════════════════════════════════════════════════════════════════ */
+
+.bento-page {
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  overflow-x: hidden;
+}
+
+.bento-main {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+}
+
+/* ── Severe-finding alert ────────────────────────────────────── */
+.bento-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg,
+    rgba(239, 68, 68, 0.18),
+    rgba(245, 158, 11, 0.12));
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.12);
+  animation: bentoAlertIn 0.35s ease;
+}
+body.dark .bento-alert { color: #fca5a5; }
+@keyframes bentoAlertIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.bento-alert > span { flex: 1; }
+.bento-alert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.42rem 0.85rem;
+  border-radius: 9999px;
+  border: none;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: white;
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+.bento-alert-btn:hover { transform: translateY(-1px); }
+
+/* ── Bento grid ──────────────────────────────────────────────── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(140px, auto);
+  gap: 1rem;
+}
+@media (max-width: 980px) {
+  .bento-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .span-col-2 { grid-column: span 2; }
+  .span-row-2 { grid-row: span 1 !important; }
+}
+/* P4 — intermediate breakpoint to keep the 2-col grid breathing between
+   800-979px (it was cramped above the 980px cutoff). */
+@media (max-width: 980px) and (min-width: 760px) {
+  .bento-main { padding: 1rem 1.25rem 3rem; }
+  .bento-grid { gap: 0.85rem; }
+  .bento-feature { min-height: 150px; padding: 0.95rem; }
+}
+@media (max-width: 760px) {
+  .bento-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
+  .bento-feature { min-height: 140px; padding: 0.85rem; }
+}
+@media (max-width: 560px) {
+  .bento-grid { grid-template-columns: 1fr; }
+  .span-col-2, .span-row-2 { grid-column: span 1; }
+}
+
+/* Span helpers */
+.span-col-2 { grid-column: span 2; }
+.span-row-2 { grid-row: span 2; }
+
+/* ── Glass card base ─────────────────────────────────────────── */
+.bento-glass {
+  position: relative;
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 12px 30px -12px rgba(67, 56, 202, 0.18),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.bento-glass:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 38px -12px rgba(67, 56, 202, 0.28),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+}
+body.dark .bento-glass {
+  background: rgba(19, 28, 46, 0.62);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 12px 30px -12px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+body.dark .bento-glass:hover {
+  background: rgba(30, 41, 59, 0.72);
+}
+
+/* ── Skeleton placeholders while stats load ──────────────────── */
+.bento-skeleton {
+  width: 100%;
+  border-radius: 0.8rem;
+  background: linear-gradient(90deg,
+    rgba(99, 102, 241, 0.06) 0%,
+    rgba(99, 102, 241, 0.16) 50%,
+    rgba(99, 102, 241, 0.06) 100%);
+  background-size: 200% 100%;
+  animation: bentoShimmer 1.4s infinite;
+}
+@keyframes bentoShimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0;  }
+}
+.h-copilot { height: 140px; margin: 0.6rem; }
+.h-health  { height: 200px; margin: 0.6rem; }
+.h-twin    { height: 100%;  min-height: 380px; }
+.h-future  { height: 200px; margin: 0.6rem; }
+.h-time    { height: 220px; margin: 0.6rem; }
+.h-const   { height: 220px; margin: 0.6rem; }
+
+/* ── Stat tile ───────────────────────────────────────────────── */
+.bento-stat {
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: 100%;
+  position: relative;
+}
+.bento-stat-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+.bento-stat-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  margin: 0.25rem 0 0.15rem;
+}
+.bento-stat-sub {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+.bento-stat-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(ellipse at top right,
+    color-mix(in srgb, var(--accent, #6366f1) 20%, transparent),
+    transparent 60%);
+  opacity: 0.6;
+}
+body.dark .bento-stat-glow { opacity: 0.45; }
+
+/* ── Health Score card ───────────────────────────────────────── */
+.bento-health {
+  display: flex;
+  align-items: center;
+  padding: 1.2rem 1.4rem;
+  gap: 1rem;
+  height: 100%;
+}
+.bento-health-left { flex: 1; min-width: 0; }
+.bento-health-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.3rem;
+}
+.bento-health-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin-bottom: 0.2rem;
+}
+.bento-health-value > span:first-child {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  background: linear-gradient(135deg, var(--text-primary), var(--nav-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.bento-health-out {
+  font-size: 1rem;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+.bento-health-trend {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.bento-health-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+.bento-health-wrapped {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid var(--nav-accent);
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--nav-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bento-health-wrapped:hover {
+  background: var(--nav-accent);
+  color: white;
+}
+.bento-health-ring {
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+}
+.bento-health-ring svg { width: 100%; height: 100%; }
+
+/* ── Feature tile (Mirror / Makeup / Fashion / Skin / Scalp / History) ──
+   All six quick-action cards share this exact class so the row reads
+   as a perfectly uniform grid: icon → title → description, top-aligned,
+   chevron in the top-right corner, equal minimum height. */
+.bento-feature {
+  padding: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  position: relative;
+  text-align: left;
+  /* Pin a minimum tile height so every feature card matches its
+     neighbour exactly, even if descriptions wrap to different line
+     counts. The flex layout keeps the icon/title/sub top-aligned. */
+  min-height: 168px;
+}
+.bento-feature-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Single, consistent indigo across every feature tile — keeps the
+     dashboard cohesive with the rest of the site's indigo theme. */
+  background: var(--nav-accent);
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.28);
+  margin-bottom: 0.2rem;
+  flex-shrink: 0;
+}
+.bento-feature-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-right: 1.5rem;  /* reserve space for the chevron */
+}
+.bento-feature-sub {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  padding-right: 0.5rem;
+}
+.bento-feature-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 1.1rem;
+  color: var(--text-tertiary);
+  transition: transform 0.18s;
+}
+.bento-feature:hover .bento-feature-arrow {
+  transform: translateX(3px);
+  color: var(--nav-accent);
+}
+
+/* ── Skin Constellation — full-width dedicated section ──────────
+   Lifted out of the bento grid so its tall starfield doesn't push
+   the neighbouring feature tiles into uneven heights.
+   Taller now so every data point is fully visible without clipping
+   or vertical stacking. */
+.bento-constellation-section {
+  margin-top: 1rem;
+  padding: 0;
+  min-height: 440px;
+  overflow: hidden;
+}
+.bento-constellation-section .constellation-sky {
+  min-height: 400px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   DARK-MODE ICON VISIBILITY FIXES
+   Several decorative icons (feature-card chevrons, book-option button
+   icons) used --text-tertiary, which is bright enough on the light
+   theme but reads as nearly-invisible grey against the dark glass
+   cards. Bump them to brighter indigo / white tokens in dark mode.
+   Light-mode rendering is unchanged.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Feature card chevrons (Mirror / Makeup / Fashion / Skin / Scalp /
+   History). Brighter idle, full accent on hover. */
+body.dark .bento-feature-arrow {
+  color: rgba(165, 180, 252, 0.78);
+}
+body.dark .bento-feature:hover .bento-feature-arrow {
+  color: #c7d2fe;
+}
+
+/* "BOOK APPOINTMENT" label + calendar icon. */
+body.dark .bento-book-head {
+  color: rgba(165, 180, 252, 0.78);
+}
+body.dark .bento-book-head svg {
+  color: inherit;
+}
+
+/* Dermatology / Salon option pills — text + heart-pulse / scissors
+   icons. Inactive: bright off-white. Active: full accent indigo. */
+body.dark .bento-book-opt {
+  color: #e2e8f0;
+}
+body.dark .bento-book-opt svg {
+  color: #e2e8f0;
+  stroke: currentColor;
+}
+body.dark .bento-book-opt.active,
+body.dark .bento-book-opt.active svg {
+  color: #c7d2fe;
+}
+
+/* ── Book Appointment tile ───────────────────────────────────── */
+.bento-book {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.bento-book-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+.bento-book-options {
+  display: flex;
+  gap: 0.6rem;
+}
+.bento-book-opt {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.7rem 0.5rem;
+  border-radius: 0.85rem;
+  background: var(--bg-tertiary);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.bento-book-opt.active {
+  background: var(--blue-50);
+  border-color: var(--nav-accent);
+  color: var(--nav-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+.bento-book-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1rem;
+  border-radius: 9999px;
+  /* Solid constant indigo — matches every other CTA on the dashboard
+     (feature icons, Skin Copilot chips, etc.). No animation. */
+  background: var(--blue-600);
+  color: white;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(67, 56, 202, 0.35);
+  transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+}
+.bento-book-cta:hover {
+  background: var(--blue-700);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(67, 56, 202, 0.45);
+}
+
+/* ── Floating ⌘K hint ────────────────────────────────────────── */
+.bento-cmdk-fab {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(19, 28, 46, 0.88);
+  color: white;
+  border: 1px solid rgba(165, 180, 252, 0.3);
+  font-size: 0.78rem;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.bento-cmdk-fab kbd {
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.16);
+  padding: 0.12rem 0.45rem;
+  border-radius: 0.35rem;
+}
+.bento-cmdk-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE (≤768px) — Home bento dashboard.
+   Strict: only inside this media query. Desktop untouched.
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .bento-main { padding: 0.85rem 1rem 2.5rem; }    /* 16px horizontal */
+
+  /* Headline scaling — no overflow at 320px. */
+  .bento-page h1,
+  .bento-page .bento-health-value > span:first-child {
+    font-size: 2.1rem !important;
+    line-height: 1.1;
+  }
+  .bento-page h2 { font-size: 1.1rem !important; }
+
+  /* Bento grid — every cell collapses to a single column. */
+  .bento-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+  }
+  .span-col-2,
+  .span-row-2 {
+    grid-column: span 1 !important;
+    grid-row:    span 1 !important;
+  }
+
+  /* Stat tiles — single column, equal height, larger touch areas. */
+  .bento-stat { padding: 1rem 1.15rem; min-height: 96px; }
+  .bento-stat-label { font-size: 0.66rem; }
+  .bento-stat-value { font-size: 1.85rem; }
+  .bento-stat-sub   { font-size: 0.72rem; }
+
+  /* Health card — split rows on narrow screens. */
+  .bento-health {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.1rem;
+    gap: 0.75rem;
+  }
+  .bento-health-ring { width: 84px; height: 84px; align-self: flex-end; margin-top: -64px; }
+
+  /* Feature tiles — uniform single column, fixed min-height. */
+  .bento-feature {
+    min-height: 138px;            /* equal height across all six tiles */
+    padding: 1rem;
+    gap: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;       /* icon top-LEFT, text left-aligned */
+    text-align: left;
+  }
+  .bento-feature-icon {
+    width: 38px; height: 38px;
+    border-radius: 0.7rem;
+    margin-bottom: 0.1rem;
+  }
+  .bento-feature-title {
+    font-size: 0.92rem;
+    line-height: 1.25;
+    padding-right: 1.25rem;
+    /* Prevent ugly mid-word breaks */
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: none;
+  }
+  .bento-feature-sub {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    padding-right: 0.25rem;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: none;
+    /* Cap to 3 lines so all six tiles match height. */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .bento-feature-arrow { top: 0.95rem; right: 0.95rem; }
+
+  /* Severe alert banner — stack the action button below the text. */
+  .bento-alert {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+    padding: 0.75rem 0.85rem;
+    font-size: 0.82rem;
+  }
+  .bento-alert-btn { align-self: stretch; justify-content: center; min-height: 44px; }
+
+  /* Book Appointment block. */
+  .bento-book { padding: 1rem; }
+  .bento-book-options { gap: 0.45rem; }
+  .bento-book-opt { padding: 0.85rem 0.45rem; font-size: 0.78rem; min-height: 56px; }
+  .bento-book-cta { min-height: 48px; font-size: 0.88rem; }
+
+  /* Constellation section. */
+  .bento-constellation-section { min-height: 220px; }
+  .bento-constellation-section .constellation-sky { min-height: 200px; }
+
+  /* Floating ⌘K hint — push slightly inward and shrink. */
+  .bento-cmdk-fab {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.72rem;
+    min-height: 38px;
+  }
+}
