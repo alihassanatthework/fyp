@@ -1005,3 +1005,931 @@ body.dark .btn-outline {
   .page-container, .container { padding-left: 0.85rem !important; padding-right: 0.85rem !important; }
 }
 
+/* ════════════════════════════════════════════════════════════════
+   DARK MODE — Matte black + grey-scale overhaul
+   Strictly scoped under body.dark. Light mode untouched.
+
+   Palette:
+     #0a0a0a   page background
+     #111111   card background
+     #1a1a1a   elevated card / icon container background
+     #2a2a2a   borders / active pill
+     #3a3a3a   hover border
+     #e2e8f0   primary text / icons / inverted button background
+     #94a3b8   secondary text / icons
+     #f1f5f9   bright headings / hover hover
+
+   Severity badges (red / amber / green) and olive accents are
+   intentionally preserved.
+   ════════════════════════════════════════════════════════════════ */
+body.dark {
+  /* Page surfaces */
+  --bg-primary:   #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-tertiary:  #1a1a1a;
+  /* Borders */
+  --border-color:       #2a2a2a;
+  --border-color-hover: #3a3a3a;
+  /* Text */
+  --text-primary:   #f1f5f9;
+  --text-secondary: #e2e8f0;
+  --text-tertiary:  #94a3b8;
+  /* Navbar */
+  --nav-bg:     #111111;
+  --nav-accent: #e2e8f0;
+  /* Indigo aliases neutralised to mono. */
+  --blue-50:  rgba(255, 255, 255, 0.06);
+  --blue-100: rgba(255, 255, 255, 0.10);
+  --blue-500: #e2e8f0;
+  --blue-600: #f1f5f9;
+  --blue-700: #ffffff;
+  /* Primary button is now INVERTED — light bg, dark text. */
+  --btn-primary-bg: #e2e8f0;
+  --btn-primary-shadow:       0 6px 20px rgba(255, 255, 255, 0.12);
+  --btn-primary-shadow-hover: 0 10px 28px rgba(255, 255, 255, 0.22);
+  /* Slight softening of pastel chip backgrounds. */
+  --green-100:  rgba(16, 185, 129, 0.18);
+  --amber-100:  rgba(245, 158, 11, 0.20);
+  --red-100:    rgba(239, 68, 68, 0.20);
+  /* Stronger shadows on near-black. */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.55);
+  --shadow-md: 0 4px 14px -2px rgba(0, 0, 0, 0.65);
+  --shadow-lg: 0 12px 28px -6px rgba(0, 0, 0, 0.7);
+}
+
+/* ── NAVBAR ──────────────────────────────────────────────────── */
+body.dark .navbar-container {
+  background: #111111 !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: none !important;
+}
+body.dark .navbar-logo {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+body.dark .navbar-divider { color: rgba(255, 255, 255, 0.4) !important; }
+body.dark .navbar-title   { color: #ffffff !important; }
+body.dark .navbar-link    { color: #e2e8f0 !important; }
+body.dark .navbar-link:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff !important;
+}
+body.dark .navbar-link.active {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* Theme toggle pill */
+body.dark .theme-toggle {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .theme-btn       { color: #94a3b8 !important; }
+body.dark .theme-btn:hover { color: #e2e8f0 !important; }
+body.dark .theme-btn.active {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* Navbar buttons (Profile / Logout / Hamburger) */
+body.dark .profile-btn {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .profile-btn:hover {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  border-color: #3a3a3a !important;
+}
+body.dark .logout-btn {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .logout-btn:hover {
+  background: rgba(239, 68, 68, 0.18) !important;
+  color: #fca5a5 !important;
+  border-color: rgba(239, 68, 68, 0.45) !important;
+}
+body.dark .navbar-hamburger {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .navbar-hamburger:hover {
+  background: #2a2a2a !important;
+}
+
+/* Mobile drawer */
+body.dark .navbar-drawer {
+  background: #111111 !important;
+  border-left-color: #2a2a2a !important;
+}
+body.dark .navbar-drawer-link {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .navbar-drawer-link.active,
+body.dark .navbar-drawer-link:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+/* Primary CTA — INVERTED (light bg, dark text). */
+body.dark .btn-primary,
+body.dark .info-card-btn,
+body.dark .analysis-card-btn,
+body.dark .mua-analyze-btn:not(:disabled),
+body.dark .fa-analyze-btn:not(:disabled),
+body.dark .ia-analyse-btn:not(:disabled),
+body.dark .mua-salon-btn,
+body.dark .fa-shopping-btn,
+body.dark .bento-book-cta,
+body.dark .mirror-cta {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border: none !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.10) !important;
+}
+body.dark .btn-primary:hover:not(:disabled),
+body.dark .info-card-btn:hover,
+body.dark .analysis-card-btn:hover,
+body.dark .mua-analyze-btn:hover:not(:disabled),
+body.dark .fa-analyze-btn:hover:not(:disabled),
+body.dark .ia-analyse-btn:hover:not(:disabled),
+body.dark .mua-salon-btn:hover,
+body.dark .fa-shopping-btn:hover,
+body.dark .bento-book-cta:hover,
+body.dark .mirror-cta:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 0 10px 28px rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Sheen overlay on primary buttons is too bright on the inverted
+   surface — soften it so it reads as a subtle silver pass. */
+body.dark .btn-primary::after,
+body.dark .info-card-btn::after,
+body.dark .analysis-card-btn::after,
+body.dark .mua-analyze-btn::after,
+body.dark .fa-analyze-btn::after,
+body.dark .ia-analyse-btn::after {
+  background: linear-gradient(100deg,
+    transparent 30%,
+    rgba(0, 0, 0, 0.10) 50%,
+    transparent 70%) !important;
+}
+
+/* Secondary / outline */
+body.dark .btn-secondary {
+  background: transparent !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+  box-shadow: none !important;
+}
+body.dark .btn-secondary:hover:not(:disabled) {
+  background: #1a1a1a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+body.dark .btn-outline {
+  border: 1.5px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+  background: transparent !important;
+}
+body.dark .btn-outline:hover:not(:disabled) {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Focus ring — mono white halo. */
+body.dark .btn:focus-visible,
+body.dark .btn-primary:focus-visible,
+body.dark .btn-secondary:focus-visible,
+body.dark .btn-outline:focus-visible,
+body.dark .info-card-btn:focus-visible,
+body.dark .analysis-card-btn:focus-visible,
+body.dark .history-btn:focus-visible,
+body.dark .npm-btn:focus-visible,
+body.dark .ia-action-btn:focus-visible,
+body.dark .ia-analyse-btn:focus-visible,
+body.dark .mua-analyze-btn:focus-visible,
+body.dark .fa-analyze-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25),
+              0 6px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Icon-style buttons throughout the app */
+body.dark .ia-action-btn,
+body.dark .mua-camera-btn,
+body.dark .mua-upload-btn-label,
+body.dark .fa-camera-btn,
+body.dark .fa-upload-btn-label,
+body.dark .npm-btn-secondary,
+body.dark .history-btn-ghost {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .ia-action-btn:hover,
+body.dark .mua-camera-btn:hover,
+body.dark .mua-upload-btn-label:hover,
+body.dark .fa-camera-btn:hover,
+body.dark .fa-upload-btn-label:hover,
+body.dark .npm-btn-secondary:hover,
+body.dark .history-btn-ghost:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+body.dark .history-btn-primary {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  box-shadow: none !important;
+}
+body.dark .history-btn-primary:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* ── FORM INPUTS ────────────────────────────────────────────── */
+body.dark .input-field,
+body.dark input,
+body.dark select,
+body.dark textarea {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .input-field::placeholder,
+body.dark input::placeholder,
+body.dark textarea::placeholder { color: #64748b !important; }
+body.dark .input-field:focus,
+body.dark input:focus,
+body.dark select:focus,
+body.dark textarea:focus {
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.18) !important;
+}
+
+/* ── CARDS / GLASS PANELS ────────────────────────────────────── */
+body.dark .card,
+body.dark .info-card,
+body.dark .bento-glass {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.55),
+              inset 0 1px 0 0 rgba(255, 255, 255, 0.02) !important;
+}
+body.dark .card:hover,
+body.dark .info-card:hover,
+body.dark .bento-glass:hover {
+  border-color: #3a3a3a !important;
+}
+
+/* ── FEATURE TILES ──────────────────────────────────────────── */
+body.dark .bento-feature-icon,
+body.dark .bento-mirror-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: none !important;
+  color: #e2e8f0 !important;
+}
+body.dark .bento-feature-icon svg,
+body.dark .bento-mirror-icon svg { color: #e2e8f0 !important; }
+body.dark .bento-feature-title { color: #f1f5f9 !important; }
+body.dark .bento-feature-sub   { color: #94a3b8 !important; }
+body.dark .bento-feature-arrow { color: #94a3b8 !important; }
+body.dark .bento-feature:hover .bento-feature-arrow { color: #ffffff !important; }
+body.dark .bento-stat-glow { display: none !important; }
+
+/* ── HEALTH SCORE ───────────────────────────────────────────── */
+body.dark .bento-health-value > span:first-child {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  color: #f1f5f9 !important;
+}
+body.dark .bento-health-wrapped {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .bento-health-wrapped:hover {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* ── SKIN COPILOT ──────────────────────────────────────────── */
+body.dark .skin-copilot {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+  box-shadow: none !important;
+}
+body.dark .skin-copilot::before { background: none !important; }
+body.dark .skin-copilot-avatar {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+/* Severity-driven tones — keep semantic colours, not purple. */
+body.dark .skin-copilot.tone-alert .skin-copilot-avatar {
+  background: rgba(239, 68, 68, 0.20) !important;
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  color: #fca5a5 !important;
+}
+body.dark .skin-copilot.tone-happy .skin-copilot-avatar {
+  background: rgba(16, 185, 129, 0.18) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  color: #6ee7b7 !important;
+}
+body.dark .skin-copilot-chip {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .skin-copilot-chip:hover {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* ── AURORA — disabled in matte dark mode ─────────────────── */
+body.dark .aurora-bg { display: none !important; }
+
+/* ── CONSTELLATION SKY ─────────────────────────────────────── */
+body.dark .constellation-sky {
+  background: #0a0a0a !important;
+  border-color: #2a2a2a !important;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.55) !important;
+}
+
+/* ── BOOK APPOINTMENT TILE ─────────────────────────────────── */
+body.dark .bento-book-head { color: #94a3b8 !important; }
+body.dark .bento-book-head svg { color: #94a3b8 !important; }
+body.dark .bento-book-opt {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .bento-book-opt svg { color: #94a3b8 !important; }
+body.dark .bento-book-opt.active {
+  background: #2a2a2a !important;
+  border-color: #e2e8f0 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+body.dark .bento-book-opt.active svg { color: #ffffff !important; }
+
+/* ── CMD+K FLOATING FAB ─────────────────────────────────────── */
+body.dark .bento-cmdk-fab {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .bento-cmdk-fab kbd { background: #2a2a2a !important; color: #e2e8f0 !important; }
+body.dark .bento-cmdk-fab:hover { background: #2a2a2a !important; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5) !important; }
+
+/* ── COMMAND PALETTE ──────────────────────────────────────── */
+body.dark .cp-shell {
+  background: #111111 !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7),
+              0 0 0 1px #2a2a2a !important;
+}
+body.dark .cp-item.highlight {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+body.dark .cp-item.highlight .cp-item-icon,
+body.dark .cp-item.highlight .cp-item-arrow { color: #e2e8f0 !important; }
+body.dark .cp-esc,
+body.dark .cp-footer kbd {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #94a3b8 !important;
+}
+
+/* ── TIME MACHINE ─────────────────────────────────────────── */
+body.dark .time-machine-slider { background: #2a2a2a !important; }
+body.dark .time-machine-slider::-webkit-slider-thumb {
+  background: #e2e8f0 !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.25) !important;
+}
+body.dark .time-machine-slider::-moz-range-thumb {
+  background: #e2e8f0 !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.25) !important;
+}
+body.dark .time-machine-arrow {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .time-machine-arrow:hover:not(:disabled) {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border-color: #e2e8f0 !important;
+}
+body.dark .time-machine-open {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .time-machine-open:hover:not(:disabled) {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+}
+
+/* ── SKIN TWIN ─────────────────────────────────────────────── */
+body.dark .skin-twin-svg {
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5)) !important;
+}
+
+/* ── MIRROR MODE MODAL ─────────────────────────────────────── */
+body.dark .mirror-shell    { background: #0a0a0a !important; border-color: #2a2a2a !important; }
+body.dark .mirror-header   { background: #111111 !important; border-bottom-color: #2a2a2a !important; }
+body.dark .mirror-footer   { background: #111111 !important; }
+body.dark .mirror-close    { background: #1a1a1a !important; color: #e2e8f0 !important; }
+body.dark .mirror-scanline {
+  background: linear-gradient(90deg, transparent, #ffffff, transparent) !important;
+  box-shadow: 0 0 12px #ffffff !important;
+}
+body.dark .mirror-error-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mirror-error-btn.primary {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border-color: #e2e8f0 !important;
+}
+body.dark .mirror-error-btn.primary:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* ── SKIN WRAPPED STORY MODAL ─────────────────────────────── */
+body.dark .wrapped-stage { filter: grayscale(0.45) brightness(0.85); }
+
+/* ── DIAGNOSIS REPORT REMINDER MODAL ─────────────────────── */
+body.dark .dr-modal {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .dr-modal-input {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .dr-modal-input::-webkit-calendar-picker-indicator { filter: invert(0.85); }
+body.dark .dr-modal-quick-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .dr-modal-quick-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* ── EDIT PROFILE / GENERIC MODALS ─────────────────────────── */
+body.dark .modal-content,
+body.dark .mua-camera-modal {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+
+/* ── BADGES / SEVERITY (semantic colours preserved) ──────── */
+body.dark .badge {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .badge-mild     { background: rgba(16, 185, 129, 0.18) !important; color: #6ee7b7 !important; }
+body.dark .badge-moderate { background: rgba(245, 158, 11, 0.22) !important; color: #fcd34d !important; }
+body.dark .badge-severe   { background: rgba(239, 68, 68, 0.22) !important; color: #fca5a5 !important; }
+
+/* ── SEVERE ALERT BANNER — keep semantic red ──────────────── */
+body.dark .bento-alert-btn {
+  /* gradient red→orange preserved — semantic, not purple */
+}
+
+/* ── AUTH PAGE NAVBAR PILL (Login / SignUp top bar) ───────── */
+body.dark .login-header-content {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+  box-shadow: none !important;
+}
+
+/* ── LOGIN CARD ──────────────────────────────────────────── */
+body.dark .login-card-3d {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .login-card-3d .login-title {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  color: #f1f5f9 !important;
+}
+body.dark .login-card-3d .input-field {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+}
+
+/* ── BOOKINGS PAGE ───────────────────────────────────────── */
+body.dark .booking-context-banner,
+body.dark .booking-filters,
+body.dark .booking-form-card,
+body.dark .booking-success-card {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .provider-type-tab.active {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  border-color: #3a3a3a !important;
+}
+
+/* ── PROFILE / CHANGE PASSWORD CARD ──────────────────────── */
+body.dark .profile-card { background: #111111 !important; border-color: #2a2a2a !important; }
+
+/* ── HISTORY PAGE BACKGROUND ─────────────────────────────── */
+body.dark .history-page { background: #0a0a0a !important; }
+body.dark .scan-card    { background: #111111 !important; border-color: #2a2a2a !important; }
+
+/* ── AURORA / FOOTER STRUCTURAL ─────────────────────────── */
+body.dark .site-footer { background: #0a0a0a !important; border-top-color: #2a2a2a !important; }
+
+/* ════════════════════════════════════════════════════════════════
+   DARK MODE — FINAL CATCH-ALL for every remaining purple/blue icon,
+   gradient, and accent across the app. Strict body.dark scope.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Footer ──────────────────────────────────────────────────── */
+body.dark .footer-logo {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  color: #f1f5f9 !important;
+}
+body.dark .footer-tagline { color: #94a3b8 !important; }
+body.dark .footer-links a { color: #94a3b8 !important; }
+body.dark .footer-links a:hover { color: #f1f5f9 !important; }
+body.dark .footer-social {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #94a3b8 !important;
+}
+body.dark .footer-social:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #f1f5f9 !important;
+}
+body.dark .footer-copy { color: #64748b !important; }
+
+/* ── Bookings — purple stethoscope icon + context banner ──── */
+body.dark .booking-context-banner {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .booking-context-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .booking-context-icon svg { color: #e2e8f0 !important; }
+body.dark .booking-context-title { color: #f1f5f9 !important; }
+body.dark .booking-context-sub   { color: #94a3b8 !important; }
+
+/* Provider type icons (Dermatologist / Salon) in form & cards */
+body.dark .provider-icon,
+body.dark .provider-icon.dermatologist,
+body.dark .provider-icon.salon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .provider-icon svg { color: #e2e8f0 !important; }
+
+/* Locator pill (was indigo translucent) */
+body.dark .booking-loc-pill {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+/* Hint pill — keep amber (semantic) */
+
+/* Distance pill — keep green (semantic) */
+
+/* "Dermatologists on Maps" Google-coloured button — replace with mono */
+body.dark .booking-maps-btn {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+body.dark .booking-maps-btn:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+body.dark .booking-nearby-btn {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+body.dark .booking-nearby-btn:hover {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+}
+body.dark .booking-directions-btn {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+/* Provider type tabs — already overridden, but make sure idle = mono */
+body.dark .provider-type-tab {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .provider-type-tab:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+}
+
+/* NearbyProvidersMap component */
+body.dark .npm-wrap { background: transparent !important; }
+body.dark .npm-card,
+body.dark .npm-card-item {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .npm-card-photo-fallback {
+  background: #1a1a1a !important;
+  color: #94a3b8 !important;
+}
+body.dark .npm-card-name { color: #f1f5f9 !important; }
+body.dark .npm-card-line { color: #94a3b8 !important; }
+body.dark .npm-status-chip.open   { background: rgba(16, 185, 129, 0.20) !important; color: #6ee7b7 !important; }
+body.dark .npm-status-chip.closed { background: rgba(239, 68, 68, 0.20) !important; color: #fca5a5 !important; }
+body.dark .npm-btn-primary {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border: none !important;
+}
+body.dark .npm-btn-primary:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+body.dark .npm-btn-secondary {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .npm-city-input {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .npm-title    { color: #f1f5f9 !important; }
+body.dark .npm-subtitle { color: #94a3b8 !important; }
+
+/* ── MakeupAssistance / FashionAssistance — remaining gradients ── */
+body.dark .mua-header-icon,
+body.dark .fa-header-icon {
+  background: #1a1a1a !important;
+}
+/* Step-3 / Get Your Look loaders (mua-loading-spinner inside indigo bg) */
+body.dark .mua-progress-bar-fill,
+body.dark .fa-progress-bar-fill {
+  background: #e2e8f0 !important;
+}
+
+/* Fashion inline collapse icons (rendered via inline style) */
+body.dark .fa-collapse-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .fa-collapse-icon svg { color: #e2e8f0 !important; }
+
+/* Makeup CARD_META icon tiles — inline pastel bg + colour. They sit
+   on .mua-rec-card-icon. In dark mode flatten them to mono. */
+body.dark .mua-rec-card-icon {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-rec-card-icon svg { color: #e2e8f0 !important; }
+
+/* ── Auth navbar pill on Login/SignUp ── */
+body.dark .login-header-content {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+  box-shadow: none !important;
+}
+body.dark .login-header .navbar-logo  { color: #ffffff !important; text-shadow: none !important; }
+body.dark .login-header .navbar-title { color: #ffffff !important; }
+body.dark .login-header .theme-toggle  { background: #1a1a1a !important; border-color: #2a2a2a !important; }
+body.dark .login-header .theme-btn       { color: #94a3b8 !important; }
+body.dark .login-header .theme-btn.active{
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+body.dark .login-header .profile-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .login-header .profile-btn:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+/* ── Diagnosis Report ────────────────────────────────────── */
+body.dark .condition-icon-badge {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .condition-icon-text { color: #f1f5f9 !important; }
+body.dark .condition-header-icon { color: #e2e8f0 !important; }
+body.dark .severity-bar {
+  background: #2a2a2a !important;
+}
+body.dark .severity-bar-fill {
+  background: #e2e8f0 !important;
+}
+body.dark .book-card {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .book-title { color: #f1f5f9 !important; }
+body.dark .book-desc  { color: #94a3b8 !important; }
+
+/* Recharts chart text colours */
+body.dark .recharts-text { fill: #94a3b8 !important; }
+
+/* ── Diagnosis Reminder modal text inside dark ── */
+body.dark .dr-modal-label { color: #94a3b8 !important; }
+
+/* ── User Profile ──────────────────────────────────────── */
+body.dark .profile-card { background: #111111 !important; border-color: #2a2a2a !important; }
+body.dark .profile-card-title { color: #f1f5f9 !important; }
+body.dark .profile-card-sub   { color: #94a3b8 !important; }
+body.dark .profile-field-label{ color: #64748b !important; }
+body.dark .profile-field-value{ color: #e2e8f0 !important; }
+body.dark .profile-field-empty{ color: #64748b !important; }
+body.dark .health-header { color: #f1f5f9 !important; }
+body.dark .health-icon-box {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .health-row-icon {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .health-row-label { color: #94a3b8 !important; }
+body.dark .health-value     { color: #e2e8f0 !important; }
+body.dark .health-empty     { color: #64748b !important; }
+body.dark .health-pill {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .health-pill-warn {
+  background: rgba(245, 158, 11, 0.20) !important;
+  color: #fcd34d !important;
+  border-color: rgba(245, 158, 11, 0.40) !important;
+}
+
+/* ── SignUp ────────────────────────────────────────────── */
+body.dark .signup-page,
+body.dark .signup-container { background: transparent !important; }
+body.dark .signup-form-panel {
+  background: #111111 !important;
+  border: 1px solid #2a2a2a !important;
+}
+body.dark .signup-title    { color: #f1f5f9 !important; }
+body.dark .signup-subtitle { color: #94a3b8 !important; }
+body.dark .section-label   { color: #64748b !important; }
+body.dark .account-type-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .account-type-btn.selected {
+  background: #2a2a2a !important;
+  border-color: #e2e8f0 !important;
+  color: #ffffff !important;
+}
+body.dark .health-option-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .health-option-btn.selected {
+  background: #2a2a2a !important;
+  border-color: #e2e8f0 !important;
+  color: #ffffff !important;
+}
+body.dark .terms-checkbox {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .terms-checkbox.checked {
+  background: #2a2a2a !important;
+  border-color: #e2e8f0 !important;
+}
+body.dark .terms-checkbox a { color: #e2e8f0 !important; }
+body.dark .consent-see-more {
+  color: #94a3b8 !important;
+}
+body.dark .consent-details {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #94a3b8 !important;
+}
+
+/* ── Diagnosis history / History list ──────────────────── */
+body.dark .history-icon-box {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .scan-card-header { color: #94a3b8 !important; }
+body.dark .scan-date  { color: #94a3b8 !important; }
+body.dark .scan-type  { color: #94a3b8 !important; }
+body.dark .scan-name  { color: #f1f5f9 !important; }
+body.dark .like-btn   {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #94a3b8 !important;
+}
+body.dark .like-btn.liked { color: #fca5a5 !important; }
+
+/* ── Static pages (Terms / Privacy / Contact / Consent etc.) ── */
+body.dark .static-page-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+
+/* ── AnalysisCard component (Skin/Scalp scan tiles on Home) ── */
+body.dark .analysis-card {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .analysis-card-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .analysis-card-title { color: #f1f5f9 !important; }
+body.dark .analysis-card-desc  { color: #94a3b8 !important; }
+body.dark .analysis-card-bullets li { color: #94a3b8 !important; }
+
+/* ── Home feature illustrations (Makeup / Fashion home tiles) ── */
+body.dark .hfi-icon-wrap {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .hfi-icon-wrap svg { color: #e2e8f0 !important; }
+body.dark .makeup-illustration .hfi-ring,
+body.dark .fashion-illustration .hfi-ring { color: #2a2a2a !important; }
+body.dark .hfi-dot { background: #2a2a2a !important; }
+
+/* ── Aurora background — disabled (kept from earlier) ────────── */
+/* (already body.dark .aurora-bg { display: none !important; }) */
+
+/* ── Catch-all: any element with a sibling-of-text purple glow ── */
+body.dark [class*="-icon-wrap"],
+body.dark [class*="-icon-tile"] {
+  background: #1a1a1a !important;
+  color: #e2e8f0 !important;
+}
+body.dark [class*="-icon-wrap"] svg,
+body.dark [class*="-icon-tile"] svg { color: #e2e8f0 !important; }
+

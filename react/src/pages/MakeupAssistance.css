@@ -566,3 +566,222 @@ body.dark .mua-event-badge { background: rgba(79, 70, 229, 0.12); }
   .mua-camera-capture-btn,
   .mua-camera-cancel-btn { width: 100%; min-height: 48px; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   DARK MODE — matte black overhaul (Makeup Assistance).
+   All purple/blue tones removed. Light mode untouched.
+   ════════════════════════════════════════════════════════════════ */
+body.dark .mua-main h1 { color: #f1f5f9 !important; }
+body.dark .mua-main p  { color: #94a3b8 !important; }
+body.dark .mua-header-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+  box-shadow: none !important;
+}
+body.dark .mua-header-icon svg { color: #e2e8f0 !important; }
+body.dark .mua-section-label { color: #64748b !important; }
+
+/* Event grid */
+body.dark .mua-event-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-event-btn:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+}
+body.dark .mua-event-btn.active {
+  background: #2a2a2a !important;
+  border-color: #e2e8f0 !important;
+  color: #ffffff !important;
+}
+body.dark .mua-event-btn.active .mua-event-label { color: #ffffff !important; }
+
+/* Other-event text input */
+body.dark .mua-other-input {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-other-input::placeholder { color: #64748b !important; }
+body.dark .mua-other-input:focus {
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.18) !important;
+}
+
+/* Upload zone */
+body.dark .mua-upload-zone {
+  background: #0a0a0a !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .mua-upload-zone.drag-over {
+  background: #111111 !important;
+  border-color: #e2e8f0 !important;
+}
+body.dark .mua-upload-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-upload-icon svg { color: #e2e8f0 !important; }
+body.dark .mua-upload-title { color: #f1f5f9 !important; }
+body.dark .mua-upload-sub   { color: #94a3b8 !important; }
+
+/* Upload action buttons */
+body.dark .mua-upload-btn-label,
+body.dark .mua-camera-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-upload-btn-label:hover,
+body.dark .mua-camera-btn:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+/* Primary CTA */
+body.dark .mua-analyze-btn {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border: none !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.12) !important;
+}
+body.dark .mua-analyze-btn:hover:not(:disabled) {
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 0 10px 28px rgba(255, 255, 255, 0.22) !important;
+}
+body.dark .mua-analyze-btn:disabled {
+  background: #1a1a1a !important;
+  color: #94a3b8 !important;
+  box-shadow: none !important;
+}
+
+body.dark .mua-reset-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-reset-btn:hover {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+/* Preview state */
+body.dark .mua-preview-wrap   { border-color: #2a2a2a !important; }
+body.dark .mua-preview-change {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-preview-label {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #6ee7b7 !important;
+}
+
+/* Camera errors / modal — semantic red kept */
+body.dark .mua-camera-error {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #fca5a5 !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+body.dark .mua-camera-modal-overlay { background: rgba(0, 0, 0, 0.85) !important; }
+body.dark .mua-camera-modal {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .mua-camera-modal-header {
+  background: #1a1a1a !important;
+  color: #f1f5f9 !important;
+  border-bottom-color: #2a2a2a !important;
+}
+body.dark .mua-camera-modal-footer {
+  background: #111111 !important;
+  border-top-color: #2a2a2a !important;
+}
+body.dark .mua-camera-capture-btn {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+}
+body.dark .mua-camera-cancel-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+
+/* Loading state */
+body.dark .mua-loading-title { color: #f1f5f9 !important; }
+body.dark .mua-loading-sub   { color: #94a3b8 !important; }
+body.dark .mua-loading-spinner {
+  border-color: #2a2a2a !important;
+  border-top-color: #e2e8f0 !important;
+}
+body.dark .mua-progress-bar-wrap { background: #1a1a1a !important; border-color: #2a2a2a !important; }
+body.dark .mua-progress-bar-fill { background: #e2e8f0 !important; }
+body.dark .mua-progress-step     { color: #e2e8f0 !important; }
+
+/* Results section */
+body.dark .mua-event-badge {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #f1f5f9 !important;
+}
+body.dark .mua-rec-card { background: #111111 !important; border-color: #2a2a2a !important; }
+body.dark .mua-rec-card-title    { color: #f1f5f9 !important; }
+body.dark .mua-rec-card-category { color: #94a3b8 !important; }
+body.dark .mua-rec-card-tip {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #94a3b8 !important;
+}
+body.dark .mua-shade-card  { background: #1a1a1a !important; border-color: #2a2a2a !important; }
+body.dark .mua-shade-name  { color: #e2e8f0 !important; }
+body.dark .mua-shade-hex   { color: #94a3b8 !important; }
+
+body.dark .mua-preview-section {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .mua-preview-section-title { color: #f1f5f9 !important; }
+body.dark .mua-preview-badge { background: #2a2a2a !important; color: #e2e8f0 !important; }
+body.dark .mua-toggle-preview {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-preview-canvas-wrap {
+  background: #0a0a0a !important;
+  border-color: #2a2a2a !important;
+}
+
+/* Salon CTA */
+body.dark .mua-salon-btn {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border: none !important;
+}
+body.dark .mua-salon-btn:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Step-by-step guide */
+body.dark .mua-step      { background: #111111 !important; border-color: #2a2a2a !important; }
+body.dark .mua-step-num  {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .mua-step-title { color: #f1f5f9 !important; }
+body.dark .mua-step-desc  { color: #94a3b8 !important; }
+body.dark .mua-step-tip   {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #94a3b8 !important;
+}
+body.dark .mua-divider    { background: #2a2a2a !important; }

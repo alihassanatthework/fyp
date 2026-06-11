@@ -1,0 +1,679 @@
+{
+  "root": "dataset",
+  "total_files": 109459,
+  "total_bytes": 16832997109,
+  "folders": {
+    "dataset": {
+      "path": "dataset",
+      "n_subdirs": 2,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 8196
+    },
+    "dataset/efficientnet_b4": {
+      "path": "dataset/efficientnet_b4",
+      "n_subdirs": 7,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 12292
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES",
+      "n_subdirs": 10,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 12292
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/1. Eczema 1677": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/1. Eczema 1677",
+      "n_subdirs": 0,
+      "n_image_files": 1677,
+      "n_other_files": 0,
+      "size_bytes": 145377214
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/10. Warts Molluscum and other Viral Infections - 2103": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/10. Warts Molluscum and other Viral Infections - 2103",
+      "n_subdirs": 0,
+      "n_image_files": 2103,
+      "n_other_files": 0,
+      "size_bytes": 138730268
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/2. Melanoma 15.75k": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/2. Melanoma 15.75k",
+      "n_subdirs": 0,
+      "n_image_files": 3140,
+      "n_other_files": 0,
+      "size_bytes": 237931421
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/3. Atopic Dermatitis - 1.25k": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/3. Atopic Dermatitis - 1.25k",
+      "n_subdirs": 0,
+      "n_image_files": 1257,
+      "n_other_files": 0,
+      "size_bytes": 67776046
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/4. Basal Cell Carcinoma (BCC) 3323": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/4. Basal Cell Carcinoma (BCC) 3323",
+      "n_subdirs": 0,
+      "n_image_files": 3323,
+      "n_other_files": 0,
+      "size_bytes": 1548462061
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/5. Melanocytic Nevi (NV) - 7970": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/5. Melanocytic Nevi (NV) - 7970",
+      "n_subdirs": 0,
+      "n_image_files": 7970,
+      "n_other_files": 0,
+      "size_bytes": 2058552121
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/6. Benign Keratosis-like Lesions (BKL) 2624": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/6. Benign Keratosis-like Lesions (BKL) 2624",
+      "n_subdirs": 0,
+      "n_image_files": 2079,
+      "n_other_files": 0,
+      "size_bytes": 872899460
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/7. Psoriasis pictures Lichen Planus and related diseases - 2k": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/7. Psoriasis pictures Lichen Planus and related diseases - 2k",
+      "n_subdirs": 0,
+      "n_image_files": 2055,
+      "n_other_files": 0,
+      "size_bytes": 176182319
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/8. Seborrheic Keratoses and other Benign Tumors - 1.8k": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/8. Seborrheic Keratoses and other Benign Tumors - 1.8k",
+      "n_subdirs": 0,
+      "n_image_files": 1847,
+      "n_other_files": 0,
+      "size_bytes": 174250489
+    },
+    "dataset/efficientnet_b4/IMG_CLASSES/9. Tinea Ringworm Candidiasis and other Fungal Infections - 1.7k": {
+      "path": "dataset/efficientnet_b4/IMG_CLASSES/9. Tinea Ringworm Candidiasis and other Fungal Infections - 1.7k",
+      "n_subdirs": 0,
+      "n_image_files": 1702,
+      "n_other_files": 0,
+      "size_bytes": 159708978
+    },
+    "dataset/efficientnet_b4/acne_dataset": {
+      "path": "dataset/efficientnet_b4/acne_dataset",
+      "n_subdirs": 1,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 6148
+    },
+    "dataset/efficientnet_b4/acne_dataset/Acne": {
+      "path": "dataset/efficientnet_b4/acne_dataset/Acne",
+      "n_subdirs": 0,
+      "n_image_files": 1832,
+      "n_other_files": 0,
+      "size_bytes": 177079261
+    },
+    "dataset/efficientnet_b4/data_eczema": {
+      "path": "dataset/efficientnet_b4/data_eczema",
+      "n_subdirs": 2,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 8196
+    },
+    "dataset/efficientnet_b4/data_eczema/images": {
+      "path": "dataset/efficientnet_b4/data_eczema/images",
+      "n_subdirs": 0,
+      "n_image_files": 1677,
+      "n_other_files": 0,
+      "size_bytes": 145377214
+    },
+    "dataset/efficientnet_b4/data_eczema/masks": {
+      "path": "dataset/efficientnet_b4/data_eczema/masks",
+      "n_subdirs": 0,
+      "n_image_files": 1677,
+      "n_other_files": 0,
+      "size_bytes": 5668858
+    },
+    "dataset/efficientnet_b4/dermnet_dataset": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset",
+      "n_subdirs": 2,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 6148
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test",
+      "n_subdirs": 23,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 18436
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos",
+      "n_subdirs": 0,
+      "n_image_files": 312,
+      "n_other_files": 0,
+      "size_bytes": 29737014
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions",
+      "n_subdirs": 0,
+      "n_image_files": 288,
+      "n_other_files": 0,
+      "size_bytes": 29403590
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos",
+      "n_subdirs": 0,
+      "n_image_files": 123,
+      "n_other_files": 0,
+      "size_bytes": 10771521
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos",
+      "n_subdirs": 0,
+      "n_image_files": 113,
+      "n_other_files": 0,
+      "size_bytes": 10849656
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Cellulitis Impetigo and other Bacterial Infections": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Cellulitis Impetigo and other Bacterial Infections",
+      "n_subdirs": 0,
+      "n_image_files": 73,
+      "n_other_files": 0,
+      "size_bytes": 6812370
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos",
+      "n_subdirs": 0,
+      "n_image_files": 309,
+      "n_other_files": 0,
+      "size_bytes": 28725223
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions",
+      "n_subdirs": 0,
+      "n_image_files": 101,
+      "n_other_files": 0,
+      "size_bytes": 8575258
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases",
+      "n_subdirs": 0,
+      "n_image_files": 60,
+      "n_other_files": 0,
+      "size_bytes": 6827511
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos",
+      "n_subdirs": 0,
+      "n_image_files": 102,
+      "n_other_files": 0,
+      "size_bytes": 10514709
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation",
+      "n_subdirs": 0,
+      "n_image_files": 143,
+      "n_other_files": 0,
+      "size_bytes": 13161155
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Lupus and other Connective Tissue diseases": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Lupus and other Connective Tissue diseases",
+      "n_subdirs": 0,
+      "n_image_files": 105,
+      "n_other_files": 0,
+      "size_bytes": 10433918
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles",
+      "n_subdirs": 0,
+      "n_image_files": 116,
+      "n_other_files": 0,
+      "size_bytes": 11543624
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease",
+      "n_subdirs": 0,
+      "n_image_files": 261,
+      "n_other_files": 0,
+      "size_bytes": 20682629
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis",
+      "n_subdirs": 0,
+      "n_image_files": 65,
+      "n_other_files": 0,
+      "size_bytes": 5831306
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases",
+      "n_subdirs": 0,
+      "n_image_files": 352,
+      "n_other_files": 0,
+      "size_bytes": 33832508
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites",
+      "n_subdirs": 0,
+      "n_image_files": 108,
+      "n_other_files": 0,
+      "size_bytes": 9250732
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Seborrheic Keratoses and other Benign Tumors": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Seborrheic Keratoses and other Benign Tumors",
+      "n_subdirs": 0,
+      "n_image_files": 343,
+      "n_other_files": 0,
+      "size_bytes": 34634491
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Systemic Disease": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Systemic Disease",
+      "n_subdirs": 0,
+      "n_image_files": 152,
+      "n_other_files": 0,
+      "size_bytes": 15065598
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections",
+      "n_subdirs": 0,
+      "n_image_files": 325,
+      "n_other_files": 0,
+      "size_bytes": 31186506
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Urticaria Hives": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Urticaria Hives",
+      "n_subdirs": 0,
+      "n_image_files": 53,
+      "n_other_files": 0,
+      "size_bytes": 4510554
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors",
+      "n_subdirs": 0,
+      "n_image_files": 121,
+      "n_other_files": 0,
+      "size_bytes": 11142716
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Vasculitis Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Vasculitis Photos",
+      "n_subdirs": 0,
+      "n_image_files": 105,
+      "n_other_files": 0,
+      "size_bytes": 8786156
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections",
+      "n_subdirs": 0,
+      "n_image_files": 272,
+      "n_other_files": 0,
+      "size_bytes": 24935091
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train",
+      "n_subdirs": 23,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 18436
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos",
+      "n_subdirs": 0,
+      "n_image_files": 840,
+      "n_other_files": 0,
+      "size_bytes": 79926354
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions",
+      "n_subdirs": 0,
+      "n_image_files": 1149,
+      "n_other_files": 0,
+      "size_bytes": 119510108
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos",
+      "n_subdirs": 0,
+      "n_image_files": 489,
+      "n_other_files": 0,
+      "size_bytes": 43418746
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos",
+      "n_subdirs": 0,
+      "n_image_files": 448,
+      "n_other_files": 0,
+      "size_bytes": 42661965
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections",
+      "n_subdirs": 0,
+      "n_image_files": 288,
+      "n_other_files": 0,
+      "size_bytes": 27090514
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos",
+      "n_subdirs": 0,
+      "n_image_files": 1235,
+      "n_other_files": 0,
+      "size_bytes": 113972055
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions",
+      "n_subdirs": 0,
+      "n_image_files": 404,
+      "n_other_files": 0,
+      "size_bytes": 33332912
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases",
+      "n_subdirs": 0,
+      "n_image_files": 239,
+      "n_other_files": 0,
+      "size_bytes": 28582444
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos",
+      "n_subdirs": 0,
+      "n_image_files": 405,
+      "n_other_files": 0,
+      "size_bytes": 41024438
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation",
+      "n_subdirs": 0,
+      "n_image_files": 568,
+      "n_other_files": 0,
+      "size_bytes": 52601134
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Lupus and other Connective Tissue diseases": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Lupus and other Connective Tissue diseases",
+      "n_subdirs": 0,
+      "n_image_files": 420,
+      "n_other_files": 0,
+      "size_bytes": 39821396
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles",
+      "n_subdirs": 0,
+      "n_image_files": 463,
+      "n_other_files": 0,
+      "size_bytes": 46068558
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease",
+      "n_subdirs": 0,
+      "n_image_files": 1040,
+      "n_other_files": 0,
+      "size_bytes": 82716030
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis",
+      "n_subdirs": 0,
+      "n_image_files": 260,
+      "n_other_files": 0,
+      "size_bytes": 26412806
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases",
+      "n_subdirs": 0,
+      "n_image_files": 1405,
+      "n_other_files": 0,
+      "size_bytes": 136237797
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites",
+      "n_subdirs": 0,
+      "n_image_files": 431,
+      "n_other_files": 0,
+      "size_bytes": 38210070
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Seborrheic Keratoses and other Benign Tumors": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Seborrheic Keratoses and other Benign Tumors",
+      "n_subdirs": 0,
+      "n_image_files": 1371,
+      "n_other_files": 0,
+      "size_bytes": 136674363
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Systemic Disease": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Systemic Disease",
+      "n_subdirs": 0,
+      "n_image_files": 606,
+      "n_other_files": 0,
+      "size_bytes": 61585265
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections",
+      "n_subdirs": 0,
+      "n_image_files": 1300,
+      "n_other_files": 0,
+      "size_bytes": 126992507
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Urticaria Hives": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Urticaria Hives",
+      "n_subdirs": 0,
+      "n_image_files": 212,
+      "n_other_files": 0,
+      "size_bytes": 17632616
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors",
+      "n_subdirs": 0,
+      "n_image_files": 482,
+      "n_other_files": 0,
+      "size_bytes": 43162961
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Vasculitis Photos": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Vasculitis Photos",
+      "n_subdirs": 0,
+      "n_image_files": 416,
+      "n_other_files": 0,
+      "size_bytes": 35913882
+    },
+    "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections": {
+      "path": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections",
+      "n_subdirs": 0,
+      "n_image_files": 1086,
+      "n_other_files": 0,
+      "size_bytes": 99754479
+    },
+    "dataset/efficientnet_b4/dryness": {
+      "path": "dataset/efficientnet_b4/dryness",
+      "n_subdirs": 3,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 6148
+    },
+    "dataset/efficientnet_b4/dryness/test": {
+      "path": "dataset/efficientnet_b4/dryness/test",
+      "n_subdirs": 2,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 6148
+    },
+    "dataset/efficientnet_b4/dryness/test/dry": {
+      "path": "dataset/efficientnet_b4/dryness/test/dry",
+      "n_subdirs": 0,
+      "n_image_files": 113,
+      "n_other_files": 0,
+      "size_bytes": 4936688
+    },
+    "dataset/efficientnet_b4/dryness/test/not_dry": {
+      "path": "dataset/efficientnet_b4/dryness/test/not_dry",
+      "n_subdirs": 0,
+      "n_image_files": 296,
+      "n_other_files": 0,
+      "size_bytes": 12164030
+    },
+    "dataset/efficientnet_b4/dryness/train": {
+      "path": "dataset/efficientnet_b4/dryness/train",
+      "n_subdirs": 2,
+      "n_image_files": 0,
+      "n_other_files": 0,
+      "size_bytes": 0
+    },
+    "dataset/efficientnet_b4/dryness/train/dry": {
+      "path": "dataset/efficientnet_b4/dryness/train/dry",
+      "n_subdirs": 0,
+      "n_image_files": 833,
+      "n_other_files": 0,
+      "size_bytes": 35421789
+    },
+    "dataset/efficientnet_b4/dryness/train/not_dry": {
+      "path": "dataset/efficientnet_b4/dryness/train/not_dry",
+      "n_subdirs": 0,
+      "n_image_files": 2039,
+      "n_other_files": 0,
+      "size_bytes": 85571261
+    },
+    "dataset/efficientnet_b4/dryness/val": {
+      "path": "dataset/efficientnet_b4/dryness/val",
+      "n_subdirs": 2,
+      "n_image_files": 0,
+      "n_other_files": 0,
+      "size_bytes": 0
+    },
+    "dataset/efficientnet_b4/dryness/val/dry": {
+      "path": "dataset/efficientnet_b4/dryness/val/dry",
+      "n_subdirs": 0,
+      "n_image_files": 257,
+      "n_other_files": 0,
+      "size_bytes": 10503320
+    },
+    "dataset/efficientnet_b4/dryness/val/not_dry": {
+      "path": "dataset/efficientnet_b4/dryness/val/not_dry",
+      "n_subdirs": 0,
+      "n_image_files": 555,
+      "n_other_files": 0,
+      "size_bytes": 22977832
+    },
+    "dataset/efficientnet_b4/train": {
+      "path": "dataset/efficientnet_b4/train",
+      "n_subdirs": 4,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 10244
+    },
+    "dataset/efficientnet_b4/train/acne": {
+      "path": "dataset/efficientnet_b4/train/acne",
+      "n_subdirs": 0,
+      "n_image_files": 865,
+      "n_other_files": 0,
+      "size_bytes": 19980846
+    },
+    "dataset/efficientnet_b4/train/dark_spots": {
+      "path": "dataset/efficientnet_b4/train/dark_spots",
+      "n_subdirs": 0,
+      "n_image_files": 1267,
+      "n_other_files": 0,
+      "size_bytes": 30073718
+    },
+    "dataset/efficientnet_b4/train/dryness": {
+      "path": "dataset/efficientnet_b4/train/dryness",
+      "n_subdirs": 0,
+      "n_image_files": 3909,
+      "n_other_files": 0,
+      "size_bytes": 89973124
+    },
+    "dataset/efficientnet_b4/train/normal": {
+      "path": "dataset/efficientnet_b4/train/normal",
+      "n_subdirs": 0,
+      "n_image_files": 10586,
+      "n_other_files": 0,
+      "size_bytes": 156978543
+    },
+    "dataset/efficientnet_b4/val": {
+      "path": "dataset/efficientnet_b4/val",
+      "n_subdirs": 4,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 10244
+    },
+    "dataset/efficientnet_b4/val/acne": {
+      "path": "dataset/efficientnet_b4/val/acne",
+      "n_subdirs": 0,
+      "n_image_files": 843,
+      "n_other_files": 0,
+      "size_bytes": 19448537
+    },
+    "dataset/efficientnet_b4/val/dark_spots": {
+      "path": "dataset/efficientnet_b4/val/dark_spots",
+      "n_subdirs": 0,
+      "n_image_files": 714,
+      "n_other_files": 0,
+      "size_bytes": 16794990
+    },
+    "dataset/efficientnet_b4/val/dryness": {
+      "path": "dataset/efficientnet_b4/val/dryness",
+      "n_subdirs": 0,
+      "n_image_files": 2891,
+      "n_other_files": 0,
+      "size_bytes": 66360948
+    },
+    "dataset/efficientnet_b4/val/normal": {
+      "path": "dataset/efficientnet_b4/val/normal",
+      "n_subdirs": 0,
+      "n_image_files": 2647,
+      "n_other_files": 0,
+      "size_bytes": 39258126
+    },
+    "dataset/scalp_yolo": {
+      "path": "dataset/scalp_yolo",
+      "n_subdirs": 2,
+      "n_image_files": 0,
+      "n_other_files": 2,
+      "size_bytes": 8496
+    },
+    "dataset/scalp_yolo/images": {
+      "path": "dataset/scalp_yolo/images",
+      "n_subdirs": 3,
+      "n_image_files": 0,
+      "n_other_files": 1,
+      "size_bytes": 8196
+    },
+    "dataset/scalp_yolo/images/test": {
+      "path": "dataset/scalp_yolo/images/test",
+      "n_subdirs": 0,
+      "n_image_files": 1239,
+      "n_other_files": 0,
+      "size_bytes": 731014278
+    },
+    "dataset/scalp_yolo/images/train": {
+      "path": "dataset/scalp_yolo/images/train",
+      "n_subdirs": 0,
+      "n_image_files": 12386,
+      "n_other_files": 0,
+      "size_bytes": 7015417242
+    },
+    "dataset/scalp_yolo/images/val": {
+      "path": "dataset/scalp_yolo/images/val",
+      "n_subdirs": 0,
+      "n_image_files": 1239,
+      "n_other_files": 0,
+      "size_bytes": 714281627
+    },
+    "dataset/scalp_yolo/labels": {
+      "path": "dataset/scalp_yolo/labels",
+      "n_subdirs": 3,
+      "n_image_files": 0,
+      "n_other_files": 3,
+      "size_bytes": 2964696
+    },
+    "dataset/scalp_yolo/labels/test": {
+      "path": "dataset/scalp_yolo/labels/test",
+      "n_subdirs": 0,
+      "n_image_files": 0,
+      "n_other_files": 1239,
+      "size_bytes": 0
+    },
+    "dataset/scalp_yolo/labels/train": {
+      "path": "dataset/scalp_yolo/labels/train",
+      "n_subdirs": 0,
+      "n_image_files": 0,
+      "n_other_files": 12386,
+      "size_bytes": 222948
+    },
+    "dataset/scalp_yolo/labels/val": {
+      "path": "dataset/scalp_yolo/labels/val",
+      "n_subdirs": 0,
+      "n_image_files": 0,
+      "n_other_files": 1239,
+      "size_bytes": 0
+    }
+  }
+}

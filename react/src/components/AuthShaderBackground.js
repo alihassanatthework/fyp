@@ -198,17 +198,34 @@ export default function AuthShaderBackground() {
     // Pre-compute targets once.
     const targets = buildSilhouetteTargets(PARTICLE_COUNT);
 
-    // Each particle has: target (silhouette), scatter (random homing point),
-    // glow phase, tiny per-particle delay so the morph isn't perfectly uniform.
-    const particles = targets.map(([tx, ty]) => ({
-      tx, ty,
-      sx: (Math.random() - 0.5) * 2.4,     // scatter X in [-1.2, 1.2]
-      sy: (Math.random() - 0.5) * 2.4,     // scatter Y
-      cx: 0, cy: 0,                         // current display position
-      delay: Math.random() * 0.18,          // 0–18% of phase offset
-      phase: Math.random() * Math.PI * 2,   // glow phase
-      hue:   238 + Math.random() * 60,      // 238–298° (indigo → magenta)
-    }));
+    // ── Dark-grey particle palette with occasional silver/white
+    //    highlights. Same palette in light + dark mode (the wrapper
+    //    background flips, but the particles themselves stay grey).
+    //    Primary: slate-300 / 400 / 500 + bright highlight stars.
+    const PALETTE = [
+      '#94a3b8', '#94a3b8', '#94a3b8',  // slate-400 (most common)
+      '#64748b', '#64748b',             // slate-500
+      '#475569',                         // slate-600 (subtle)
+    ];
+    const HIGHLIGHTS = ['#e2e8f0', '#f1f5f9', '#ffffff'];
+    const HIGHLIGHT_PROB = 0.12; // 12 % of particles glow silver/white
+
+    const particles = targets.map(([tx, ty]) => {
+      const isHighlight = Math.random() < HIGHLIGHT_PROB;
+      const color = isHighlight
+        ? HIGHLIGHTS[Math.floor(Math.random() * HIGHLIGHTS.length)]
+        : PALETTE[Math.floor(Math.random() * PALETTE.length)];
+      return {
+        tx, ty,
+        sx: (Math.random() - 0.5) * 2.4,
+        sy: (Math.random() - 0.5) * 2.4,
+        cx: 0, cy: 0,
+        delay: Math.random() * 0.18,
+        phase: Math.random() * Math.PI * 2,
+        color,                    // fixed hex, no hue spin
+        isHighlight,
+      };
+    });
 
     // Initialise current pos to scatter so frame 0 isn't a flash.
     particles.forEach((p) => { p.cx = p.sx; p.cy = p.sy; });
@@ -290,15 +307,19 @@ export default function AuthShaderBackground() {
           else                                                            alpha = 0.85 * (1 - ease((tt - T_SCATTER - T_ASSEMBLE - T_HOLD) / T_DISSOLVE)) + 0.20;
         }
 
-        const size = 1.2 + Math.sin(t * 1.7 + p.phase) * 0.4;
-        ctx.fillStyle   = `hsla(${p.hue}, 85%, 76%, ${alpha})`;
-        ctx.shadowBlur  = 8 * dpr;
-        ctx.shadowColor = `hsla(${p.hue}, 85%, 70%, ${alpha * 0.65})`;
+        // Highlight particles glow a touch bigger + brighter than the
+        // common slate ones so the silhouette has visible "stars" in it.
+        const size = (p.isHighlight ? 1.55 : 1.15) + Math.sin(t * 1.7 + p.phase) * 0.4;
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle   = p.color;
+        ctx.shadowBlur  = (p.isHighlight ? 12 : 6) * dpr;
+        ctx.shadowColor = p.color;
         ctx.beginPath();
         ctx.arc(sx, sy, size * dpr, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.shadowBlur = 0;
+      ctx.globalAlpha = 1;
 
       // ── Faint connective lines along the silhouette during hold ──
       // Connect each particle to its nearest neighbour within a radius
@@ -323,7 +344,8 @@ export default function AuthShaderBackground() {
             }
             if (bestJ !== -1) {
               const k = 1 - Math.sqrt(bestD2) / R;
-              ctx.strokeStyle = `hsla(${a.hue}, 80%, 75%, ${k * 0.22})`;
+              // Connective lines: #2a2a2a at distance-scaled alpha.
+              ctx.strokeStyle = `rgba(42, 42, 42, ${k * 0.42})`;
               ctx.beginPath();
               ctx.moveTo(a.cx, a.cy);
               ctx.lineTo(particles[bestJ].cx, particles[bestJ].cy);

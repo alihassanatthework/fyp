@@ -1,0 +1,337 @@
+{
+  "threshold_hamming": 6,
+  "per_class": {
+    "acne": {
+      "val_hashed": 300,
+      "train_hashed": 400,
+      "near_duplicate_count": 141,
+      "near_duplicate_pct": 47.0,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/rosacea-nose-45.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/rosacea-nose-45.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/hidradenitis-suppurativa-87.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/hidradenitis-suppurativa-87.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/hyperhidrosis-4.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/hyperhidrosis-4.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-25.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-25.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-infantile-9.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/acne-infantile-9.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-72.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/acne-open-comedo-72.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-102.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-102.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/rosacea-50.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/rosacea-50.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/hidradenitis-suppurativa-54.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/hidradenitis-suppurativa-54.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-excoriated-16.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/acne-excoriated-16.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-35.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-35.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-closed-comedo-5.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/acne-closed-comedo-5.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/hidradenitis-suppurativa-83.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/hidradenitis-suppurativa-83.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-126.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-126.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/hidradenitis-suppurativa-60.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/hidradenitis-suppurativa-60.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-121.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-121.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-pustular-55.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/acne-pustular-55.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/rosacea-89.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/rosacea-89.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-pustular-48.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/acne-pustular-48.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-infantile-16.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/acne/acne-infantile-16.jpg",
+          "hamming_distance": 0
+        }
+      ]
+    },
+    "dark_spots": {
+      "val_hashed": 300,
+      "train_hashed": 400,
+      "near_duplicate_count": 91,
+      "near_duplicate_pct": 30.33,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/radiation-dermatitis-1.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/radiation-dermatitis-1.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-34.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-34.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/malignant-melanoma-111.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/malignant-melanoma-111.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/malignant-melanoma-171.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/malignant-melanoma-171.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/idiopathic-guttate-hypomelanosis-17.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/idiopathic-guttate-hypomelanosis-17.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/sun-damaged-skin-112.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/sun-damaged-skin-112.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/phototoxic-reactions-55.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/phototoxic-reactions-55.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/actinic-comedones-12.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/actinic-comedones-12.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-78.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-78.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/hydroa-aestivale-1.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/hydroa-aestivale-1.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-58.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-58.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/malignant-melanoma-85.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/malignant-melanoma-85.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/phototoxic-reactions-33.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/phototoxic-reactions-33.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/sun-damaged-skin-58.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-77.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-77.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-77.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/phototoxic-reactions-73.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/phototoxic-reactions-73.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-68.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-68.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/idiopathic-guttate-hypomelanosis-14.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/idiopathic-guttate-hypomelanosis-14.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/sun-damaged-skin-109.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/sun-damaged-skin-109.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/phototoxic-reactions-64.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dark_spots/phototoxic-reactions-64.jpg",
+          "hamming_distance": 0
+        }
+      ]
+    },
+    "dryness": {
+      "val_hashed": 300,
+      "train_hashed": 400,
+      "near_duplicate_count": 36,
+      "near_duplicate_pct": 12.0,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/pityriasis-rosea-170.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/pityriasis-rosea-170.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-face-8.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/eczema-face-8.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-fingertips-38.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/eczema-fingertips-38.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-foot-9.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/heels-dry-cracked-11.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Lichen-Planus-Penis-9.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/Lichen-Planus-Penis-9.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-nails-32.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/Psoriasis-nails-32.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-nummular-168.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/eczema-nummular-168.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Lichen-Sclerosus-Penis-34.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/Lichen-Sclerosus-Penis-34.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/KeratosisIMG007-GP3.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/KeratosisIMG007-GP3.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/lichen-simplex-chronicus-98.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/lichen-simplex-chronicus-98.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/pityriasis-rosea-21.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/pityriasis-rosea-21.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/8IMG008.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/8IMG008.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-face-1.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/eczema-subacute-30.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Chronic-Plaque-177.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/Psoriasis-Chronic-Plaque-177.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Lichen-Planus-Oral-33.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/Lichen-Planus-Oral-33.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/lichen-simplex-chronicus-85.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/lichen-simplex-chronicus-85.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/chapped-fissured-feet-12.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/chapped-fissured-feet-12.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/08SebDermLids0301041.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/08SebDermLids0301041.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Guttate-5.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/Psoriasis-Guttate-5.jpg",
+          "hamming_distance": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-asteatotic-36.jpg",
+          "nearest_train_file": "dataset/efficientnet_b4/train/dryness/eczema-asteatotic-36.jpg",
+          "hamming_distance": 0
+        }
+      ]
+    },
+    "normal": {
+      "val_hashed": 300,
+      "train_hashed": 400,
+      "near_duplicate_count": 0,
+      "near_duplicate_pct": 0.0,
+      "examples": []
+    }
+  },
+  "total_near_duplicates": 268
+}

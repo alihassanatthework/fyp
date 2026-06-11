@@ -1,0 +1,2669 @@
+{
+  "pairs": [
+    {
+      "parent_dataset": "dataset/efficientnet_b4",
+      "split_pair": "train\u2194val",
+      "leaf_a": "dataset/efficientnet_b4/train/acne",
+      "leaf_b": "dataset/efficientnet_b4/val/acne",
+      "leak_count": 200,
+      "leak_pct_of_b": 50.0,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-43.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/acne-open-comedo-43.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/07PerlecheAccutane.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/07PerlecheAccutane.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/nevus-comedonicus-4.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/nevus-comedonicus-4.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-68.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/acne-open-comedo-68.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-95.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-95.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/Sebaceous-glands-Areola-4.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/Sebaceous-glands-Areola-4.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-66.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/acne-open-comedo-66.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-21.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-21.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-cystic-38.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/acne-cystic-38.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/rosacea-8.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/rosacea-8.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-closed-comedo-7.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/acne-closed-comedo-7.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/rosacea-81.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/rosacea-81.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/07RosaceaK02165.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/07RosaceaK02165.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-infantile-12.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/acne-infantile-12.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-104.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-104.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/hidradenitis-suppurativa-26.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/hidradenitis-suppurativa-27.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/rosacea-nose-48.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/rosacea-nose-48.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-12.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/perioral-dermatitis-12.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-scar-3.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/acne-scar-3.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/07RosaceaForehead.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/07RosaceaForehead.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/rosacea-nose-9.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/rosacea-nose-9.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/hidradenitis-suppurativa-4.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/hidradenitis-suppurativa-4.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-64.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/acne-open-comedo-64.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/hidradenitis-suppurativa-49.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/hidradenitis-suppurativa-49.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/minocycline-pigmentation-1.jpg",
+          "train_file": "dataset/efficientnet_b4/train/acne/minocycline-pigmentation-1.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4",
+      "split_pair": "train\u2194val",
+      "leaf_a": "dataset/efficientnet_b4/train/dark_spots",
+      "leaf_b": "dataset/efficientnet_b4/val/acne",
+      "leak_count": 2,
+      "leak_pct_of_b": 0.5,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/acne-cystic-60.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-79.jpg",
+          "hamming": 6
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/acne/milia-4.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/milia-4.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4",
+      "split_pair": "train\u2194val",
+      "leaf_a": "dataset/efficientnet_b4/train/dark_spots",
+      "leaf_b": "dataset/efficientnet_b4/val/dark_spots",
+      "leak_count": 124,
+      "leak_pct_of_b": 31.0,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/atypical-nevi-24.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/atypical-nevi-24.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/milia-3.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/milia-3.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/phototoxic-reactions-8.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/phototoxic-reactions-8.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/malignant-melanoma-21.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/malignant-melanoma-21.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/albinism-11.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/albinism-11.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/idiopathic-guttate-hypomelanosis-5.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/idiopathic-guttate-hypomelanosis-5.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/congenital-nevus-29.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/congenital-nevus-28.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/atypical-nevi-dermoscopy-77.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/atypical-nevi-dermoscopy-77.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/melasma-27.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/melasma-27.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/milia-10.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/milia-10.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/piebaldism-2.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/piebaldism-2.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-15.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-15.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/sun-damaged-skin-77.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/sun-damaged-skin-77.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/phototoxic-reactions-2.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/phototoxic-reactions-2.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/phototoxic-reactions-41.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/phototoxic-reactions-41.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/melasma-10.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/melasma-10.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/sun-damaged-skin-57.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/sun-damaged-skin-57.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/porphyrias-11.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/porphyrias-11.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/idiopathic-guttate-hypomelanosis-8.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/idiopathic-guttate-hypomelanosis-8.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/vitiligo-38.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/vitiligo-38.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/colloid-milia-7.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/colloid-milia-7.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/polymorphous-light-eruption-15.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/polymorphous-light-eruption-15.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-76.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-76.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-11.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-11.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dark_spots/lentigo-adults-47.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dark_spots/lentigo-adults-47.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4",
+      "split_pair": "train\u2194val",
+      "leaf_a": "dataset/efficientnet_b4/train/dryness",
+      "leaf_b": "dataset/efficientnet_b4/val/dryness",
+      "leak_count": 55,
+      "leak_pct_of_b": 13.75,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/psoriasis-erythrodermic-28.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/psoriasis-erythrodermic-28.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Hand-56.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Psoriasis-Hand-56.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-subacute-37.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/eczema-subacute-37.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Pityriasis-Lichenoides-34.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Pityriasis-Lichenoides-34.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Guttate-25.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Psoriasis-Guttate-41.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/psoriasis-scalp-41.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/psoriasis-scalp-41.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Guttate-72.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Psoriasis-Guttate-72.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Lichen-Planus-Palm-Soles-5.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Lichen-Planus-Palm-Soles-5.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Guttate-59.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Psoriasis-Guttate-59.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/lichen-simplex-chronicus-17.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/lichen-simplex-chronicus-17.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-asteatotic-11.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/eczema-asteatotic-11.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/05atopicMouth012306.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/05atopicMouth012306.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Hand-42.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/psoriasis-palms-soles-125.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/15IMG013.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/15IMG013.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/lichen-simplex-chronicus-183.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/lichen-simplex-chronicus-183.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Pityriasis-Lichenoides-33.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Pityriasis-Lichenoides-33.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-foot-23.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/eczema-foot-23.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/keratolysis-exfoliativa-39.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/keratolysis-exfoliativa-39.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/eczema-hand-95.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/eczema-hand-96.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Chronic-Plaque-159.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Psoriasis-Chronic-Plaque-159.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/lichen-simplex-chronicus-85.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/lichen-simplex-chronicus-85.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/emersion-foot-3.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/emersion-foot-3.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/6IMG005.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/9IMG006.jpg",
+          "hamming": 6
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/12IMG005.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/12IMG005.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/val/dryness/Lichen-Planus-Hypertrophic-12.jpg",
+          "train_file": "dataset/efficientnet_b4/train/dryness/Lichen-Planus-Hypertrophic-12.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos",
+      "leak_count": 133,
+      "leak_pct_of_b": 42.63,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-cystic-103.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-cystic-103.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-excoriated-2.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-excoriated-2.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/rosacea-25.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/rosacea-25.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/rosacea-32.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/rosacea-32.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/perioral-dermatitis-99.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/perioral-dermatitis-99.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-cystic-95.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-cystic-95.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/perioral-dermatitis-106.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/perioral-dermatitis-106.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-pustular-21.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-pustular-21.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-open-comedo-48.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-open-comedo-48.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/hidradenitis-suppurativa-12.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/hidradenitis-suppurativa-12.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-excoriated-14.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-excoriated-14.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/hidradenitis-suppurativa-60.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/hidradenitis-suppurativa-60.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/hidradenitis-suppurativa-10.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/hidradenitis-suppurativa-10.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-cystic-104.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-cystic-104.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/rosacea-nose-18.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/rosacea-nose-18.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/07Rhinophyma1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/07Rhinophyma1.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/hidradenitis-suppurativa-56.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/hidradenitis-suppurativa-84.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-open-comedo-24.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-open-comedo-24.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-pustular-34.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-pustular-34.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-pustular-41.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-pustular-41.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/hidradenitis-suppurativa-66.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/hidradenitis-suppurativa-66.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-pustular-66.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-pustular-66.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/perioral-dermatitis-129.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/perioral-dermatitis-129.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-closed-comedo-003.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/acne-open-comedo-14.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/hidradenitis-suppurativa-29.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/hidradenitis-suppurativa-29.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation",
+      "leak_count": 2,
+      "leak_pct_of_b": 1.4,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation/milia-1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/milia-1.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation/milia-11.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos/milia-11.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions",
+      "leak_count": 7,
+      "leak_pct_of_b": 2.43,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/actinic-keratosis-face-15.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/actinic-keratosis-lesion-5.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/bowens-disease-54.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/erythroplasia-queyrat-6.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/ctcl-48.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/ctcl-49.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/basal-cell-carcinoma-pigmented-31.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/basal-cell-carcinoma-pigmented-30.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/basal-cell-carcinoma-lip-28.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/basal-cell-carcinoma-lip-27.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/bowens-disease-87.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/bowens-disease-52.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/ctcl-54.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions/ctcl-55.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos",
+      "leak_count": 4,
+      "leak_pct_of_b": 3.25,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos/05AtopicFace1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos/05AtopicFace14.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos/13IMG011.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos/14IMG015.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos/7IMG012.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos/6IMG017.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos/05PityriasisAlba.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos/05PityriasisAlbaq.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos",
+      "leak_count": 8,
+      "leak_pct_of_b": 7.08,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos/dermatitis-herpetiformis-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos/dariers-disease-17.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos/pemphigus-98.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos/pemphigus-11.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos/epidermolysis-bullosa-7.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos/bullous-pemphigoid-6.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos/pemphigus-51.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos/localized-pemphigoid-4.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos/pemphigus-95.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos/pemphigus-7.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos/pemphigus-foliaceous-12.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos/pemphigus-foliaceous-13.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos/bullous-pemphigoid-57.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos/bullous-pemphigoid-1.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos/pemphigus-92.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos/pemphigus-5.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Cellulitis Impetigo and other Bacterial Infections",
+      "leak_count": 3,
+      "leak_pct_of_b": 4.11,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Cellulitis Impetigo and other Bacterial Infections/Folliculitis-1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections/Staphylococcal-Folliculitis-24.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Cellulitis Impetigo and other Bacterial Infections/Sycosis-Barbae-11.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections/Sycosis-Barbae-10.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Cellulitis Impetigo and other Bacterial Infections/Cellulitis-1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections/Cellulitis-9.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections",
+      "leak_count": 3,
+      "leak_pct_of_b": 0.92,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/pitted-keratolysis-3.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections/pitted-keratolysis-3.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/pitted-keratolysis-2.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections/pitted-keratolysis-2.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/pitted-keratolysis-6.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections/pitted-keratolysis-6.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.81,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos/03EczemaAreolae1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-areola-11.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos",
+      "leak_count": 16,
+      "leak_pct_of_b": 5.18,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-foot-23.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-impetiginized-5.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-fingertips-56.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-fingertips-55.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-impetiginized-8.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-ears-5.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/desquamation-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/03Desquamation-02.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-subacute-30.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-face-1.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-trunk-generalized-22.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-subacute-43.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-impetiginized-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-foot-22.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-leg-3.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-subacute-17.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-arms-5.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-subacute-8.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-subacute-29.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-trunk-generalized-28.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/lichen-simplex-chronicus-146.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-anal-1.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-arms-10.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-subacute-24.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/lichen-simplex-chronicus-157.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-vulva-4.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-chronic-20.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/03eczema091205.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-impetiginized-6.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-foot-24.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-arms-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/eczema-subacute-7.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease",
+      "leak_count": 2,
+      "leak_pct_of_b": 0.77,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/fissure-9.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/fissure-8.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/fissure-8.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/fissure-8.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.28,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/Lichen-Sclerosus-Skin-1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos/03AnalExcoriation051204.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos",
+      "leak_count": 3,
+      "leak_pct_of_b": 0.96,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/acne-infantile-6.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/gianotti-crosti-19.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/minocycline-pigmentation-3.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/minocycline-pigmentation-3.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/minocycline-pigmentation-10.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/minocycline-pigmentation-10.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.32,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/03dermatitisDrug112205.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/drug-eruptions-1.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions",
+      "leak_count": 18,
+      "leak_pct_of_b": 17.82,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/fixed-drug-eruption-47.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/fixed-drug-eruption-30.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/14PostInfDesquam.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-9.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/enterovirus-20.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-96.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/14desquamationViral34-GP3.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-5.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/viral-exanthems-28.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-29.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/viral-exanthems-101.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/enterovirus-25.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/viral-exanthems-86.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/enterovirus-10.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/enterovirus-30.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-106.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/drug-eruptions-69.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/drug-eruptions-81.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/viral-exanthems-93.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/enterovirus-17.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/enterovirus-21.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-97.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/14desquamationViral341-GP3.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-6.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/viral-exanthems-99.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/enterovirus-23.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/erythema-infectiosum-7.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/erythema-infectiosum-38.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/scarlet-fever-8.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/scarlet-fever-3.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/erythema-infectiosum-8.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/erythema-infectiosum-28.jpg",
+          "hamming": 3
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/enterovirus-15.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-91.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions/enterovirus-16.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions/viral-exanthems-92.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases",
+      "leak_count": 6,
+      "leak_pct_of_b": 10.0,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-52.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-51.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-40.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-41.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-33.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-34.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/acne-keloidalis-40.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/acne-keloidalis-39.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-37.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-39.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-53.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-51.jpg",
+          "hamming": 6
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease",
+      "leak_count": 21,
+      "leak_pct_of_b": 8.05,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-61.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-61.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-56.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-56.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-67.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-67.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-97.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-97.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-4.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-17.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-17.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-19.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-19.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-54.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-54.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-34.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-34.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-32.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-32.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-39.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-39.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-52.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-51.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-33.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-34.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-6.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-6.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-12.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-12.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-14.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-14.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-21.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-21.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-89.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-89.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-81.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-81.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-90.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-90.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-75.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-75.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos",
+      "leak_count": 3,
+      "leak_pct_of_b": 2.94,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/genital-warts-133.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/genital-warts-83.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/warts-genital-2.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/genital-warts-59.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/molluscum-contagiosum-136.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-158.jpg",
+          "hamming": 4
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections",
+      "leak_count": 19,
+      "leak_pct_of_b": 6.99,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-167.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-167.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-157.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-157.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-155.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-155.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-98.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-98.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-164.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-164.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-1.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-113.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-113.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-152.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-152.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-132.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-132.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/12wartMouth4977.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/warts-mouth-3.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-129.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-129.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-168.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-168.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-23.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-23.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-110.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-110.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-25.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-25.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-123.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-123.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-116.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-116.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-170.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-170.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/molluscum-contagiosum-102.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos/molluscum-contagiosum-102.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos",
+      "leak_count": 3,
+      "leak_pct_of_b": 0.96,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/milia-18.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation/milia-18.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/milia-14.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation/milia-14.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos/milia-19.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation/milia-19.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation",
+      "leak_count": 5,
+      "leak_pct_of_b": 3.5,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation/porphyrias-21.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation/porphyrias-4.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation/phototoxic-reactions-32.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation/phototoxic-reactions-23.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation/polymorphous-light-eruption-18.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation/polymorphous-light-eruption-3.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation/erythema-ab-igne-8.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation/erythema-ab-igne-17.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation/lentigo-adults-28.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation/lentigo-adults-32.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Lupus and other Connective Tissue diseases",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Lupus and other Connective Tissue diseases",
+      "leak_count": 3,
+      "leak_pct_of_b": 2.86,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Lupus and other Connective Tissue diseases/chilblains-perniosis-39.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Lupus and other Connective Tissue diseases/chilblains-perniosis-6.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Lupus and other Connective Tissue diseases/lupus-chronic-cutaneous-66.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Lupus and other Connective Tissue diseases/lupus-chronic-cutaneous-67.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Lupus and other Connective Tissue diseases/lupus-chronic-cutaneous-40.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Lupus and other Connective Tissue diseases/lupus-chronic-cutaneous-41.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles",
+      "leak_count": 7,
+      "leak_pct_of_b": 6.03,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles/congenital-nevus-24.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles/congenital-nevus-25.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles/lentigo-maligna-26.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles/lentigo-maligna-27.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles/becker-nevus-14.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles/becker-nevus-13.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles/atypical-nevi-23.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles/melanocytic-nevi-19.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles/congenital-nevus-21.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles/congenital-nevus-22.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles/congenital-nevus-19.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles/congenital-nevus-20.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles/melanocytic-nevi-79.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles/melanocytic-nevi-76.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.37,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/warts-common-20.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles/spitz-nevus-1.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.32,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/fissure-2.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/fissure-2.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases",
+      "leak_count": 3,
+      "leak_pct_of_b": 5.0,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-7.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/alopecia-areata-7.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-40.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/alopecia-areata-40.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases/alopecia-areata-101.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/alopecia-areata-101.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease",
+      "leak_count": 10,
+      "leak_pct_of_b": 3.83,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/onychogryphosis-1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/onychogryphosis-2.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/mucous-cyst-78.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/psoriasis-89.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/alopecia-areata-19.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/alopecia-areata-20.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/distal-subungual-onychomycosis-117.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/trauma-20.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/mucous-cyst-39.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/mucous-cyst-7.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/proximal-subungual-onychomycosis-7.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/proximal-subungual-onychomycosis-9.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/nail-distal-splitting-15.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/periungual-warts-7.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/psoriasis-3.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/chronic-paronychia-17.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/onycholysis-22.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/onycholysis-21.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/beaus-lines-2.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/beaus-lines-1.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases",
+      "leak_count": 9,
+      "leak_pct_of_b": 2.56,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-157.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-157.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/Lichen-Planus-Hypertrophic-16.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-100.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-159.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-159.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-212.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-212.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-199.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-199.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-10.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-10.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-186.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-186.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-160.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-159.jpg",
+          "hamming": 5
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-115.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease/lichen-planus-115.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.32,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos/eczema-arms-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis/allergic-contact-dermatitis-19.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis",
+      "leak_count": 6,
+      "leak_pct_of_b": 9.23,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis/allergic-contact-dermatitis-88.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis/allergic-contact-dermatitis-180.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis/allergic-contact-dermatitis-167.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis/allergic-contact-dermatitis-168.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis/rhus-dermatitis-26.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis/rhus-dermatitis-36.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis/allergic-contact-dermatitis-165.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis/allergic-contact-dermatitis-166.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis/rhus-dermatitis-19.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis/rhus-dermatitis-18.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis/shoe-allergy-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis/shoe-allergy-9.jpg",
+          "hamming": 3
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease",
+      "leak_count": 4,
+      "leak_pct_of_b": 1.53,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/lichen-planus-102.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-102.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/lichen-planus-20.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-20.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/lichen-planus-1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-1.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease/lichen-planus-137.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-137.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases",
+      "leak_count": 4,
+      "leak_pct_of_b": 1.14,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/Lichen-Planus-Hypertrophic-16.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases/lichen-planus-100.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/psoriasis-palms-soles-125.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases/Psoriasis-Hand-42.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/Psoriasis-nails-3.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases/Psoriasis-nails-4.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases/Lichen-Sclerosis-Vulva-17.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases/Lichen-Sclerosis-Vulva-18.jpg",
+          "hamming": 2
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites",
+      "leak_count": 7,
+      "leak_pct_of_b": 6.48,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites/tick-bite-12.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites/tick-bite-13.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites/flea-bites-1.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites/biting-insects-35.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites/scabies-15.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites/scabies-167.jpg",
+          "hamming": 3
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites/cutaneous-Larva-Migrans-23.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites/cutaneous-Larva-Migrans-14.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites/scabies-168.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites/scabies-170.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites/cutaneous-Larva-Migrans-27.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites/cutaneous-Larva-Migrans-5.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites/cutaneous-Larva-Migrans-19.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites/cutaneous-Larva-Migrans-10.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Seborrheic Keratoses and other Benign Tumors",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Seborrheic Keratoses and other Benign Tumors",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.29,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Seborrheic Keratoses and other Benign Tumors/dermatofibroma-45.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Seborrheic Keratoses and other Benign Tumors/dermatofibroma-51.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Systemic Disease",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Systemic Disease",
+      "leak_count": 4,
+      "leak_pct_of_b": 2.63,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Systemic Disease/xanthomas-66.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Systemic Disease/xanthomas-40.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Systemic Disease/diabetes-mellitus-13.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Systemic Disease/diabetes-mellitus-12.jpg",
+          "hamming": 5
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Systemic Disease/acanthosis-nigricans-59.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Systemic Disease/acanthosis-nigricans-64.jpg",
+          "hamming": 5
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Systemic Disease/glucagonoma-8.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Systemic Disease/glucagonoma-3.jpg",
+          "hamming": 2
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections",
+      "leak_count": 8,
+      "leak_pct_of_b": 2.46,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/tinea-incognito-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections/tinea-groin-62.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/tinea-incognito-5.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections/tinea-groin-64.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/tinea-body-9.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections/tinea-hand-dorsum-7.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/perleche-785.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections/03ContactDerm040127.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/candida-groin-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections/13TineaGroin34.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/intertrigo-30.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections/13intertrigo121905.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/intertrigo-4.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections/candida-penis-10.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections/tinea-scalp-8.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections/tinea-scalp-21.jpg",
+          "hamming": 4
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Urticaria Hives",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Urticaria Hives",
+      "leak_count": 1,
+      "leak_pct_of_b": 1.89,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Urticaria Hives/dermagraphism-18.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Urticaria Hives/dermagraphism-3.jpg",
+          "hamming": 4
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.98,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/AIDS-49.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors/kaposi-sarcoma-19.jpg",
+          "hamming": 2
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors",
+      "leak_count": 4,
+      "leak_pct_of_b": 3.31,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors/hemangioma-57.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors/pyogenic-granuloma-82.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors/pyogenic-granuloma-2.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors/pyogenic-granuloma-91.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors/telangiectasias-6.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors/telangiectasias-5.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors/hemangioma-infancy-60.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors/hemangioma-infancy-17.jpg",
+          "hamming": 3
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Vasculitis Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Vasculitis Photos",
+      "leak_count": 3,
+      "leak_pct_of_b": 2.86,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Vasculitis Photos/schamberg-disease-8.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Vasculitis Photos/schamberg-disease-7.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Vasculitis Photos/vasculitis-34.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Vasculitis Photos/vasculitis-33.jpg",
+          "hamming": 3
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Vasculitis Photos/erythema-multiforme-119.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Vasculitis Photos/erythema-multiforme-118.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos",
+      "leak_count": 5,
+      "leak_pct_of_b": 4.9,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/molluscum-contagiosum-135.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/molluscum-contagiosum-135.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/molluscum-contagiosum-115.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/molluscum-contagiosum-115.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/genital-warts-57.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/warts-common-47.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/molluscum-contagiosum-136.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/molluscum-contagiosum-158.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos/molluscum-contagiosum-27.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/molluscum-contagiosum-27.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dermnet_dataset",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections",
+      "leak_count": 8,
+      "leak_pct_of_b": 2.94,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/hand-foot-mouth-13.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/hand-foot-mouth-14.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/herpes-type-1-recurrent-38.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/herpes-type-1-primary-64.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/herpes-simplex-58.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/herpes-type-1-recurrent-24.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/herpes-zoster-11.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/herpes-zoster-154.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/warts-cryotherapy-7.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/warts-cryotherapy-10.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/eczema-herpeticum-12.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/eczema-herpeticum-23.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/warts-flat-39.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/warts-flat-13.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections/herpes-type-1-recurrent-28.jpg",
+          "train_file": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections/herpes-type-1-recurrent-33.jpg",
+          "hamming": 6
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dryness",
+      "split_pair": "train\u2194val",
+      "leaf_a": "dataset/efficientnet_b4/dryness/train/dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/val/dry",
+      "leak_count": 9,
+      "leak_pct_of_b": 3.5,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_e7c89bc4618f5585a464_jpg.rf.379369e09db1d45466095b8a17bba9ce.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_e7c89bc4618f5585a464_jpg.rf.221cbaa016a8b810544af0adc7e6afe8.jpg",
+          "hamming": 4
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_new_7e4544bdb1b24d471db2_jpg.rf.06e9cf5f55c0ab08b27ef236f36a0279.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_7e4544bdb1b24d471db2_jpg.rf.d0a5620af6804f3d9507af0d05613001.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_f546fdf27bf752288cf1_jpg.rf.b575a70d52d849900127f9df78b3ecfc.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_f546fdf27bf752288cf1_jpg.rf.7614b5df2698ce004d358319967687a5.jpg",
+          "hamming": 4
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_new_3e272674d4fc2521b882_jpg.rf.2445ac211d223fb37bcd3dea691c8ebe.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_3e272674d4fc2521b882_jpg.rf.e6287bfd07fab8e7194b9b994fae7370.jpg",
+          "hamming": 4
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_new_bd11916b1fe4f5db3076_jpg.rf.3a6872300506e13fe8543e790eb21158.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_new_9ffce20e2eeccf964428_jpg.rf.27c3da83da0e75c51e7a29ae9ff9d5bc.jpg",
+          "hamming": 6
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_830c447ab48ccae9ae23_jpg.rf.1ad1d0111c33b602d529efe7d5cf7cf6.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_830c447ab48ccae9ae23_jpg.rf.dcd5ac6cf49c3c7f1fe8bd6b9222c263.jpg",
+          "hamming": 5
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_new_b281bfd19155464c1a7b_jpg.rf.675f170e344dd14432de884fbe714e8f.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_new_b281bfd19155464c1a7b_jpg.rf.be3c566fe9ae6ca3b169b8b4fc360f6e.jpg",
+          "hamming": 2
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_ded9f7a6131df5bdc061_jpg.rf.6f3011e90e346e6efc7398b4e8c995bb.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_ded9f7a6131df5bdc061_jpg.rf.089dc1fa4531b89f97ff32e0f0bf6a1f.jpg",
+          "hamming": 5
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_4bdd7e0353dcd6dff393_jpg.rf.76ade28dc2eeaf9ee57a4771870450f8.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_37d7c7bd92be29df6dea_jpg.rf.eb722acc901f729041a6020b84f11583.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dryness",
+      "split_pair": "train\u2194val",
+      "leaf_a": "dataset/efficientnet_b4/dryness/train/not_dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/val/dry",
+      "leak_count": 2,
+      "leak_pct_of_b": 0.78,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_new_f0f5131b7f8b76432662_jpg.rf.e92546ee9bed82e92dea4aa1b08e6a37.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/normal__normal_f0f5131b7f8b76432662_jpg.rf.0b05428c22ef035985edfd867d676113.jpg",
+          "hamming": 5
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_0e8ee7ea2431e24b4454_jpg.rf.51fc8b9d22045d5eb1cdbc313c0d9d6b.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/normal__normal_2c92ed4def81458a2a01_jpg.rf.b205f8c5d3094a2a45d16d931162e979.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dryness",
+      "split_pair": "train\u2194val",
+      "leaf_a": "dataset/efficientnet_b4/dryness/train/not_dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/val/not_dry",
+      "leak_count": 8,
+      "leak_pct_of_b": 2.0,
+      "examples": [
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/oily__oily_f0d8b23f4c7ab1d534c6_jpg.rf.f6a838f065f517974350ea2b55fb26b3.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/oily__oily_f0d8b23f4c7ab1d534c6_jpg.rf.028f3612c6db11b733301c58ef004fb7.jpg",
+          "hamming": 6
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/oily__oily_65ff22cb0310bb6e7ec1-Copy_jpg.rf.434b0be04e29f1beabfb831249aa3497.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/oily__oily_65ff22cb0310bb6e7ec1-Copy_jpg.rf.bcab09f34ac358a6bb1357fd2e5c5874.jpg",
+          "hamming": 3
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/normal__normal_1f10f0c44b63fd869df6_jpg.rf.b13e2598590f92d46bc13f26f68004b1.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/normal__normal_1f10f0c44b63fd869df6_jpg.rf.520d6df44cc9cc05dced053e4489fbff.jpg",
+          "hamming": 6
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/normal__normal_new_3382727155e79853b5f3_jpg.rf.fc406383bbaa2c5cdbe0553a16915534.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/normal__normal_new_3382727155e79853b5f3_jpg.rf.f6ad0fe6776fa596b5444b75712c7433.jpg",
+          "hamming": 6
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/combination__combination_-_9a995e8841c4115c5575_jpg.rf.6be2d1c15702e51668ec3999ca3a1254.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/combination__combination_-_bcba7d9a67334bc8774f_jpg.rf.5fe69ca5ce2370a23539dcda5d10099b.jpg",
+          "hamming": 6
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/oily__oily_cf87f127ebe281a60a45_jpg.rf.85f89996f04a889698f5a66418548901.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/oily__oily_new_cf87f127ebe281a60a45_jpg.rf.12a341ba5dd1b42bf75c9287d94bca11.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/oily__oily_new_f9bbc29f1446f959a9cb_jpg.rf.e8bb19579b67b5edf76a5e57ad3f6134.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/oily__oily_new_1e69ec4d608bf0e4e895_jpg.rf.e121d6f4607d5da9382f3773a5d57ea2.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/normal__normal_new_84ded48d7b3ac1310401_jpg.rf.ff3adc58c6c10d1ac52ea300f9b9b03e.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/normal__normal_84ded48d7b3ac1310401_jpg.rf.77f04c20df5690023d48792649c31887.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dryness",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dryness/train/dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/test/dry",
+      "leak_count": 6,
+      "leak_pct_of_b": 5.31,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_7057947125674cacc670_jpg.rf.5b8e87a787aae3486091d0e02874a318.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_7057947125674cacc670_jpg.rf.43629110d125c798f4beb061a1d23d5b.jpg",
+          "hamming": 3
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_df6b42013b85662caba1_jpg.rf.1ecc143b22d4bfda8d2e9e5fa19ee7c3.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_df6b42013b85662caba1_jpg.rf.9f5c166f3ce40edb52ad8f1419fb6c21.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_new_cd200fe37c1429385e7a_jpg.rf.e665e491afa28b5fce506adaadd342b8.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_cd200fe37c1429385e7a_jpg.rf.df2475c7088ecaa43aecc02e8a706f7c.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_d62c41fb3d5227063fe8_jpg.rf.48a1cc2460cad710667806b672f63f1c.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_new_d62c41fb3d5227063fe8_jpg.rf.46f93a2bb167a6fa56452353f2be4021.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_3e272674d4fc2521b882_jpg.rf.0faab0127428df1e2c7dca4f8e705ea8.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_new_3e272674d4fc2521b882_jpg.rf.87ce4ac68391f12ea0cd2916c50642ab.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_95fc0d4729bdf5ea2660_jpg.rf.34d3d10ba6dc7ffa1c6a4542f63dd5e6.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_95fc0d4729bdf5ea2660_jpg.rf.0bb7b980138f18dd49361e8245a4e80d.jpg",
+          "hamming": 1
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dryness",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dryness/train/dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/test/not_dry",
+      "leak_count": 1,
+      "leak_pct_of_b": 0.34,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/normal__normal_new_e15bd3646fbf97b620a1_jpg.rf.1a173423ce575b4ec1f71b2cff52f4ce.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/dry/dry__dry_new_8e5ae72cc69703eec556_jpg.rf.b2e6925e66c376c77b8be64b1dde1231.jpg",
+          "hamming": 6
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dryness",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dryness/train/not_dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/test/not_dry",
+      "leak_count": 5,
+      "leak_pct_of_b": 1.69,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/normal__normal_fe5a0f30a5092c6b020a_jpg.rf.de7a65ddab7ddd7746034312ffa350a4.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/normal__normal_fe5a0f30a5092c6b020a_jpg.rf.4d74b0d4d94a348a85f9e3cdb06137d1.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/oily__oily_new_0993be8fcb3661669610_jpg.rf.8bcf9353baed59b936972c06ced53b0d.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/oily__oily_new_0993be8fcb3661669610_jpg.rf.8701de256ea4706b898bc134a8a8254e.jpg",
+          "hamming": 5
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/normal__normal_334f4043a8022c3c91e1_jpg.rf.b34298188610c0a9107c61c81fde8358.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/normal__normal_334f4043a8022c3c91e1_jpg.rf.8b02a57c426f0f2b6379a987d4c8c8b1.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/normal__normal_new_0b242e3257fb43ff1fcd_jpg.rf.c87ee94e061a5d09e5505d7a4bafd241.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/normal__normal_new_0b242e3257fb43ff1fcd_jpg.rf.d096481ad8ae09992d59bf763007d973.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/oily__oily_db1d1db1bc2f2f2d484c_jpg.rf.c1d395786cb878c260792ab76fde2b08.jpg",
+          "train_file": "dataset/efficientnet_b4/dryness/train/not_dry/oily__oily_new_db1d1db1bc2f2f2d484c_jpg.rf.e05a90459f4a9d74f9aae89bf344f522.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dryness",
+      "split_pair": "val\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dryness/val/dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/test/dry",
+      "leak_count": 4,
+      "leak_pct_of_b": 3.54,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_dfb11d8fb03df2b4fdc9_jpg.rf.aa35da65e6eb3af5c3677b2652cb7542.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_dfb11d8fb03df2b4fdc9_jpg.rf.8c0eef682ac80867ffe0cbfa3ba31ab6.jpg",
+          "hamming": 2
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_d9cac0f138c33b674999_jpg.rf.47f96ca87ded8b279864c5c02da22fd3.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_new_d9cac0f138c33b674999_jpg.rf.41b6a682945a0e832081fee67f6fe3bc.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_98e5cc0b401cfc75b001_jpg.rf.dbd7249df0c4da1362df84df77963528.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_98e5cc0b401cfc75b001_jpg.rf.368852be11643a01e4253fb788be0c04.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/dry/dry__dry_new_27d85bba1b40047b4ed3_jpg.rf.08e5aa3fbb7247e232d3854c53d271e4.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/dry/dry__dry_new_27d85bba1b40047b4ed3_jpg.rf.8859104e0aac26f3f8ce59c1a456110c.jpg",
+          "hamming": 6
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/efficientnet_b4/dryness",
+      "split_pair": "val\u2194test",
+      "leaf_a": "dataset/efficientnet_b4/dryness/val/not_dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/test/not_dry",
+      "leak_count": 8,
+      "leak_pct_of_b": 2.7,
+      "examples": [
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/combination__combination_-_ca1c35c05200c9b947fa_jpg.rf.a6baf0d4673db48d19dc429f9e19e0c6.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/combination__combination_-_ca1c35c05200c9b947fa_jpg.rf.a2a00f846f2fbe7edaa94911171b4fec.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/combination__combination_-_934dfe250d57337ddbb3_jpg.rf.e6f93bf2b0fd4e201ced4bbde92b2f21.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/combination__combination_-_934dfe250d57337ddbb3_jpg.rf.db7edb6a80334d5d7154770ea38fef2f.jpg",
+          "hamming": 5
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/normal__normal_ff7170ec56b6897c64f8_jpg.rf.616fb2fce4ed83c11c8f9fd7f4ea206b.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/normal__normal_ff7170ec56b6897c64f8_jpg.rf.c3140a807f58a4b1902ad44696888f9a.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/normal__normal_ff7170ec56b6897c64f8_jpg.rf.2de0778740a1bb565f36490a5345e3db.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/normal__normal_ff7170ec56b6897c64f8_jpg.rf.c3140a807f58a4b1902ad44696888f9a.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/combination__combination_-_c4005eaa988878368a9a_jpg.rf.7881ee42c732b2fd2ab7a1a4a3af64f2.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/combination__combination_-_c4005eaa988878368a9a_jpg.rf.5695df52f6f2fc044b77017ef3a30388.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/oily__oily_new_f109c7904e65ee5e7785_jpg.rf.b9480486aa040bcefeedaac1ad0ef6d3.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/normal__normal_adf06508b9980e2e0e2c_jpg.rf.d0bec05a0ca5df53e1a06bfb5bfb97d9.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/combination__combination_-_7dd0c3d78039ce5d796f_jpg.rf.6b100d7b586c0d913958858c77c2df24.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/combination__combination_-_7dd0c3d78039ce5d796f_jpg.rf.c46d1d86bbc221d6f32d0405649325c6.jpg",
+          "hamming": 4
+        },
+        {
+          "test_file": "dataset/efficientnet_b4/dryness/test/not_dry/normal__normal_new_ff7170ec56b6897c64f8_jpg.rf.a96c0fe16fc555c6b3e754d18f6c5bde.jpg",
+          "val_file": "dataset/efficientnet_b4/dryness/val/not_dry/normal__normal_ff7170ec56b6897c64f8_jpg.rf.c3140a807f58a4b1902ad44696888f9a.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/scalp_yolo/images",
+      "split_pair": "train\u2194val",
+      "leaf_a": "dataset/scalp_yolo/images/train",
+      "leaf_b": "dataset/scalp_yolo/images/val",
+      "leak_count": 29,
+      "leak_pct_of_b": 7.25,
+      "examples": [
+        {
+          "val_file": "dataset/scalp_yolo/images/val/iZsM_eDGp1p-fRQI.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/iZsM_eDGp1p-fRQI.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/t-psoriasis-pustular-generalized-56.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/psoriasis-pustular-generalized-56.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/t-factitial-dermatitis-8.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/factitial-dermatitis-8.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/g0QMDWN_RIcT1MeR.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/g0QMDWN_RIcT1MeR.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/JAV3WKR0xDUkh-Kn.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/JAV3WKR0xDUkh-Kn.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/t-pityriasis-rubra-pilaris-44.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/pityriasis-rubra-pilaris-44.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/t-lichen-planus-103.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/t-lichen-planus-103.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/Lichen-Sclerosus-Skin-133.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/t-Lichen-Sclerosus-Skin-133.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/0sKFb-wUoztXd-fb.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/0sKFb-wUoztXd-fb.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/7m3WBcdUeNZ2tS5Z.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/7m3WBcdUeNZ2tS5Z.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/eczema-leg-11.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/eczema-leg-11.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/Palmoplantar-Keratoderma-5.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/Palmoplantar-Keratoderma-5.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/Psoriasis-Guttate-44.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/Psoriasis-Guttate-44.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/ZDirLQVMXs50pKaO.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/ZDirLQVMXs50pKaO.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/t-eczema-subacute-105.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/t-eczema-subacute-105.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/457f8OmIHjawUA7a.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/457f8OmIHjawUA7a.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/t-Psoriasis-Chronic-Plaque-112.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/Psoriasis-Chronic-Plaque-112.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/xE3qVHDLjMY4LH4p.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/xE3qVHDLjMY4LH4p.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/lichen-planus-196.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/t-lichen-planus-196.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/v-Lichen-Sclerosus-Skin-14.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/v-Lichen-Sclerosus-Skin-14.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/eczema-hand-120.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/t-eczema-hand-120.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/M4u2RUoT41rip7WQ.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/M4u2RUoT41rip7WQ.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/t-lichen-simplex-chronicus-158.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/t-eczema-scrotum-4.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/t-eczema-asteatotic-6.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/eczema-asteatotic-6.jpg",
+          "hamming": 0
+        },
+        {
+          "val_file": "dataset/scalp_yolo/images/val/JfxZSHbFYq21i5-a.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/JfxZSHbFYq21i5-a.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/scalp_yolo/images",
+      "split_pair": "train\u2194test",
+      "leaf_a": "dataset/scalp_yolo/images/train",
+      "leaf_b": "dataset/scalp_yolo/images/test",
+      "leak_count": 21,
+      "leak_pct_of_b": 5.25,
+      "examples": [
+        {
+          "test_file": "dataset/scalp_yolo/images/test/Lichen-Sclerosus-Skin-14.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/v-Lichen-Sclerosus-Skin-14.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/t-Lichen-Sclerosus-Skin-133.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/t-Lichen-Sclerosus-Skin-133.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/Lichen-Planus-Oral-47.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/Lichen-Planus-Oral-47.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/v-psoriasis-scalp-51.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/v-psoriasis-scalp-51.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/t-eczema-foot-59.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/eczema-foot-59.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/factitial-dermatitis-2.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/factitial-dermatitis-2.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/WFv3O_W4NMrzYytV.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/WFv3O_W4NMrzYytV.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/JjwkI-wMLKXUrjpM.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/JjwkI-wMLKXUrjpM.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/lichen-planus-vaginal-8.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/lichen-planus-vaginal-3.jpg",
+          "hamming": 6
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/t-Psoriasis-Chronic-Plaque-152.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/t-Psoriasis-Chronic-Plaque-152.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/eczema-fingertips-93.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/eczema-fingertips-93.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/Lichen-Planus-Penis-10.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/Lichen-Planus-Penis-10.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/patch-testing-23.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/patch-testing-23.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/v-psoriasis-palms-soles-185.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/v-psoriasis-palms-soles-185.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/Qv8J7kjtH4bY17Kx.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/Qv8J7kjtH4bY17Kx.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/eczema-foot-9.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/eczema-foot-9.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/v-psoriasis-scalp-12.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/psoriasis-scalp-12.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/t-Lichen-Nitidus-14.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/Lichen-Nitidus-14.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/t-seborrheic-dermatitis-147.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/seborrheic-dermatitis-147.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/J_cn-su-7rZ-Sfv9.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/J_cn-su-7rZ-Sfv9.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/vZNsKEzFe8a9rwb0.jpg",
+          "train_file": "dataset/scalp_yolo/images/train/vZNsKEzFe8a9rwb0.jpg",
+          "hamming": 0
+        }
+      ]
+    },
+    {
+      "parent_dataset": "dataset/scalp_yolo/images",
+      "split_pair": "val\u2194test",
+      "leaf_a": "dataset/scalp_yolo/images/val",
+      "leaf_b": "dataset/scalp_yolo/images/test",
+      "leak_count": 13,
+      "leak_pct_of_b": 3.25,
+      "examples": [
+        {
+          "test_file": "dataset/scalp_yolo/images/test/Lichen-Sclerosus-Skin-14.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/v-Lichen-Sclerosus-Skin-14.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/t-Lichen-Sclerosus-Skin-133.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/Lichen-Sclerosus-Skin-133.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/v-eczema-foot-41.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/eczema-foot-41.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/Psoriasis-inversus-6.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/t-Psoriasis-inversus-6.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/v-lichen-simplex-chronicus-146.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/lichen-simplex-chronicus-146.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/eczema-hand-144.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/t-eczema-hand-144.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/pityriasis-rosea-86.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/t-pityriasis-rosea-86.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/eczema-foot-22.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/eczema-impetiginized-4.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/Lichen-Sclerosus-Skin-56.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/t-Lichen-Sclerosus-Skin-56.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/Lichen-Planus-Hypertrophic-18.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/v-Lichen-Planus-Hypertrophic-18.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/t-lichen-simplex-chronicus-92.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/lichen-simplex-chronicus-92.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/pityriasis-rosea-82.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/t-pityriasis-rosea-82.jpg",
+          "hamming": 0
+        },
+        {
+          "test_file": "dataset/scalp_yolo/images/test/t-eczema-areola-1.jpg",
+          "val_file": "dataset/scalp_yolo/images/val/eczema-areola-1.jpg",
+          "hamming": 0
+        }
+      ]
+    }
+  ]
+}

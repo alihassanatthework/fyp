@@ -318,22 +318,39 @@ else:
 OLLAMA_URL    = os.getenv('OLLAMA_URL',   'http://localhost:11434')
 OLLAMA_MODEL  = os.getenv('OLLAMA_MODEL', 'llama3.2')
 
-# Email Settings
-# In development: prints emails to the console (no SMTP needed).
-# In production:  set EMAIL_HOST_USER + EMAIL_HOST_PASSWORD env vars to use Gmail.
+# ── Email Settings ───────────────────────────────────────────────
+# In development without EMAIL_HOST_USER set, emails print to the
+# terminal. With EMAIL_HOST_USER + EMAIL_HOST_PASSWORD set, real SMTP
+# (Gmail by default) sends actual messages.
+#
+# Gmail deliverability notes (so reset emails land in Primary inbox,
+# not Spam):
+#   1. From address MUST match the authenticated EMAIL_HOST_USER
+#      (Gmail blocks "From: someone@otherdomain.com" spoofing).
+#   2. We send multipart text + HTML, set Reply-To, and add
+#      List-Unsubscribe + X-Auto-Response-Suppress headers — these
+#      mark the message as transactional, which Gmail's classifier
+#      uses to put it in Primary instead of Promotions/Spam.
+#   3. Subject line is specific, not vague ("Reset your … password")
+#      — vague subjects hurt deliverability.
 _email_user = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_FROM_NAME = os.getenv('EMAIL_FROM_NAME', 'ME Skin Assistant')
 if _email_user:
-    EMAIL_BACKEND     = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST        = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-    EMAIL_PORT        = int(os.getenv('EMAIL_PORT', '587'))
-    EMAIL_USE_TLS     = True
-    EMAIL_HOST_USER   = _email_user
+    EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST          = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+    EMAIL_PORT          = int(os.getenv('EMAIL_PORT', '587'))
+    EMAIL_USE_TLS       = True
+    EMAIL_HOST_USER     = _email_user
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-    DEFAULT_FROM_EMAIL = f'AI Skin Assistant <{_email_user}>'
+    EMAIL_TIMEOUT       = 20   # don't hang the request forever
+    # From address MUST be the authenticated Gmail address.
+    DEFAULT_FROM_EMAIL  = f'{EMAIL_FROM_NAME} <{_email_user}>'
+    SERVER_EMAIL        = _email_user
+    EMAIL_SUBJECT_PREFIX = ''  # avoid "[Django] " prefix on error mails
 else:
-    # Console backend — emails are printed in the terminal during local dev.
-    EMAIL_BACKEND     = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'AI Skin Assistant <noreply@fyp.local>'
+    # Console backend — emails print to the terminal during local dev.
+    EMAIL_BACKEND      = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = f'{EMAIL_FROM_NAME} <noreply@fyp.local>'
 
 # Frontend base URL used in password-reset links
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')

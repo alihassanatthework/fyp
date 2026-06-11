@@ -1,0 +1,2740 @@
+{
+  "dataset/efficientnet_b4/IMG_CLASSES/1. Eczema 1677": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 13.1083984375,
+      "max": 183.2041015625,
+      "mean": 84.71586588541666
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 720,
+      "width_mean": 619.0133333333333,
+      "height_min": 222,
+      "height_max": 720,
+      "height_mean": 503.54
+    },
+    "brightness": {
+      "mean": 108.94935908564815,
+      "std": 26.577272812097892
+    },
+    "contrast": {
+      "mean": 47.80371668326684
+    },
+    "hsv_mean": {
+      "H": 48.13643952546297,
+      "S": 94.49994212962963,
+      "V": 135.00554542824077
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/10. Warts Molluscum and other Viral Infections - 2103": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 11.123046875,
+      "max": 190.40234375,
+      "mean": 66.08867838541667
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 720,
+      "width_mean": 547.5466666666666,
+      "height_min": 222,
+      "height_max": 720,
+      "height_mean": 413.38
+    },
+    "brightness": {
+      "mean": 126.68459852430557,
+      "std": 31.225588702486526
+    },
+    "contrast": {
+      "mean": 40.240265473865776
+    },
+    "hsv_mean": {
+      "H": 48.66892939814815,
+      "S": 92.64837239583333,
+      "V": 156.80319444444447
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/2. Melanoma 15.75k": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 43.076171875,
+      "max": 171.8837890625,
+      "mean": 74.07281901041667
+    },
+    "resolution": {
+      "width_min": 512,
+      "width_max": 512,
+      "width_mean": 512.0,
+      "height_min": 512,
+      "height_max": 512,
+      "height_mean": 512.0
+    },
+    "brightness": {
+      "mean": 171.66662760416668,
+      "std": 34.67227757562126
+    },
+    "contrast": {
+      "mean": 23.130834648568648
+    },
+    "hsv_mean": {
+      "H": 72.26797092013891,
+      "S": 77.12283130787037,
+      "V": 205.4376707175926
+    },
+    "over_exposed_count": 41,
+    "under_exposed_count": 0,
+    "quality_score": 91.8
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/3. Atopic Dermatitis - 1.25k": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 9.6171875,
+      "max": 148.3173828125,
+      "mean": 52.67693359375
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 720,
+      "width_mean": 466.04,
+      "height_min": 222,
+      "height_max": 720,
+      "height_mean": 391.28
+    },
+    "brightness": {
+      "mean": 113.18251663773145,
+      "std": 28.8618174388388
+    },
+    "contrast": {
+      "mean": 44.26763196098904
+    },
+    "hsv_mean": {
+      "H": 44.54308232060185,
+      "S": 100.4668287037037,
+      "V": 143.16545500578704
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/4. Basal Cell Carcinoma (BCC) 3323": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 106.1220703125,
+      "max": 697.5556640625,
+      "mean": 445.5750911458333
+    },
+    "resolution": {
+      "width_min": 600,
+      "width_max": 1024,
+      "width_mean": 961.8133333333334,
+      "height_min": 450,
+      "height_max": 1024,
+      "height_mean": 939.8133333333334
+    },
+    "brightness": {
+      "mean": 131.9372800925926,
+      "std": 35.22268219603001
+    },
+    "contrast": {
+      "mean": 40.442609488346875
+    },
+    "hsv_mean": {
+      "H": 70.10980685763889,
+      "S": 51.92562572337963,
+      "V": 151.50748625578703
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/5. Melanocytic Nevi (NV) - 7970": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 64.8994140625,
+      "max": 393.171875,
+      "mean": 255.32448567708335
+    },
+    "resolution": {
+      "width_min": 576,
+      "width_max": 1024,
+      "width_mean": 699.1866666666666,
+      "height_min": 450,
+      "height_max": 946,
+      "height_mean": 516.7866666666666
+    },
+    "brightness": {
+      "mean": 158.00421368634258,
+      "std": 19.79946634932001
+    },
+    "contrast": {
+      "mean": 27.352631583154054
+    },
+    "hsv_mean": {
+      "H": 84.9521925636574,
+      "S": 83.03555049189815,
+      "V": 198.10706958912036
+    },
+    "over_exposed_count": 4,
+    "under_exposed_count": 0,
+    "quality_score": 99.2
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/6. Benign Keratosis-like Lesions (BKL) 2624": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 179.2568359375,
+      "max": 775.328125,
+      "mean": 402.8906510416667
+    },
+    "resolution": {
+      "width_min": 600,
+      "width_max": 1024,
+      "width_mean": 806.3466666666667,
+      "height_min": 450,
+      "height_max": 1024,
+      "height_mean": 729.3466666666667
+    },
+    "brightness": {
+      "mean": 144.0387456597222,
+      "std": 24.989716303194694
+    },
+    "contrast": {
+      "mean": 34.61534490769902
+    },
+    "hsv_mean": {
+      "H": 84.47640697337964,
+      "S": 55.857587528935184,
+      "V": 165.93240162037037
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/7. Psoriasis pictures Lichen Planus and related diseases - 2k": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 11.46875,
+      "max": 160.99609375,
+      "mean": 79.55934244791666
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 720,
+      "width_mean": 581.9933333333333,
+      "height_min": 222,
+      "height_max": 720,
+      "height_mean": 494.41333333333336
+    },
+    "brightness": {
+      "mean": 113.3817744502315,
+      "std": 30.34048675645564
+    },
+    "contrast": {
+      "mean": 41.24487017249012
+    },
+    "hsv_mean": {
+      "H": 46.017789351851846,
+      "S": 98.93350549768519,
+      "V": 141.5862449363426
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/8. Seborrheic Keratoses and other Benign Tumors - 1.8k": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 13.33203125,
+      "max": 152.689453125,
+      "mean": 89.94104166666666
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 720,
+      "width_mean": 652.6866666666666,
+      "height_min": 222,
+      "height_max": 720,
+      "height_mean": 494.16
+    },
+    "brightness": {
+      "mean": 122.15872395833334,
+      "std": 29.832363513369547
+    },
+    "contrast": {
+      "mean": 33.822789162394066
+    },
+    "hsv_mean": {
+      "H": 42.34384114583333,
+      "S": 84.52875868055554,
+      "V": 147.21397497106483
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/IMG_CLASSES/9. Tinea Ringworm Candidiasis and other Fungal Infections - 1.7k": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 13.94140625,
+      "max": 230.974609375,
+      "mean": 93.29904947916667
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 720,
+      "width_mean": 644.38,
+      "height_min": 222,
+      "height_max": 720,
+      "height_mean": 522.7066666666667
+    },
+    "brightness": {
+      "mean": 116.55020616319445,
+      "std": 28.52174005514834
+    },
+    "contrast": {
+      "mean": 41.93623228837449
+    },
+    "hsv_mean": {
+      "H": 58.75578052662036,
+      "S": 96.38981264467593,
+      "V": 145.87792173032406
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/acne_dataset/Acne": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpeg": 65,
+      ".jpg": 80,
+      ".png": 5
+    },
+    "file_size_kb": {
+      "min": 2.2314453125,
+      "max": 1069.107421875,
+      "mean": 79.45884114583333
+    },
+    "resolution": {
+      "width_min": 100,
+      "width_max": 3024,
+      "width_mean": 677.9266666666666,
+      "height_min": 100,
+      "height_max": 2538,
+      "height_mean": 577.3733333333333
+    },
+    "brightness": {
+      "mean": 133.21999855324074,
+      "std": 27.244106006242344
+    },
+    "contrast": {
+      "mean": 41.313513856202285
+    },
+    "hsv_mean": {
+      "H": 36.742444299768515,
+      "S": 92.05568576388887,
+      "V": 165.3562666377315
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/data_eczema/images": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 10.4619140625,
+      "max": 156.029296875,
+      "mean": 83.0408203125
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 720,
+      "width_mean": 615.18,
+      "height_min": 222,
+      "height_max": 720,
+      "height_mean": 520.9866666666667
+    },
+    "brightness": {
+      "mean": 101.41954788773147,
+      "std": 27.949049131126266
+    },
+    "contrast": {
+      "mean": 48.08229811564647
+    },
+    "hsv_mean": {
+      "H": 49.643471498842594,
+      "S": 97.72713396990743,
+      "V": 126.82571976273148
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/data_eczema/masks": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".png": 150
+    },
+    "file_size_kb": {
+      "min": 0.6064453125,
+      "max": 7.3251953125,
+      "mean": 3.2762890625
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 720,
+      "width_mean": 623.5133333333333,
+      "height_min": 222,
+      "height_max": 720,
+      "height_mean": 524.8866666666667
+    },
+    "brightness": {
+      "mean": 76.86728370949074,
+      "std": 48.216205773277665
+    },
+    "contrast": {
+      "mean": 104.17079050471384
+    },
+    "hsv_mean": {
+      "H": 0.0,
+      "S": 0.0,
+      "V": 76.86728370949074
+    },
+    "over_exposed_count": 5,
+    "under_exposed_count": 33,
+    "quality_score": 92.4
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 40.8603515625,
+      "max": 194.560546875,
+      "mean": 90.85000651041666
+    },
+    "resolution": {
+      "width_min": 326,
+      "width_max": 720,
+      "width_mean": 641.52,
+      "height_min": 409,
+      "height_max": 720,
+      "height_mean": 550.5333333333333
+    },
+    "brightness": {
+      "mean": 120.5472265625,
+      "std": 31.272354308012044
+    },
+    "contrast": {
+      "mean": 38.8599547100547
+    },
+    "hsv_mean": {
+      "H": 50.34364149305555,
+      "S": 86.18257957175928,
+      "V": 147.94901475694445
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 46.5751953125,
+      "max": 180.4052734375,
+      "mean": 98.17837239583334
+    },
+    "resolution": {
+      "width_min": 465,
+      "width_max": 720,
+      "width_mean": 654.6266666666667,
+      "height_min": 462,
+      "height_max": 720,
+      "height_mean": 545.08
+    },
+    "brightness": {
+      "mean": 122.10905237268521,
+      "std": 28.386582231965438
+    },
+    "contrast": {
+      "mean": 34.45413107085355
+    },
+    "hsv_mean": {
+      "H": 43.77919704861111,
+      "S": 85.40081307870369,
+      "V": 148.75467809606485
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Atopic Dermatitis Photos": {
+    "sampled": 123,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 123
+    },
+    "file_size_kb": {
+      "min": 47.951171875,
+      "max": 142.9921875,
+      "mean": 85.52084127286585
+    },
+    "resolution": {
+      "width_min": 468,
+      "width_max": 720,
+      "width_mean": 652.780487804878,
+      "height_min": 461,
+      "height_max": 720,
+      "height_mean": 543.5040650406504
+    },
+    "brightness": {
+      "mean": 107.45328555499096,
+      "std": 31.050437664188802
+    },
+    "contrast": {
+      "mean": 44.833568384407485
+    },
+    "hsv_mean": {
+      "H": 56.40408338979223,
+      "S": 87.48959656588752,
+      "V": 131.6704749957656
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Bullous Disease Photos": {
+    "sampled": 113,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 113
+    },
+    "file_size_kb": {
+      "min": 45.9267578125,
+      "max": 174.4384765625,
+      "mean": 93.76431139380531
+    },
+    "resolution": {
+      "width_min": 458,
+      "width_max": 720,
+      "width_mean": 654.7433628318585,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 554.8672566371681
+    },
+    "brightness": {
+      "mean": 117.27897327464356,
+      "std": 33.9031337266739
+    },
+    "contrast": {
+      "mean": 43.946019706636086
+    },
+    "hsv_mean": {
+      "H": 67.4362334454892,
+      "S": 83.90488262045231,
+      "V": 141.3789782678835
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.7
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Cellulitis Impetigo and other Bacterial Infections": {
+    "sampled": 73,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 73
+    },
+    "file_size_kb": {
+      "min": 45.91796875,
+      "max": 151.466796875,
+      "mean": 91.13294627568493
+    },
+    "resolution": {
+      "width_min": 458,
+      "width_max": 720,
+      "width_mean": 671.2328767123288,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 545.6027397260274
+    },
+    "brightness": {
+      "mean": 103.95931435502284,
+      "std": 29.04685596870616
+    },
+    "contrast": {
+      "mean": 42.77783171425297
+    },
+    "hsv_mean": {
+      "H": 47.882672778729074,
+      "S": 96.51986717560881,
+      "V": 129.09120231640028
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 40.2724609375,
+      "max": 208.734375,
+      "mean": 90.40376953125
+    },
+    "resolution": {
+      "width_min": 464,
+      "width_max": 720,
+      "width_mean": 642.0533333333333,
+      "height_min": 464,
+      "height_max": 1080,
+      "height_mean": 561.0933333333334
+    },
+    "brightness": {
+      "mean": 104.46517288773147,
+      "std": 30.122055525675055
+    },
+    "contrast": {
+      "mean": 46.91927872332439
+    },
+    "hsv_mean": {
+      "H": 46.82066840277778,
+      "S": 98.63548394097222,
+      "V": 129.70931640625
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions": {
+    "sampled": 101,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 101
+    },
+    "file_size_kb": {
+      "min": 35.3837890625,
+      "max": 156.64453125,
+      "mean": 82.91361772896039
+    },
+    "resolution": {
+      "width_min": 456,
+      "width_max": 720,
+      "width_mean": 637.5544554455446,
+      "height_min": 463,
+      "height_max": 720,
+      "height_mean": 573.7920792079208
+    },
+    "brightness": {
+      "mean": 103.0953389284241,
+      "std": 28.534874870957285
+    },
+    "contrast": {
+      "mean": 47.024592863512304
+    },
+    "hsv_mean": {
+      "H": 73.93336062121837,
+      "S": 95.56688862245599,
+      "V": 128.90600612795652
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Hair Loss Photos Alopecia and other Hair Diseases": {
+    "sampled": 60,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 60
+    },
+    "file_size_kb": {
+      "min": 45.9560546875,
+      "max": 194.9130859375,
+      "mean": 111.124853515625
+    },
+    "resolution": {
+      "width_min": 472,
+      "width_max": 720,
+      "width_mean": 670.3833333333333,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 535.9833333333333
+    },
+    "brightness": {
+      "mean": 82.19251844618057,
+      "std": 31.30894231582983
+    },
+    "contrast": {
+      "mean": 48.65127478927673
+    },
+    "hsv_mean": {
+      "H": 49.40721571180556,
+      "S": 87.81724537037034,
+      "V": 98.56981698495368
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 6,
+    "quality_score": 97.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Herpes HPV and other STDs Photos": {
+    "sampled": 102,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 102
+    },
+    "file_size_kb": {
+      "min": 49.61328125,
+      "max": 181.0478515625,
+      "mean": 100.66931870404412
+    },
+    "resolution": {
+      "width_min": 464,
+      "width_max": 720,
+      "width_mean": 667.4411764705883,
+      "height_min": 458,
+      "height_max": 720,
+      "height_mean": 540.2450980392157
+    },
+    "brightness": {
+      "mean": 117.47804861962146,
+      "std": 30.750965863391826
+    },
+    "contrast": {
+      "mean": 37.73973106528873
+    },
+    "hsv_mean": {
+      "H": 40.29379850898693,
+      "S": 96.82112630208333,
+      "V": 145.67528552219503
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.7
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Light Diseases and Disorders of Pigmentation": {
+    "sampled": 143,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 143
+    },
+    "file_size_kb": {
+      "min": 26.4775390625,
+      "max": 163.8701171875,
+      "mean": 89.87895405375875
+    },
+    "resolution": {
+      "width_min": 370,
+      "width_max": 720,
+      "width_mean": 653.4265734265734,
+      "height_min": 455,
+      "height_max": 720,
+      "height_mean": 546.6853146853147
+    },
+    "brightness": {
+      "mean": 102.79759281517094,
+      "std": 30.50858977897011
+    },
+    "contrast": {
+      "mean": 45.63080256103507
+    },
+    "hsv_mean": {
+      "H": 56.27567592997279,
+      "S": 96.30510179924244,
+      "V": 126.88081157124125
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Lupus and other Connective Tissue diseases": {
+    "sampled": 105,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 105
+    },
+    "file_size_kb": {
+      "min": 42.2333984375,
+      "max": 236.404296875,
+      "mean": 97.0416480654762
+    },
+    "resolution": {
+      "width_min": 463,
+      "width_max": 720,
+      "width_mean": 671.6,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 538.0952380952381
+    },
+    "brightness": {
+      "mean": 102.54380787037037,
+      "std": 33.419118385010236
+    },
+    "contrast": {
+      "mean": 47.28823043369504
+    },
+    "hsv_mean": {
+      "H": 74.61792121362434,
+      "S": 94.59912574404763,
+      "V": 127.74989666005293
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Melanoma Skin Cancer Nevi and Moles": {
+    "sampled": 116,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 116
+    },
+    "file_size_kb": {
+      "min": 44.0712890625,
+      "max": 180.8291015625,
+      "mean": 97.181640625
+    },
+    "resolution": {
+      "width_min": 453,
+      "width_max": 720,
+      "width_mean": 675.9137931034483,
+      "height_min": 436,
+      "height_max": 720,
+      "height_mean": 526.6034482758621
+    },
+    "brightness": {
+      "mean": 126.30956282926245,
+      "std": 33.76828547311337
+    },
+    "contrast": {
+      "mean": 34.58416482361663
+    },
+    "hsv_mean": {
+      "H": 38.54157125538793,
+      "S": 85.15840891403258,
+      "V": 150.4810243803879
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Nail Fungus and other Nail Disease": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 36.9326171875,
+      "max": 193.48046875,
+      "mean": 77.9896875
+    },
+    "resolution": {
+      "width_min": 460,
+      "width_max": 720,
+      "width_mean": 645.9066666666666,
+      "height_min": 452,
+      "height_max": 720,
+      "height_mean": 551.0533333333333
+    },
+    "brightness": {
+      "mean": 108.86804615162036,
+      "std": 32.65172806430055
+    },
+    "contrast": {
+      "mean": 56.332209114216276
+    },
+    "hsv_mean": {
+      "H": 51.46547381365741,
+      "S": 87.78351490162036,
+      "V": 132.06774594907407
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 2,
+    "quality_score": 99.6
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Poison Ivy Photos and other Contact Dermatitis": {
+    "sampled": 65,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 65
+    },
+    "file_size_kb": {
+      "min": 51.0654296875,
+      "max": 152.8017578125,
+      "mean": 87.609765625
+    },
+    "resolution": {
+      "width_min": 464,
+      "width_max": 720,
+      "width_mean": 642.8615384615384,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 563.0461538461539
+    },
+    "brightness": {
+      "mean": 111.82240418002138,
+      "std": 36.0099629570321
+    },
+    "contrast": {
+      "mean": 45.00659629538795
+    },
+    "hsv_mean": {
+      "H": 43.577605836004274,
+      "S": 89.70860710470085,
+      "V": 135.42217715010682
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.5
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Psoriasis pictures Lichen Planus and related diseases": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 38.0322265625,
+      "max": 159.21875,
+      "mean": 94.89378255208334
+    },
+    "resolution": {
+      "width_min": 472,
+      "width_max": 720,
+      "width_mean": 657.16,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 546.3466666666667
+    },
+    "brightness": {
+      "mean": 112.07024233217594,
+      "std": 32.66309577690173
+    },
+    "contrast": {
+      "mean": 42.38483096421589
+    },
+    "hsv_mean": {
+      "H": 51.18049045138889,
+      "S": 95.89957320601852,
+      "V": 137.7463859953704
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 2,
+    "quality_score": 99.6
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites": {
+    "sampled": 108,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 108
+    },
+    "file_size_kb": {
+      "min": 31.2744140625,
+      "max": 151.236328125,
+      "mean": 83.64738859953704
+    },
+    "resolution": {
+      "width_min": 459,
+      "width_max": 720,
+      "width_mean": 665.5925925925926,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 538.1388888888889
+    },
+    "brightness": {
+      "mean": 117.08337954925412,
+      "std": 34.565245460041155
+    },
+    "contrast": {
+      "mean": 42.60596512597267
+    },
+    "hsv_mean": {
+      "H": 52.58964582529578,
+      "S": 94.74554317772633,
+      "V": 143.9730330102238
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.7
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Seborrheic Keratoses and other Benign Tumors": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 52.021484375,
+      "max": 182.8955078125,
+      "mean": 98.83569661458333
+    },
+    "resolution": {
+      "width_min": 462,
+      "width_max": 720,
+      "width_mean": 680.7533333333333,
+      "height_min": 463,
+      "height_max": 720,
+      "height_mean": 519.9666666666667
+    },
+    "brightness": {
+      "mean": 121.49007306134258,
+      "std": 32.664901617660824
+    },
+    "contrast": {
+      "mean": 34.49435784692161
+    },
+    "hsv_mean": {
+      "H": 42.47783130787037,
+      "S": 85.82547743055557,
+      "V": 146.47999710648148
+    },
+    "over_exposed_count": 2,
+    "under_exposed_count": 0,
+    "quality_score": 99.6
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Systemic Disease": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 45.6259765625,
+      "max": 238.7802734375,
+      "mean": 96.95236979166667
+    },
+    "resolution": {
+      "width_min": 385,
+      "width_max": 720,
+      "width_mean": 632.8666666666667,
+      "height_min": 385,
+      "height_max": 720,
+      "height_mean": 571.0466666666666
+    },
+    "brightness": {
+      "mean": 119.3000441261574,
+      "std": 36.32661993706134
+    },
+    "contrast": {
+      "mean": 54.528049502917206
+    },
+    "hsv_mean": {
+      "H": 55.052337962962966,
+      "S": 87.03548900462964,
+      "V": 141.95309100115742
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Tinea Ringworm Candidiasis and other Fungal Infections": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 42.7607421875,
+      "max": 207.1279296875,
+      "mean": 95.8925
+    },
+    "resolution": {
+      "width_min": 458,
+      "width_max": 720,
+      "width_mean": 671.8933333333333,
+      "height_min": 458,
+      "height_max": 720,
+      "height_mean": 525.32
+    },
+    "brightness": {
+      "mean": 114.4581741898148,
+      "std": 28.976281293360678
+    },
+    "contrast": {
+      "mean": 41.570341538227126
+    },
+    "hsv_mean": {
+      "H": 55.62373046875,
+      "S": 93.43163122106482,
+      "V": 141.73697699652777
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Urticaria Hives": {
+    "sampled": 53,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 53
+    },
+    "file_size_kb": {
+      "min": 41.98046875,
+      "max": 155.24609375,
+      "mean": 83.11014887971699
+    },
+    "resolution": {
+      "width_min": 466,
+      "width_max": 720,
+      "width_mean": 646.0377358490566,
+      "height_min": 456,
+      "height_max": 720,
+      "height_mean": 584.0566037735849
+    },
+    "brightness": {
+      "mean": 112.68055555555557,
+      "std": 28.733340943390537
+    },
+    "contrast": {
+      "mean": 51.55609439437784
+    },
+    "hsv_mean": {
+      "H": 57.86526917911425,
+      "S": 88.1819907134434,
+      "V": 137.3703874312107
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors": {
+    "sampled": 121,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 121
+    },
+    "file_size_kb": {
+      "min": 37.150390625,
+      "max": 176.95703125,
+      "mean": 89.93023631198348
+    },
+    "resolution": {
+      "width_min": 466,
+      "width_max": 720,
+      "width_mean": 648.0165289256198,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 555.4958677685951
+    },
+    "brightness": {
+      "mean": 117.85176337235995,
+      "std": 28.99036421691233
+    },
+    "contrast": {
+      "mean": 40.85145558508864
+    },
+    "hsv_mean": {
+      "H": 62.72123310519973,
+      "S": 83.22511962666435,
+      "V": 143.43771073662765
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Vasculitis Photos": {
+    "sampled": 105,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 105
+    },
+    "file_size_kb": {
+      "min": 38.2890625,
+      "max": 127.9736328125,
+      "mean": 81.71648065476191
+    },
+    "resolution": {
+      "width_min": 455,
+      "width_max": 720,
+      "width_mean": 623.2857142857143,
+      "height_min": 456,
+      "height_max": 720,
+      "height_mean": 578.6666666666666
+    },
+    "brightness": {
+      "mean": 106.35747871197088,
+      "std": 26.3855657944698
+    },
+    "contrast": {
+      "mean": 47.00551737874156
+    },
+    "hsv_mean": {
+      "H": 57.69166253306878,
+      "S": 86.41678757440476,
+      "V": 129.3223823991402
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 31.197265625,
+      "max": 164.6220703125,
+      "mean": 88.69727864583334
+    },
+    "resolution": {
+      "width_min": 470,
+      "width_max": 720,
+      "width_mean": 688.54,
+      "height_min": 359,
+      "height_max": 1114,
+      "height_mean": 518.88
+    },
+    "brightness": {
+      "mean": 118.99297743055553,
+      "std": 33.33340859866209
+    },
+    "contrast": {
+      "mean": 40.54735468295466
+    },
+    "hsv_mean": {
+      "H": 52.1806568287037,
+      "S": 95.7361400462963,
+      "V": 148.64914207175926
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 44.51171875,
+      "max": 194.560546875,
+      "mean": 93.35626953125
+    },
+    "resolution": {
+      "width_min": 464,
+      "width_max": 720,
+      "width_mean": 653.5466666666666,
+      "height_min": 453,
+      "height_max": 720,
+      "height_mean": 549.7466666666667
+    },
+    "brightness": {
+      "mean": 122.10465928819443,
+      "std": 28.665351330523205
+    },
+    "contrast": {
+      "mean": 39.00112934263298
+    },
+    "hsv_mean": {
+      "H": 50.32287254050926,
+      "S": 90.95881944444446,
+      "V": 151.08840856481478
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 45.4677734375,
+      "max": 237.0595703125,
+      "mean": 101.05123046875
+    },
+    "resolution": {
+      "width_min": 463,
+      "width_max": 720,
+      "width_mean": 660.2533333333333,
+      "height_min": 450,
+      "height_max": 720,
+      "height_mean": 543.6066666666667
+    },
+    "brightness": {
+      "mean": 119.12122178819443,
+      "std": 28.821128064897746
+    },
+    "contrast": {
+      "mean": 36.31300364270748
+    },
+    "hsv_mean": {
+      "H": 54.02662688078704,
+      "S": 86.98180989583334,
+      "V": 145.32624927662036
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 38.5458984375,
+      "max": 177.9638671875,
+      "mean": 87.25962890625
+    },
+    "resolution": {
+      "width_min": 461,
+      "width_max": 720,
+      "width_mean": 648.48,
+      "height_min": 452,
+      "height_max": 720,
+      "height_mean": 555.1333333333333
+    },
+    "brightness": {
+      "mean": 105.70579282407407,
+      "std": 31.29539235117786
+    },
+    "contrast": {
+      "mean": 46.3804162385358
+    },
+    "hsv_mean": {
+      "H": 51.12300564236111,
+      "S": 91.87392505787037,
+      "V": 129.16269965277777
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Bullous Disease Photos": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 48.7666015625,
+      "max": 179.44140625,
+      "mean": 90.63642578125
+    },
+    "resolution": {
+      "width_min": 458,
+      "width_max": 720,
+      "width_mean": 654.8933333333333,
+      "height_min": 444,
+      "height_max": 720,
+      "height_mean": 554.2733333333333
+    },
+    "brightness": {
+      "mean": 117.21959129050927,
+      "std": 34.35437682014853
+    },
+    "contrast": {
+      "mean": 42.80547427204218
+    },
+    "hsv_mean": {
+      "H": 59.09110749421297,
+      "S": 89.05129412615742,
+      "V": 141.57788049768516
+    },
+    "over_exposed_count": 2,
+    "under_exposed_count": 1,
+    "quality_score": 99.4
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Cellulitis Impetigo and other Bacterial Infections": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 36.1162109375,
+      "max": 159.4765625,
+      "mean": 91.03186848958333
+    },
+    "resolution": {
+      "width_min": 458,
+      "width_max": 720,
+      "width_mean": 662.9466666666667,
+      "height_min": 455,
+      "height_max": 720,
+      "height_mean": 546.4666666666667
+    },
+    "brightness": {
+      "mean": 112.51525390625,
+      "std": 29.035361247783474
+    },
+    "contrast": {
+      "mean": 43.30529379448388
+    },
+    "hsv_mean": {
+      "H": 54.91803530092592,
+      "S": 90.83008897569442,
+      "V": 137.74277199074075
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 49.162109375,
+      "max": 162.126953125,
+      "mean": 89.8579296875
+    },
+    "resolution": {
+      "width_min": 472,
+      "width_max": 720,
+      "width_mean": 648.12,
+      "height_min": 472,
+      "height_max": 720,
+      "height_mean": 550.1866666666666
+    },
+    "brightness": {
+      "mean": 104.11006148726851,
+      "std": 26.061383054741384
+    },
+    "contrast": {
+      "mean": 47.49091362062609
+    },
+    "hsv_mean": {
+      "H": 47.75821325231482,
+      "S": 100.68055193865742,
+      "V": 129.78842809606485
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Exanthems and Drug Eruptions": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 26.8095703125,
+      "max": 134.9248046875,
+      "mean": 80.28802734375
+    },
+    "resolution": {
+      "width_min": 463,
+      "width_max": 720,
+      "width_mean": 637.4666666666667,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 574.1333333333333
+    },
+    "brightness": {
+      "mean": 103.55480034722223,
+      "std": 30.225452392670736
+    },
+    "contrast": {
+      "mean": 49.35363607648437
+    },
+    "hsv_mean": {
+      "H": 57.52735821759259,
+      "S": 100.06167751736112,
+      "V": 129.3024117476852
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Hair Loss Photos Alopecia and other Hair Diseases": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 50.2763671875,
+      "max": 209.5966796875,
+      "mean": 116.98858723958334
+    },
+    "resolution": {
+      "width_min": 464,
+      "width_max": 720,
+      "width_mean": 679.1133333333333,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 532.8266666666667
+    },
+    "brightness": {
+      "mean": 89.6926048900463,
+      "std": 37.44890383046308
+    },
+    "contrast": {
+      "mean": 47.42582278803384
+    },
+    "hsv_mean": {
+      "H": 51.15933810763889,
+      "S": 90.19453052662037,
+      "V": 107.36046151620371
+    },
+    "over_exposed_count": 2,
+    "under_exposed_count": 10,
+    "quality_score": 97.6
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 31.197265625,
+      "max": 203.8310546875,
+      "mean": 99.21752604166667
+    },
+    "resolution": {
+      "width_min": 459,
+      "width_max": 720,
+      "width_mean": 652.94,
+      "height_min": 359,
+      "height_max": 720,
+      "height_mean": 547.8133333333334
+    },
+    "brightness": {
+      "mean": 121.70470847800927,
+      "std": 30.12314818677434
+    },
+    "contrast": {
+      "mean": 39.83887984013625
+    },
+    "hsv_mean": {
+      "H": 49.67965205439815,
+      "S": 97.65728804976852,
+      "V": 152.06952039930556
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 34.943359375,
+      "max": 193.625,
+      "mean": 92.09452473958333
+    },
+    "resolution": {
+      "width_min": 378,
+      "width_max": 720,
+      "width_mean": 648.5333333333333,
+      "height_min": 384,
+      "height_max": 720,
+      "height_mean": 552.84
+    },
+    "brightness": {
+      "mean": 103.65658347800925,
+      "std": 31.845147739855378
+    },
+    "contrast": {
+      "mean": 45.50184051819897
+    },
+    "hsv_mean": {
+      "H": 52.684365596064815,
+      "S": 92.21279513888888,
+      "V": 127.43794632523148
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Lupus and other Connective Tissue diseases": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 43.259765625,
+      "max": 214.798828125,
+      "mean": 94.1214453125
+    },
+    "resolution": {
+      "width_min": 464,
+      "width_max": 720,
+      "width_mean": 665.84,
+      "height_min": 456,
+      "height_max": 720,
+      "height_mean": 538.9733333333334
+    },
+    "brightness": {
+      "mean": 107.9687254050926,
+      "std": 31.207640668011702
+    },
+    "contrast": {
+      "mean": 45.12819844041425
+    },
+    "hsv_mean": {
+      "H": 65.531640625,
+      "S": 90.66211443865743,
+      "V": 133.06355541087964
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Melanoma Skin Cancer Nevi and Moles": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 50.4111328125,
+      "max": 165.69140625,
+      "mean": 95.96766927083333
+    },
+    "resolution": {
+      "width_min": 434,
+      "width_max": 720,
+      "width_mean": 679.78,
+      "height_min": 439,
+      "height_max": 720,
+      "height_mean": 524.3666666666667
+    },
+    "brightness": {
+      "mean": 126.03662037037037,
+      "std": 33.70327297992795
+    },
+    "contrast": {
+      "mean": 34.410692215183005
+    },
+    "hsv_mean": {
+      "H": 41.3094921875,
+      "S": 80.37961371527776,
+      "V": 149.50041811342592
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Nail Fungus and other Nail Disease": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 33.2548828125,
+      "max": 183.4716796875,
+      "mean": 76.38791015625
+    },
+    "resolution": {
+      "width_min": 458,
+      "width_max": 720,
+      "width_mean": 644.16,
+      "height_min": 459,
+      "height_max": 720,
+      "height_mean": 554.3
+    },
+    "brightness": {
+      "mean": 114.56362919560188,
+      "std": 34.501381202015075
+    },
+    "contrast": {
+      "mean": 56.65823852639667
+    },
+    "hsv_mean": {
+      "H": 49.862598379629624,
+      "S": 90.09654513888889,
+      "V": 139.7375636574074
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 4,
+    "quality_score": 99.2
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Poison Ivy Photos and other Contact Dermatitis": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 42.9873046875,
+      "max": 244.64453125,
+      "mean": 100.85995442708334
+    },
+    "resolution": {
+      "width_min": 417,
+      "width_max": 720,
+      "width_mean": 661.9466666666667,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 545.9333333333333
+    },
+    "brightness": {
+      "mean": 112.32494429976855,
+      "std": 33.72350592887198
+    },
+    "contrast": {
+      "mean": 41.92322630490666
+    },
+    "hsv_mean": {
+      "H": 45.11169632523148,
+      "S": 91.06173828125,
+      "V": 137.37450954861114
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 2,
+    "quality_score": 99.4
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 46.0302734375,
+      "max": 169.2294921875,
+      "mean": 96.95185546875
+    },
+    "resolution": {
+      "width_min": 471,
+      "width_max": 720,
+      "width_mean": 654.7733333333333,
+      "height_min": 460,
+      "height_max": 720,
+      "height_mean": 547.8466666666667
+    },
+    "brightness": {
+      "mean": 113.85519097222219,
+      "std": 30.498029742367446
+    },
+    "contrast": {
+      "mean": 43.4169377397129
+    },
+    "hsv_mean": {
+      "H": 44.51801793981481,
+      "S": 100.27209129050927,
+      "V": 141.56507016782408
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Scabies Lyme Disease and other Infestations and Bites": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 28.1298828125,
+      "max": 171.3173828125,
+      "mean": 85.79872395833333
+    },
+    "resolution": {
+      "width_min": 458,
+      "width_max": 720,
+      "width_mean": 674.3666666666667,
+      "height_min": 455,
+      "height_max": 720,
+      "height_mean": 533.22
+    },
+    "brightness": {
+      "mean": 116.3836205150463,
+      "std": 36.77850069875468
+    },
+    "contrast": {
+      "mean": 41.571656247108734
+    },
+    "hsv_mean": {
+      "H": 50.39101779513889,
+      "S": 91.64871889467592,
+      "V": 142.46365523726854
+    },
+    "over_exposed_count": 3,
+    "under_exposed_count": 0,
+    "quality_score": 99.4
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Seborrheic Keratoses and other Benign Tumors": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 48.7724609375,
+      "max": 171.87890625,
+      "mean": 97.04098307291666
+    },
+    "resolution": {
+      "width_min": 464,
+      "width_max": 720,
+      "width_mean": 678.8133333333334,
+      "height_min": 460,
+      "height_max": 720,
+      "height_mean": 521.2
+    },
+    "brightness": {
+      "mean": 123.36763237847224,
+      "std": 30.211250431358337
+    },
+    "contrast": {
+      "mean": 33.72973438624069
+    },
+    "hsv_mean": {
+      "H": 44.10772424768519,
+      "S": 86.14310329861112,
+      "V": 149.3422952835648
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Systemic Disease": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 24.4365234375,
+      "max": 207.23046875,
+      "mean": 99.96868489583333
+    },
+    "resolution": {
+      "width_min": 463,
+      "width_max": 720,
+      "width_mean": 638.3866666666667,
+      "height_min": 391,
+      "height_max": 720,
+      "height_mean": 566.2266666666667
+    },
+    "brightness": {
+      "mean": 121.9212065972222,
+      "std": 34.99991866421111
+    },
+    "contrast": {
+      "mean": 51.6649426647899
+    },
+    "hsv_mean": {
+      "H": 63.150116464120366,
+      "S": 85.62730902777778,
+      "V": 145.4423726851852
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 3,
+    "quality_score": 99.4
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 45.7431640625,
+      "max": 214.919921875,
+      "mean": 96.59572916666667
+    },
+    "resolution": {
+      "width_min": 462,
+      "width_max": 720,
+      "width_mean": 677.0866666666667,
+      "height_min": 453,
+      "height_max": 720,
+      "height_mean": 522.5
+    },
+    "brightness": {
+      "mean": 112.69543981481482,
+      "std": 32.237940398218214
+    },
+    "contrast": {
+      "mean": 41.467399870315
+    },
+    "hsv_mean": {
+      "H": 61.33099030671297,
+      "S": 101.41331380208334,
+      "V": 141.3628833912037
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Urticaria Hives": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 40.6064453125,
+      "max": 169.107421875,
+      "mean": 80.78284505208333
+    },
+    "resolution": {
+      "width_min": 458,
+      "width_max": 720,
+      "width_mean": 612.5066666666667,
+      "height_min": 470,
+      "height_max": 720,
+      "height_mean": 605.8733333333333
+    },
+    "brightness": {
+      "mean": 112.15784866898146,
+      "std": 29.56787291445323
+    },
+    "contrast": {
+      "mean": 48.12184154666546
+    },
+    "hsv_mean": {
+      "H": 55.709785156249986,
+      "S": 87.03644458912036,
+      "V": 136.3008376736111
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 45.7744140625,
+      "max": 143.392578125,
+      "mean": 85.94559244791667
+    },
+    "resolution": {
+      "width_min": 463,
+      "width_max": 720,
+      "width_mean": 667.4066666666666,
+      "height_min": 464,
+      "height_max": 720,
+      "height_mean": 533.3466666666667
+    },
+    "brightness": {
+      "mean": 116.69259114583333,
+      "std": 27.013360512053936
+    },
+    "contrast": {
+      "mean": 38.77468796975068
+    },
+    "hsv_mean": {
+      "H": 63.66117404513888,
+      "S": 81.75289351851852,
+      "V": 141.58494574652775
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Vasculitis Photos": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 29.9267578125,
+      "max": 141.5703125,
+      "mean": 82.38119140625
+    },
+    "resolution": {
+      "width_min": 454,
+      "width_max": 720,
+      "width_mean": 652.3266666666667,
+      "height_min": 437,
+      "height_max": 720,
+      "height_mean": 550.9
+    },
+    "brightness": {
+      "mean": 109.4366796875,
+      "std": 35.11560487836402
+    },
+    "contrast": {
+      "mean": 47.53064679808049
+    },
+    "hsv_mean": {
+      "H": 58.81479021990741,
+      "S": 86.01679036458333,
+      "V": 132.36832320601852
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 41.603515625,
+      "max": 183.91796875,
+      "mean": 88.60429036458333
+    },
+    "resolution": {
+      "width_min": 468,
+      "width_max": 720,
+      "width_mean": 706.8533333333334,
+      "height_min": 460,
+      "height_max": 720,
+      "height_mean": 502.9533333333333
+    },
+    "brightness": {
+      "mean": 121.4063331886574,
+      "std": 29.407307106967913
+    },
+    "contrast": {
+      "mean": 38.755082073551094
+    },
+    "hsv_mean": {
+      "H": 48.251320891203704,
+      "S": 96.82231409143519,
+      "V": 152.4013187210648
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dryness/test/dry": {
+    "sampled": 113,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 113
+    },
+    "file_size_kb": {
+      "min": 19.8837890625,
+      "max": 77.603515625,
+      "mean": 42.66357853982301
+    },
+    "resolution": {
+      "width_min": 640,
+      "width_max": 640,
+      "width_mean": 640.0,
+      "height_min": 640,
+      "height_max": 640,
+      "height_mean": 640.0
+    },
+    "brightness": {
+      "mean": 110.13449387751966,
+      "std": 34.31118843102385
+    },
+    "contrast": {
+      "mean": 71.9782035804516
+    },
+    "hsv_mean": {
+      "H": 32.23112651333579,
+      "S": 58.877191264134716,
+      "V": 125.7851687330998
+    },
+    "over_exposed_count": 3,
+    "under_exposed_count": 1,
+    "quality_score": 98.9
+  },
+  "dataset/efficientnet_b4/dryness/test/not_dry": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 21.05859375,
+      "max": 69.6640625,
+      "mean": 41.05707682291666
+    },
+    "resolution": {
+      "width_min": 640,
+      "width_max": 640,
+      "width_mean": 640.0,
+      "height_min": 640,
+      "height_max": 640,
+      "height_mean": 640.0
+    },
+    "brightness": {
+      "mean": 101.74370804398147,
+      "std": 29.836076549008066
+    },
+    "contrast": {
+      "mean": 75.63255380374484
+    },
+    "hsv_mean": {
+      "H": 29.948888888888888,
+      "S": 57.07516276041667,
+      "V": 116.88956597222224
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dryness/train/dry": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 17.0810546875,
+      "max": 81.251953125,
+      "mean": 42.881236979166665
+    },
+    "resolution": {
+      "width_min": 640,
+      "width_max": 640,
+      "width_mean": 640.0,
+      "height_min": 640,
+      "height_max": 640,
+      "height_mean": 640.0
+    },
+    "brightness": {
+      "mean": 107.22241536458333,
+      "std": 32.20422042476783
+    },
+    "contrast": {
+      "mean": 73.45279403264493
+    },
+    "hsv_mean": {
+      "H": 30.45534432870371,
+      "S": 59.69475115740741,
+      "V": 123.2630685763889
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dryness/train/not_dry": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 16.80859375,
+      "max": 68.927734375,
+      "mean": 40.70921875
+    },
+    "resolution": {
+      "width_min": 640,
+      "width_max": 640,
+      "width_mean": 640.0,
+      "height_min": 640,
+      "height_max": 640,
+      "height_mean": 640.0
+    },
+    "brightness": {
+      "mean": 100.49609230324073,
+      "std": 34.5525595116901
+    },
+    "contrast": {
+      "mean": 72.84867122893901
+    },
+    "hsv_mean": {
+      "H": 27.916129918981483,
+      "S": 59.1082761863426,
+      "V": 115.93820384837962
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/dryness/val/dry": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 19.962890625,
+      "max": 75.048828125,
+      "mean": 40.8805859375
+    },
+    "resolution": {
+      "width_min": 640,
+      "width_max": 640,
+      "width_mean": 640.0,
+      "height_min": 640,
+      "height_max": 640,
+      "height_mean": 640.0
+    },
+    "brightness": {
+      "mean": 101.48462745949075,
+      "std": 31.652694448081437
+    },
+    "contrast": {
+      "mean": 72.79104084129249
+    },
+    "hsv_mean": {
+      "H": 28.22959129050926,
+      "S": 58.933135850694455,
+      "V": 116.50014829282406
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 4,
+    "quality_score": 99.0
+  },
+  "dataset/efficientnet_b4/dryness/val/not_dry": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 19.259765625,
+      "max": 82.2451171875,
+      "mean": 40.8177734375
+    },
+    "resolution": {
+      "width_min": 640,
+      "width_max": 640,
+      "width_mean": 640.0,
+      "height_min": 640,
+      "height_max": 640,
+      "height_mean": 640.0
+    },
+    "brightness": {
+      "mean": 108.25020543981482,
+      "std": 37.89532709554119
+    },
+    "contrast": {
+      "mean": 72.10724521105652
+    },
+    "hsv_mean": {
+      "H": 30.735740017361106,
+      "S": 61.25645109953703,
+      "V": 124.39224681712963
+    },
+    "over_exposed_count": 2,
+    "under_exposed_count": 3,
+    "quality_score": 99.0
+  },
+  "dataset/efficientnet_b4/train/acne": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 11.8310546875,
+      "max": 52.236328125,
+      "mean": 22.90768880208333
+    },
+    "resolution": {
+      "width_min": 380,
+      "width_max": 380,
+      "width_mean": 380.0,
+      "height_min": 380,
+      "height_max": 380,
+      "height_mean": 380.0
+    },
+    "brightness": {
+      "mean": 117.4667599826389,
+      "std": 29.7629216769604
+    },
+    "contrast": {
+      "mean": 38.50431716582065
+    },
+    "hsv_mean": {
+      "H": 53.12804759837963,
+      "S": 88.41710141782406,
+      "V": 145.51036530671297
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/train/dark_spots": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 13.0185546875,
+      "max": 57.05859375,
+      "mean": 23.136100260416665
+    },
+    "resolution": {
+      "width_min": 380,
+      "width_max": 380,
+      "width_mean": 380.0,
+      "height_min": 380,
+      "height_max": 380,
+      "height_mean": 380.0
+    },
+    "brightness": {
+      "mean": 111.88701533564814,
+      "std": 31.39180112981885
+    },
+    "contrast": {
+      "mean": 40.235809422337255
+    },
+    "hsv_mean": {
+      "H": 48.32301866319444,
+      "S": 85.41312644675926,
+      "V": 134.4904173900463
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/train/dryness": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 11.8271484375,
+      "max": 45.1923828125,
+      "mean": 23.121842447916666
+    },
+    "resolution": {
+      "width_min": 380,
+      "width_max": 380,
+      "width_mean": 380.0,
+      "height_min": 380,
+      "height_max": 380,
+      "height_mean": 380.0
+    },
+    "brightness": {
+      "mean": 108.39360894097223,
+      "std": 30.493874498303995
+    },
+    "contrast": {
+      "mean": 45.61990433852147
+    },
+    "hsv_mean": {
+      "H": 42.398120659722224,
+      "S": 101.22748914930555,
+      "V": 135.59928385416666
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 3,
+    "quality_score": 99.4
+  },
+  "dataset/efficientnet_b4/train/normal": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 9.4501953125,
+      "max": 22.1376953125,
+      "mean": 14.439720052083333
+    },
+    "resolution": {
+      "width_min": 380,
+      "width_max": 380,
+      "width_mean": 380.0,
+      "height_min": 380,
+      "height_max": 380,
+      "height_mean": 380.0
+    },
+    "brightness": {
+      "mean": 92.66128255208334,
+      "std": 26.448563567600193
+    },
+    "contrast": {
+      "mean": 61.79632797945731
+    },
+    "hsv_mean": {
+      "H": 47.70103298611111,
+      "S": 95.29377025462962,
+      "V": 111.37406177662037
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/val/acne": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 12.9462890625,
+      "max": 52.208984375,
+      "mean": 22.12021484375
+    },
+    "resolution": {
+      "width_min": 380,
+      "width_max": 380,
+      "width_mean": 380.0,
+      "height_min": 380,
+      "height_max": 380,
+      "height_mean": 380.0
+    },
+    "brightness": {
+      "mean": 120.72893880208333,
+      "std": 29.021884156695275
+    },
+    "contrast": {
+      "mean": 37.62263242637092
+    },
+    "hsv_mean": {
+      "H": 44.65189814814815,
+      "S": 88.12108217592593,
+      "V": 149.53533854166668
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/efficientnet_b4/val/dark_spots": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 10.2900390625,
+      "max": 51.6083984375,
+      "mean": 22.661126302083332
+    },
+    "resolution": {
+      "width_min": 380,
+      "width_max": 380,
+      "width_mean": 380.0,
+      "height_min": 380,
+      "height_max": 380,
+      "height_mean": 380.0
+    },
+    "brightness": {
+      "mean": 105.52802155671297,
+      "std": 34.6456987314763
+    },
+    "contrast": {
+      "mean": 42.90075069225101
+    },
+    "hsv_mean": {
+      "H": 51.46128906250001,
+      "S": 91.52213758680556,
+      "V": 128.7673263888889
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 0,
+    "quality_score": 99.8
+  },
+  "dataset/efficientnet_b4/val/dryness": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 10.634765625,
+      "max": 54.775390625,
+      "mean": 22.1533203125
+    },
+    "resolution": {
+      "width_min": 380,
+      "width_max": 380,
+      "width_mean": 380.0,
+      "height_min": 380,
+      "height_max": 380,
+      "height_mean": 380.0
+    },
+    "brightness": {
+      "mean": 106.31875940393519,
+      "std": 33.35634224809931
+    },
+    "contrast": {
+      "mean": 43.513133075480596
+    },
+    "hsv_mean": {
+      "H": 46.84053530092592,
+      "S": 98.78851851851853,
+      "V": 132.0545674189815
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 4,
+    "quality_score": 99.2
+  },
+  "dataset/efficientnet_b4/val/normal": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 8.892578125,
+      "max": 18.4228515625,
+      "mean": 14.542395833333334
+    },
+    "resolution": {
+      "width_min": 380,
+      "width_max": 380,
+      "width_mean": 380.0,
+      "height_min": 380,
+      "height_max": 380,
+      "height_mean": 380.0
+    },
+    "brightness": {
+      "mean": 94.11771412037037,
+      "std": 26.36505444882052
+    },
+    "contrast": {
+      "mean": 62.826162511725514
+    },
+    "hsv_mean": {
+      "H": 43.185625,
+      "S": 91.75909288194444,
+      "V": 111.53445167824073
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 1,
+    "quality_score": 99.8
+  },
+  "dataset/scalp_yolo/images/test": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 23.744140625,
+      "max": 1392.7197265625,
+      "mean": 547.68736328125
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 1872,
+      "width_mean": 1117.4666666666667,
+      "height_min": 222,
+      "height_max": 1080,
+      "height_mean": 731.4133333333333
+    },
+    "brightness": {
+      "mean": 108.38015842013888,
+      "std": 23.75751068268277
+    },
+    "contrast": {
+      "mean": 38.52893832608672
+    },
+    "hsv_mean": {
+      "H": 56.9237962962963,
+      "S": 85.41732855902778,
+      "V": 133.1051048900463
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 2,
+    "quality_score": 99.4
+  },
+  "dataset/scalp_yolo/images/train": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 16.376953125,
+      "max": 1438.974609375,
+      "mean": 638.47498046875
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 1872,
+      "width_mean": 1201.3866666666668,
+      "height_min": 222,
+      "height_max": 1053,
+      "height_mean": 762.42
+    },
+    "brightness": {
+      "mean": 106.1322265625,
+      "std": 19.591919996519966
+    },
+    "contrast": {
+      "mean": 40.69547002025999
+    },
+    "hsv_mean": {
+      "H": 55.23069010416667,
+      "S": 80.95043041087963,
+      "V": 128.67800130208335
+    },
+    "over_exposed_count": 0,
+    "under_exposed_count": 0,
+    "quality_score": 100.0
+  },
+  "dataset/scalp_yolo/images/val": {
+    "sampled": 150,
+    "corrupted_paths": [],
+    "corrupted_count": 0,
+    "formats": {
+      ".jpg": 150
+    },
+    "file_size_kb": {
+      "min": 10.4619140625,
+      "max": 1412.962890625,
+      "mean": 494.75932942708334
+    },
+    "resolution": {
+      "width_min": 294,
+      "width_max": 1872,
+      "width_mean": 1053.8266666666666,
+      "height_min": 222,
+      "height_max": 1053,
+      "height_mean": 704.8933333333333
+    },
+    "brightness": {
+      "mean": 111.53310112847224,
+      "std": 28.050148012933754
+    },
+    "contrast": {
+      "mean": 39.326201006475344
+    },
+    "hsv_mean": {
+      "H": 57.869585503472216,
+      "S": 82.24205946180555,
+      "V": 134.88561342592592
+    },
+    "over_exposed_count": 1,
+    "under_exposed_count": 1,
+    "quality_score": 99.6
+  }
+}

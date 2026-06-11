@@ -1,0 +1,170 @@
+{
+  "classes": {
+    "acne": {
+      "subfolders": {
+        "acne_rosacea": {
+          "total": 1152,
+          "train": 922,
+          "val": 230
+        },
+        "bullous_disease": {
+          "total": 561,
+          "train": 449,
+          "val": 112
+        },
+        "cellulitis_impetigo_bacterial": {
+          "total": 361,
+          "train": 289,
+          "val": 72
+        },
+        "exanthems_drug_eruptions": {
+          "total": 505,
+          "train": 404,
+          "val": 101
+        },
+        "herpes_hpv_stds": {
+          "total": 507,
+          "train": 406,
+          "val": 101
+        },
+        "psoriasis_lichen_planus": {
+          "total": 1757,
+          "train": 1406,
+          "val": 351
+        },
+        "scabies_lyme_infestations": {
+          "total": 539,
+          "train": 431,
+          "val": 108
+        },
+        "tinea_ringworm_fungal": {
+          "total": 1625,
+          "train": 1300,
+          "val": 325
+        },
+        "urticaria_hives": {
+          "total": 265,
+          "train": 212,
+          "val": 53
+        },
+        "warts_molluscum_viral": {
+          "total": 1358,
+          "train": 1086,
+          "val": 272
+        }
+      },
+      "total": 8630,
+      "train": 6905,
+      "val": 1725
+    },
+    "dryness": {
+      "subfolders": {
+        "atopic_dermatitis": {
+          "total": 612,
+          "train": 490,
+          "val": 122
+        },
+        "eczema": {
+          "total": 1544,
+          "train": 1235,
+          "val": 309
+        },
+        "lupus_connective_tissue": {
+          "total": 525,
+          "train": 420,
+          "val": 105
+        },
+        "nail_fungus_nail_disease": {
+          "total": 1301,
+          "train": 1041,
+          "val": 260
+        },
+        "poison_ivy_contact_dermatitis": {
+          "total": 325,
+          "train": 260,
+          "val": 65
+        },
+        "systemic_disease": {
+          "total": 758,
+          "train": 606,
+          "val": 152
+        },
+        "vascular_tumors": {
+          "total": 603,
+          "train": 482,
+          "val": 121
+        },
+        "vasculitis": {
+          "total": 521,
+          "train": 417,
+          "val": 104
+        }
+      },
+      "total": 6189,
+      "train": 4951,
+      "val": 1238
+    },
+    "dark_spots": {
+      "subfolders": {
+        "actinic_keratosis_bcc_malignant": {
+          "total": 1437,
+          "train": 1150,
+          "val": 287
+        },
+        "benign_keratosis_like_lesions": {
+          "total": 2079,
+          "train": 1663,
+          "val": 416
+        },
+        "light_diseases_pigmentation": {
+          "total": 711,
+          "train": 569,
+          "val": 142
+        },
+        "melanocytic_nevi": {
+          "total": 7970,
+          "train": 6376,
+          "val": 1594
+        },
+        "melanoma_nevi_moles": {
+          "total": 579,
+          "train": 463,
+          "val": 116
+        },
+        "seborrheic_keratoses_benign_tumors": {
+          "total": 1714,
+          "train": 1371,
+          "val": 343
+        }
+      },
+      "total": 14490,
+      "train": 11592,
+      "val": 2898
+    },
+    "normal": {
+      "subfolders": {
+        "_root": {
+          "total": 13233,
+          "train": 10586,
+          "val": 2647
+        }
+      },
+      "total": 13233,
+      "train": 10586,
+      "val": 2647
+    }
+  },
+  "missing_sources": [],
+  "imbalance_ratio": 2.341250605913718,
+  "class_totals": {
+    "acne": 8630,
+    "dryness": 6189,
+    "dark_spots": 14490,
+    "normal": 13233
+  },
+  "grand_total_train": 34034,
+  "grand_total_val": 8508,
+  "val_fraction": 0.2,
+  "applied": true,
+  "elapsed_sec": 31.5
+}

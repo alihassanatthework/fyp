@@ -1,0 +1,69 @@
+{
+  "config": {
+    "device": "mps",
+    "img_size": 380,
+    "batch_size": 8,
+    "accum_steps": 4,
+    "phase1_epochs": 5,
+    "phase2_epochs": 45,
+    "phase1_lr": 0.001,
+    "phase2_lr": 0.0001,
+    "weight_decay": 0.0001,
+    "label_smoothing": 0.1,
+    "mixup_alpha": 0.2,
+    "patience": 8,
+    "workers": 4,
+    "amp": false,
+    "unfreeze_blocks": 3,
+    "max_hours": 0.0,
+    "resume": true
+  },
+  "log": {
+    "phase1": [],
+    "phase2": [
+      {
+        "epoch": 1,
+        "train_loss": 0.890366559928291,
+        "lr": 4e-05,
+        "loss": 0.6671868393156264,
+        "acc": 0.822020202020202,
+        "macro_p": 0.7713495950262024,
+        "macro_r": 0.7844402140378949,
+        "macro_f1": 0.7736001632789198,
+        "cm": [
+          [
+            621,
+            49,
+            325,
+            0
+          ],
+          [
+            133,
+            1700,
+            148,
+            0
+          ],
+          [
+            195,
+            30,
+            430,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            1318
+          ]
+        ]
+      }
+    ]
+  },
+  "best_val_acc": 0.822020202020202,
+  "classes": [
+    "acne",
+    "dark_spots",
+    "dryness_new",
+    "normal"
+  ]
+}

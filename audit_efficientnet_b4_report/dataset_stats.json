@@ -1,0 +1,30 @@
+{
+  "train_counts": {
+    "acne": 865,
+    "dark_spots": 1267,
+    "dryness": 3909,
+    "normal": 10586
+  },
+  "val_counts": {
+    "acne": 843,
+    "dark_spots": 714,
+    "dryness": 2891,
+    "normal": 2647
+  },
+  "train_total": 16627,
+  "val_total": 7095,
+  "train_imbalance_ratio": 12.23815028901734,
+  "val_imbalance_ratio": 4.049019607843137,
+  "train_pct": {
+    "acne": 5.2,
+    "dark_spots": 7.62,
+    "dryness": 23.51,
+    "normal": 63.67
+  },
+  "val_pct": {
+    "acne": 11.88,
+    "dark_spots": 10.06,
+    "dryness": 40.75,
+    "normal": 37.31
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "issues": [
+    {
+      "severity": "CRITICAL",
+      "section": "leakage",
+      "message": "837 cross-split near-duplicates"
+    },
+    {
+      "severity": "CRITICAL",
+      "section": "cross_class",
+      "message": "200 cross-class duplicate groups"
+    },
+    {
+      "severity": "WARNING",
+      "section": "imbalance",
+      "message": "dataset/efficientnet_b4/IMG_CLASSES imbalance 6.3x"
+    },
+    {
+      "severity": "WARNING",
+      "section": "imbalance",
+      "message": "dataset/efficientnet_b4/dermnet_dataset/test imbalance 6.6x"
+    },
+    {
+      "severity": "WARNING",
+      "section": "imbalance",
+      "message": "dataset/efficientnet_b4/dermnet_dataset/train imbalance 6.6x"
+    },
+    {
+      "severity": "CRITICAL",
+      "section": "imbalance",
+      "message": "dataset/efficientnet_b4/train imbalance 12.2x"
+    },
+    {
+      "severity": "WARNING",
+      "section": "imbalance",
+      "message": "dataset/scalp_yolo/images imbalance 10.0x"
+    },
+    {
+      "severity": "WARNING",
+      "section": "class_boundary",
+      "message": "similar pair dataset/efficientnet_b4/dryness/train/not_dry \u2194 dataset/efficientnet_b4/dryness/val/dry"
+    },
+    {
+      "severity": "WARNING",
+      "section": "feasibility",
+      "message": "58 class folders below 1500 images"
+    }
+  ],
+  "count_by_severity": {
+    "CRITICAL": 3,
+    "WARNING": 6,
+    "INFO": 0
+  }
+}

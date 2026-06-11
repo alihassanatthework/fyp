@@ -1,0 +1,957 @@
+{
+  "acne->dark_spots": {
+    "count": 30,
+    "examples": [
+      {
+        "file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-24.jpg",
+        "wrong_class_prob": 0.9999209642410278,
+        "all_probs": [
+          1.4825321159150917e-05,
+          0.9999209642410278,
+          5.8313207773608156e-06,
+          5.8365589211462066e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/23VesselsNose1.jpg",
+        "wrong_class_prob": 0.9996793270111084,
+        "all_probs": [
+          0.0002057208912447095,
+          0.9996793270111084,
+          0.00011442144750617445,
+          6.188263910189562e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/rosacea-31.jpg",
+        "wrong_class_prob": 0.9995361566543579,
+        "all_probs": [
+          0.00045244910870678723,
+          0.9995361566543579,
+          8.993498340714723e-06,
+          2.4403477709711296e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-closed-comedo-38.jpg",
+        "wrong_class_prob": 0.9976629018783569,
+        "all_probs": [
+          0.0021973662078380585,
+          0.9976629018783569,
+          0.00013791557285003364,
+          1.8232218508273945e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-pustular-14.jpg",
+        "wrong_class_prob": 0.9959617257118225,
+        "all_probs": [
+          0.003275221213698387,
+          0.9959617257118225,
+          4.726611280148063e-07,
+          0.0007626001024618745
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/rosacea-nose-20.jpg",
+        "wrong_class_prob": 0.9775202870368958,
+        "all_probs": [
+          0.022471824660897255,
+          0.9775202870368958,
+          4.173618890490616e-06,
+          3.7374272778833983e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/rosacea-109.jpg",
+        "wrong_class_prob": 0.968397319316864,
+        "all_probs": [
+          0.03158825263381004,
+          0.968397319316864,
+          1.3762220987700857e-05,
+          6.453173000409151e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-cystic-2.jpg",
+        "wrong_class_prob": 0.9669861793518066,
+        "all_probs": [
+          0.03276953101158142,
+          0.9669861793518066,
+          0.00021489929349627346,
+          2.937491808552295e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-histology-4.jpg",
+        "wrong_class_prob": 0.958706259727478,
+        "all_probs": [
+          0.040093179792165756,
+          0.958706259727478,
+          0.0011994820088148117,
+          1.024821699502354e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-closed-comedo-32.jpg",
+        "wrong_class_prob": 0.9347173571586609,
+        "all_probs": [
+          0.014877219684422016,
+          0.9347173571586609,
+          0.05040445178747177,
+          1.0243786618957529e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-59.jpg",
+        "wrong_class_prob": 0.9153559803962708,
+        "all_probs": [
+          0.08453918993473053,
+          0.9153559803962708,
+          5.5790537771827076e-06,
+          9.918161958921701e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-closed-comedo-10.jpg",
+        "wrong_class_prob": 0.8913561701774597,
+        "all_probs": [
+          0.03886387497186661,
+          0.8913561701774597,
+          0.069776751101017,
+          3.2261214073514566e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/07Rhinophymaq.jpg",
+        "wrong_class_prob": 0.8910833597183228,
+        "all_probs": [
+          0.1087288185954094,
+          0.8910833597183228,
+          0.00017404716345481575,
+          1.3811431927024387e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-48.jpg",
+        "wrong_class_prob": 0.8472051620483398,
+        "all_probs": [
+          0.15256477892398834,
+          0.8472051620483398,
+          0.00022882563644088805,
+          1.1843623042295803e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/rosacea-11.jpg",
+        "wrong_class_prob": 0.8157433867454529,
+        "all_probs": [
+          0.174013152718544,
+          0.8157433867454529,
+          2.2382292286238226e-07,
+          0.010243179276585579
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/rosacea-nose-4.jpg",
+        "wrong_class_prob": 0.8102554082870483,
+        "all_probs": [
+          0.18906553089618683,
+          0.8102554082870483,
+          0.0006452600355260074,
+          3.379524787305854e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-infantile-7.jpg",
+        "wrong_class_prob": 0.7914719581604004,
+        "all_probs": [
+          0.09522891789674759,
+          0.7914719581604004,
+          0.11329622566699982,
+          2.955755917355418e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-closed-comedo-4.jpg",
+        "wrong_class_prob": 0.7864441871643066,
+        "all_probs": [
+          0.028470924124121666,
+          0.7864441871643066,
+          0.18507897853851318,
+          5.861578301846748e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-101.jpg",
+        "wrong_class_prob": 0.7651185393333435,
+        "all_probs": [
+          0.0871448814868927,
+          0.7651185393333435,
+          0.14772982895374298,
+          6.718324584653601e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/hidradenitis-suppurativa-64.jpg",
+        "wrong_class_prob": 0.7639514207839966,
+        "all_probs": [
+          0.1495547592639923,
+          0.7639514207839966,
+          0.0864906758069992,
+          3.184207798767602e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-58.jpg",
+        "wrong_class_prob": 0.7544509172439575,
+        "all_probs": [
+          0.24358528852462769,
+          0.7544509172439575,
+          0.0019613439217209816,
+          2.420312057438423e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-57.jpg",
+        "wrong_class_prob": 0.7137454748153687,
+        "all_probs": [
+          0.2861824631690979,
+          0.7137454748153687,
+          7.189935422502458e-05,
+          2.0859090454905527e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-25.jpg",
+        "wrong_class_prob": 0.7120136618614197,
+        "all_probs": [
+          0.2776156961917877,
+          0.7120136618614197,
+          0.010353276506066322,
+          1.738263927109074e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/rosacea-nose-3.jpg",
+        "wrong_class_prob": 0.7055431008338928,
+        "all_probs": [
+          0.2943766713142395,
+          0.7055431008338928,
+          2.1259813365759328e-05,
+          5.8985300711356103e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/minocycline-pigmentation-10.jpg",
+        "wrong_class_prob": 0.672998309135437,
+        "all_probs": [
+          0.3269507884979248,
+          0.672998309135437,
+          5.026650251238607e-05,
+          6.195398327690782e-07
+        ]
+      }
+    ]
+  },
+  "acne->dryness": {
+    "count": 11,
+    "examples": [
+      {
+        "file": "dataset/efficientnet_b4/val/acne/07sebDerem110105.jpg",
+        "wrong_class_prob": 0.9999808073043823,
+        "all_probs": [
+          3.0137705380184343e-06,
+          5.140992076491102e-09,
+          0.9999808073043823,
+          1.620684088265989e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/07RosaceaFulFAce.jpg",
+        "wrong_class_prob": 0.9997890591621399,
+        "all_probs": [
+          0.00018802692648023367,
+          1.6044794392655604e-05,
+          0.9997890591621399,
+          6.830700840509962e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-cystic-122.jpg",
+        "wrong_class_prob": 0.9670751094818115,
+        "all_probs": [
+          0.032481011003255844,
+          0.0004417391319293529,
+          0.9670751094818115,
+          2.0959937501174863e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-excoriated-16.jpg",
+        "wrong_class_prob": 0.8910496830940247,
+        "all_probs": [
+          0.014142136089503765,
+          0.09480197727680206,
+          0.8910496830940247,
+          6.260650025069481e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-cystic-88.jpg",
+        "wrong_class_prob": 0.8199840188026428,
+        "all_probs": [
+          0.1765269935131073,
+          0.0034821704030036926,
+          0.8199840188026428,
+          6.8024864958715625e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/rosacea-41.jpg",
+        "wrong_class_prob": 0.7422739863395691,
+        "all_probs": [
+          0.18988238275051117,
+          0.06783512234687805,
+          0.7422739863395691,
+          8.525982593710069e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-15.jpg",
+        "wrong_class_prob": 0.6620281934738159,
+        "all_probs": [
+          0.32679831981658936,
+          0.011172549799084663,
+          0.6620281934738159,
+          9.484026577410987e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/perioral-dermatitis-108.jpg",
+        "wrong_class_prob": 0.6465335488319397,
+        "all_probs": [
+          0.2457083761692047,
+          0.1077437773346901,
+          0.6465335488319397,
+          1.4256845133786555e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/milia-12.jpg",
+        "wrong_class_prob": 0.5566062331199646,
+        "all_probs": [
+          0.027443217113614082,
+          0.41594913601875305,
+          0.5566062331199646,
+          1.5114791267478722e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/23VesselsNose.jpg",
+        "wrong_class_prob": 0.5121981501579285,
+        "all_probs": [
+          0.3074113130569458,
+          0.17974111437797546,
+          0.5121981501579285,
+          0.0006494682165794075
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/acne/acne-open-comedo-37.jpg",
+        "wrong_class_prob": 0.43262794613838196,
+        "all_probs": [
+          0.4044177532196045,
+          0.16292984783649445,
+          0.43262794613838196,
+          2.442066397634335e-05
+        ]
+      }
+    ]
+  },
+  "dark_spots->acne": {
+    "count": 9,
+    "examples": [
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/milia-10.jpg",
+        "wrong_class_prob": 0.6382504105567932,
+        "all_probs": [
+          0.6382504105567932,
+          0.33595332503318787,
+          0.02578732557594776,
+          9.006579603010323e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/milia-9.jpg",
+        "wrong_class_prob": 0.6382504105567932,
+        "all_probs": [
+          0.6382504105567932,
+          0.33595332503318787,
+          0.02578732557594776,
+          9.006579603010323e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/milia-3.jpg",
+        "wrong_class_prob": 0.6279640197753906,
+        "all_probs": [
+          0.6279640197753906,
+          0.339251846075058,
+          0.03277596831321716,
+          8.266873010143172e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/milia-19.jpg",
+        "wrong_class_prob": 0.6166478395462036,
+        "all_probs": [
+          0.6166478395462036,
+          0.3513456881046295,
+          0.03200555592775345,
+          9.650302672525868e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/actinic-comedones-9.jpg",
+        "wrong_class_prob": 0.6145622134208679,
+        "all_probs": [
+          0.6145622134208679,
+          0.38382819294929504,
+          0.0015886613400653005,
+          2.088618384732399e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/milia-15.jpg",
+        "wrong_class_prob": 0.608917236328125,
+        "all_probs": [
+          0.608917236328125,
+          0.26544880867004395,
+          0.12319296598434448,
+          0.002441013464704156
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/milia-5.jpg",
+        "wrong_class_prob": 0.6086552143096924,
+        "all_probs": [
+          0.6086552143096924,
+          0.34170183539390564,
+          0.04963657632470131,
+          6.424685579986544e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/milia-8.jpg",
+        "wrong_class_prob": 0.4895578622817993,
+        "all_probs": [
+          0.4895578622817993,
+          0.377760648727417,
+          0.1326274573802948,
+          5.4084604926174507e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/milia-16.jpg",
+        "wrong_class_prob": 0.44528430700302124,
+        "all_probs": [
+          0.44528430700302124,
+          0.37222224473953247,
+          0.18249066174030304,
+          2.8375729925755877e-06
+        ]
+      }
+    ]
+  },
+  "dark_spots->dryness": {
+    "count": 2,
+    "examples": [
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/atypical-nevi-trunk-12.jpg",
+        "wrong_class_prob": 0.9986507296562195,
+        "all_probs": [
+          6.177892373671057e-06,
+          0.001342341536656022,
+          0.9986507296562195,
+          7.907520398475754e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dark_spots/sun-damaged-skin-45.jpg",
+        "wrong_class_prob": 0.49348509311676025,
+        "all_probs": [
+          0.3379289507865906,
+          0.16850005090236664,
+          0.49348509311676025,
+          8.591728692408651e-05
+        ]
+      }
+    ]
+  },
+  "dryness->dark_spots": {
+    "count": 164,
+    "examples": [
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Histology-11.jpg",
+        "wrong_class_prob": 0.999923586845398,
+        "all_probs": [
+          1.0576620468327746e-07,
+          0.999923586845398,
+          7.616365473950282e-05,
+          7.005295543649481e-08
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/prurigo-nodularis-44.jpg",
+        "wrong_class_prob": 0.9997351765632629,
+        "all_probs": [
+          2.764472505079052e-11,
+          0.9997351765632629,
+          0.0002648451772984117,
+          2.4112331686865218e-08
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Lichen-Sclerosus-Skin-130.jpg",
+        "wrong_class_prob": 0.9989144802093506,
+        "all_probs": [
+          8.711823795692908e-08,
+          0.9989144802093506,
+          0.0010689975460991263,
+          1.6483068975503556e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-subacute-72.jpg",
+        "wrong_class_prob": 0.9983831644058228,
+        "all_probs": [
+          0.00039741897489875555,
+          0.9983831644058228,
+          0.0012004339369013906,
+          1.909867933136411e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Hand-31.jpg",
+        "wrong_class_prob": 0.9968491196632385,
+        "all_probs": [
+          4.239246287340848e-09,
+          0.9968491196632385,
+          0.003150851698592305,
+          5.6300959450084065e-09
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/IchthosisIMG002-GP3.jpg",
+        "wrong_class_prob": 0.99650639295578,
+        "all_probs": [
+          4.327638635004405e-06,
+          0.99650639295578,
+          0.0034877511207014322,
+          1.5617804365319898e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-subacute-101.jpg",
+        "wrong_class_prob": 0.995899498462677,
+        "all_probs": [
+          5.549622428269174e-10,
+          0.995899498462677,
+          0.004100446589291096,
+          4.141670562063382e-09
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Histology-6.jpg",
+        "wrong_class_prob": 0.9947955012321472,
+        "all_probs": [
+          9.976798173738644e-05,
+          0.9947955012321472,
+          0.005104202311486006,
+          5.869068218089524e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/prurigo-nodularis-31.jpg",
+        "wrong_class_prob": 0.9939327836036682,
+        "all_probs": [
+          6.150526310477744e-09,
+          0.9939327836036682,
+          0.00606714328750968,
+          4.630529915061743e-08
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-hand-104.jpg",
+        "wrong_class_prob": 0.9932910203933716,
+        "all_probs": [
+          1.3963810488348827e-05,
+          0.9932910203933716,
+          0.006693925242871046,
+          1.0776117278510355e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-hand-105.jpg",
+        "wrong_class_prob": 0.9932799935340881,
+        "all_probs": [
+          3.3695243817355447e-10,
+          0.9932799935340881,
+          0.006719880737364292,
+          1.0733243271943138e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-leg-4.jpg",
+        "wrong_class_prob": 0.9932447075843811,
+        "all_probs": [
+          7.668671031524354e-09,
+          0.9932447075843811,
+          0.006755257491022348,
+          5.5503956986058256e-08
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-subacute-18.jpg",
+        "wrong_class_prob": 0.9932447075843811,
+        "all_probs": [
+          7.668671031524354e-09,
+          0.9932447075843811,
+          0.006755257491022348,
+          5.5503956986058256e-08
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Hand-3.jpg",
+        "wrong_class_prob": 0.9932255148887634,
+        "all_probs": [
+          5.662058200073261e-08,
+          0.9932255148887634,
+          0.006774380803108215,
+          2.721321479270955e-08
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/05xlinkedIcthyosis0823041.jpg",
+        "wrong_class_prob": 0.9932079911231995,
+        "all_probs": [
+          1.0297404742232175e-06,
+          0.9932079911231995,
+          0.006790230982005596,
+          7.326968329834926e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-hand-19.jpg",
+        "wrong_class_prob": 0.9897099137306213,
+        "all_probs": [
+          2.923991996794939e-05,
+          0.9897099137306213,
+          0.01025839988142252,
+          2.5011647721839836e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Lichen-Planus-Oral-48.jpg",
+        "wrong_class_prob": 0.9891054034233093,
+        "all_probs": [
+          9.279420919483528e-05,
+          0.9891054034233093,
+          0.010799843817949295,
+          1.909204684125143e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Lichen-Planus-Drug-5.jpg",
+        "wrong_class_prob": 0.9834524989128113,
+        "all_probs": [
+          6.98418674005552e-08,
+          0.9834524989128113,
+          0.016547242179512978,
+          1.0077312850853559e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/05SexLinkIchthosis0328052.jpg",
+        "wrong_class_prob": 0.981894314289093,
+        "all_probs": [
+          0.0001585729914950207,
+          0.981894314289093,
+          0.017945555970072746,
+          1.4804440979787614e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-leg-18.jpg",
+        "wrong_class_prob": 0.9807525277137756,
+        "all_probs": [
+          7.243053914862685e-06,
+          0.9807525277137756,
+          0.01923980563879013,
+          3.9052167721820297e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Psoriasis-Interferon-Injection-08230426.jpg",
+        "wrong_class_prob": 0.9784095883369446,
+        "all_probs": [
+          3.3957564937736606e-07,
+          0.9784095883369446,
+          0.021588820964097977,
+          1.3208758673499688e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/5T-0021.jpg",
+        "wrong_class_prob": 0.973304271697998,
+        "all_probs": [
+          4.497755435295403e-05,
+          0.973304271697998,
+          0.026650356128811836,
+          3.017761684986908e-07
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/05AtopicChild020120.jpg",
+        "wrong_class_prob": 0.972821056842804,
+        "all_probs": [
+          5.31847144102926e-09,
+          0.972821056842804,
+          0.02717885747551918,
+          8.428894027190381e-09
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/lichen-planus-116.jpg",
+        "wrong_class_prob": 0.9700597524642944,
+        "all_probs": [
+          9.172609861707315e-05,
+          0.9700597524642944,
+          0.029847130179405212,
+          1.402877160217031e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/neurotic-excoriations-32.jpg",
+        "wrong_class_prob": 0.9693431258201599,
+        "all_probs": [
+          1.8737945310931536e-06,
+          0.9693431258201599,
+          0.03063901886343956,
+          1.5934911061776802e-05
+        ]
+      }
+    ]
+  },
+  "dryness->acne": {
+    "count": 15,
+    "examples": [
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-trunk-generalized-2.jpg",
+        "wrong_class_prob": 0.996528685092926,
+        "all_probs": [
+          0.996528685092926,
+          0.00041457207407802343,
+          0.0030551974195986986,
+          1.5927167851259583e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/neurotic-excoriations-67.jpg",
+        "wrong_class_prob": 0.996528685092926,
+        "all_probs": [
+          0.996528685092926,
+          0.00041457207407802343,
+          0.0030551974195986986,
+          1.5927167851259583e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-nummular-104.jpg",
+        "wrong_class_prob": 0.9942366480827332,
+        "all_probs": [
+          0.9942366480827332,
+          0.0005119488923810422,
+          0.005222518928349018,
+          2.882668013626244e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Lichen-Planus-Oral-32.jpg",
+        "wrong_class_prob": 0.9836891293525696,
+        "all_probs": [
+          0.9836891293525696,
+          0.0010951245203614235,
+          0.015214299783110619,
+          1.4756683412997518e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Lichen-Sclerosis-Vulva-29.jpg",
+        "wrong_class_prob": 0.9464644193649292,
+        "all_probs": [
+          0.9464644193649292,
+          5.153316351425019e-07,
+          0.0535116083920002,
+          2.3355227313004434e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/seborrheic-dermatitis-138.jpg",
+        "wrong_class_prob": 0.8941574692726135,
+        "all_probs": [
+          0.8941574692726135,
+          0.016252584755420685,
+          0.08955178409814835,
+          3.8142850826261565e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Axillary-Granular-Parakeratosis-7.jpg",
+        "wrong_class_prob": 0.8679894804954529,
+        "all_probs": [
+          0.8679894804954529,
+          0.0006436440162360668,
+          0.13136088848114014,
+          5.975838121230481e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/08SebDermNLFold.jpg",
+        "wrong_class_prob": 0.742289662361145,
+        "all_probs": [
+          0.742289662361145,
+          0.03036562167108059,
+          0.22720451653003693,
+          0.00014023597759660333
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Psoriasis-inversus-6.jpg",
+        "wrong_class_prob": 0.7400487661361694,
+        "all_probs": [
+          0.7400487661361694,
+          0.002543775364756584,
+          0.2574007511138916,
+          6.673038114968222e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/Psoriasis-inversus-5.jpg",
+        "wrong_class_prob": 0.7338359951972961,
+        "all_probs": [
+          0.7338359951972961,
+          0.005682597402483225,
+          0.26046985387802124,
+          1.1560849088709801e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/eczema-fingertips-98.jpg",
+        "wrong_class_prob": 0.686962366104126,
+        "all_probs": [
+          0.686962366104126,
+          0.007701092399656773,
+          0.3053230047225952,
+          1.3549230061471462e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/08SebDermLids030104.jpg",
+        "wrong_class_prob": 0.6082106828689575,
+        "all_probs": [
+          0.6082106828689575,
+          0.17873921990394592,
+          0.2130049616098404,
+          4.514503962127492e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/08SebDermLids0301041.jpg",
+        "wrong_class_prob": 0.5484794974327087,
+        "all_probs": [
+          0.5484794974327087,
+          0.3055301010608673,
+          0.14596892893314362,
+          2.150360342056956e-05
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/seborrheic-dermatitis-150.jpg",
+        "wrong_class_prob": 0.5329998731613159,
+        "all_probs": [
+          0.5329998731613159,
+          0.3596625328063965,
+          0.10690904408693314,
+          0.0004285096365492791
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/dryness/05atopicFace040306.jpg",
+        "wrong_class_prob": 0.4119383990764618,
+        "all_probs": [
+          0.4119383990764618,
+          0.3306860327720642,
+          0.25720664858818054,
+          0.00016900523041840643
+        ]
+      }
+    ]
+  },
+  "normal->dark_spots": {
+    "count": 5,
+    "examples": [
+      {
+        "file": "dataset/efficientnet_b4/val/normal/normal_903.jpg",
+        "wrong_class_prob": 0.999964714050293,
+        "all_probs": [
+          1.686743416939862e-05,
+          0.999964714050293,
+          1.0420147191325668e-05,
+          7.929475032142363e-06
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/normal/normal_700.jpg",
+        "wrong_class_prob": 0.9935576319694519,
+        "all_probs": [
+          2.875837878946186e-07,
+          0.9935576319694519,
+          2.723347097344231e-05,
+          0.006414840463548899
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/normal/normal_647.jpg",
+        "wrong_class_prob": 0.8972728848457336,
+        "all_probs": [
+          0.004083110485225916,
+          0.8972728848457336,
+          0.0002825921983458102,
+          0.09836140275001526
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/normal/normal_2477.jpg",
+        "wrong_class_prob": 0.8417475819587708,
+        "all_probs": [
+          9.860362297331449e-06,
+          0.8417475819587708,
+          1.6679359760018997e-05,
+          0.1582258939743042
+        ]
+      },
+      {
+        "file": "dataset/efficientnet_b4/val/normal/normal_525.jpg",
+        "wrong_class_prob": 0.5133329629898071,
+        "all_probs": [
+          0.00019194719789084047,
+          0.5133329629898071,
+          1.3497710824594833e-05,
+          0.4864615797996521
+        ]
+      }
+    ]
+  }
+}

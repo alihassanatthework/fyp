@@ -1,0 +1,216 @@
+{
+  "lowest_distance_top20_high_risk": [
+    {
+      "leaf_a": "dataset/efficientnet_b4/dryness/train/not_dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/val/dry",
+      "distance": 0.0017,
+      "brightness_delta": -0.99,
+      "contrast_delta": 0.06
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/IMG_CLASSES/3. Atopic Dermatitis - 1.25k",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Psoriasis pictures Lichen Planus and related diseases",
+      "distance": 0.0025,
+      "brightness_delta": -0.67,
+      "contrast_delta": 0.85
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Seborrheic Keratoses and other Benign Tumors",
+      "distance": 0.0029,
+      "brightness_delta": 0.62,
+      "contrast_delta": -0.04
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Lupus and other Connective Tissue diseases",
+      "distance": 0.003,
+      "brightness_delta": 0.55,
+      "contrast_delta": -0.26
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/IMG_CLASSES/8. Seborrheic Keratoses and other Benign Tumors - 1.8k",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Seborrheic Keratoses and other Benign Tumors",
+      "distance": 0.0034,
+      "brightness_delta": 0.67,
+      "contrast_delta": -0.67
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Seborrheic Keratoses and other Benign Tumors",
+      "distance": 0.0038,
+      "brightness_delta": -1.26,
+      "contrast_delta": 0.72
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/IMG_CLASSES/8. Seborrheic Keratoses and other Benign Tumors - 1.8k",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions",
+      "distance": 0.0041,
+      "brightness_delta": 0.05,
+      "contrast_delta": -0.63
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Eczema Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Eczema Photos",
+      "distance": 0.0048,
+      "brightness_delta": 0.36,
+      "contrast_delta": -0.57
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections",
+      "distance": 0.0052,
+      "brightness_delta": 0.3,
+      "contrast_delta": 1.08
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/IMG_CLASSES/8. Seborrheic Keratoses and other Benign Tumors - 1.8k",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Seborrheic Keratoses and other Benign Tumors",
+      "distance": 0.0054,
+      "brightness_delta": -1.21,
+      "contrast_delta": 0.09
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dryness/train/dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/val/not_dry",
+      "distance": 0.0056,
+      "brightness_delta": -1.03,
+      "contrast_delta": 1.35
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Seborrheic Keratoses and other Benign Tumors",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Seborrheic Keratoses and other Benign Tumors",
+      "distance": 0.0059,
+      "brightness_delta": -1.88,
+      "contrast_delta": 0.76
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Vasculitis Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Vasculitis Photos",
+      "distance": 0.006,
+      "brightness_delta": -3.08,
+      "contrast_delta": -0.53
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Light Diseases and Disorders of Pigmentation",
+      "distance": 0.0062,
+      "brightness_delta": 2.05,
+      "contrast_delta": 0.88
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Acne and Rosacea Photos",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Acne and Rosacea Photos",
+      "distance": 0.0065,
+      "brightness_delta": -1.56,
+      "contrast_delta": -0.14
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dryness/test/dry",
+      "leaf_b": "dataset/efficientnet_b4/dryness/val/not_dry",
+      "distance": 0.0065,
+      "brightness_delta": 1.88,
+      "contrast_delta": -0.13
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Cellulitis Impetigo and other Bacterial Infections",
+      "leaf_b": "dataset/efficientnet_b4/val/dryness",
+      "distance": 0.0074,
+      "brightness_delta": -2.36,
+      "contrast_delta": -0.74
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Scabies Lyme Disease and other Infestations and Bites",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Warts Molluscum and other Viral Infections",
+      "distance": 0.0074,
+      "brightness_delta": -1.91,
+      "contrast_delta": 2.06
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/train/Atopic Dermatitis Photos",
+      "leaf_b": "dataset/efficientnet_b4/val/dark_spots",
+      "distance": 0.0078,
+      "brightness_delta": 0.18,
+      "contrast_delta": 3.48
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/dermnet_dataset/test/Vascular Tumors",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors",
+      "distance": 0.0079,
+      "brightness_delta": 1.16,
+      "contrast_delta": 2.08
+    }
+  ],
+  "highest_distance_top10_safe": [
+    {
+      "leaf_a": "dataset/efficientnet_b4/data_eczema/masks",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Warts Molluscum and other Viral Infections",
+      "distance": 0.3334,
+      "brightness_delta": -44.54,
+      "contrast_delta": 65.42
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/data_eczema/masks",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/test/Exanthems and Drug Eruptions",
+      "distance": 0.3337,
+      "brightness_delta": -26.23,
+      "contrast_delta": 57.15
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/data_eczema/masks",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions",
+      "distance": 0.3343,
+      "brightness_delta": -42.25,
+      "contrast_delta": 67.86
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/data_eczema/masks",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Herpes HPV and other STDs Photos",
+      "distance": 0.3343,
+      "brightness_delta": -44.84,
+      "contrast_delta": 64.33
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/data_eczema/masks",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Vascular Tumors",
+      "distance": 0.3353,
+      "brightness_delta": -39.83,
+      "contrast_delta": 65.4
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/IMG_CLASSES/9. Tinea Ringworm Candidiasis and other Fungal Infections - 1.7k",
+      "leaf_b": "dataset/efficientnet_b4/data_eczema/masks",
+      "distance": 0.3366,
+      "brightness_delta": 39.68,
+      "contrast_delta": -62.23
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/data_eczema/masks",
+      "leaf_b": "dataset/efficientnet_b4/dermnet_dataset/train/Tinea Ringworm Candidiasis and other Fungal Infections",
+      "distance": 0.3422,
+      "brightness_delta": -35.83,
+      "contrast_delta": 62.7
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/IMG_CLASSES/6. Benign Keratosis-like Lesions (BKL) 2624",
+      "leaf_b": "dataset/efficientnet_b4/data_eczema/masks",
+      "distance": 0.3738,
+      "brightness_delta": 67.17,
+      "contrast_delta": -69.56
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/IMG_CLASSES/2. Melanoma 15.75k",
+      "leaf_b": "dataset/efficientnet_b4/data_eczema/masks",
+      "distance": 0.4272,
+      "brightness_delta": 94.8,
+      "contrast_delta": -81.04
+    },
+    {
+      "leaf_a": "dataset/efficientnet_b4/IMG_CLASSES/5. Melanocytic Nevi (NV) - 7970",
+      "leaf_b": "dataset/efficientnet_b4/data_eczema/masks",
+      "distance": 0.429,
+      "brightness_delta": 81.14,
+      "contrast_delta": -76.82
+    }
+  ]
+}

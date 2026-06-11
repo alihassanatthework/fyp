@@ -428,3 +428,148 @@
 
   .ia-feature-grid { grid-template-columns: 1fr !important; padding: 0 1rem; gap: 0.6rem; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   DARK MODE — matte black overhaul (Skin + Scalp Analysis page).
+   All purple/blue tones removed. Light mode untouched.
+   ════════════════════════════════════════════════════════════════ */
+body.dark .ia-hero h1 { color: #f1f5f9 !important; }
+body.dark .ia-hero p  { color: #94a3b8 !important; }
+body.dark .ia-hero-badge {
+  background: #2a2a2a !important;
+  color: #e2e8f0 !important;
+  border-color: #3a3a3a !important;
+}
+
+/* Type selector cards */
+body.dark .ia-type-card {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .ia-type-card:hover { border-color: #3a3a3a !important; }
+body.dark .ia-type-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .ia-type-icon svg { color: #e2e8f0 !important; }
+body.dark .ia-type-label   { color: #f1f5f9 !important; }
+body.dark .ia-type-desc    { color: #94a3b8 !important; }
+body.dark .ia-type-bullets li { color: #94a3b8 !important; }
+body.dark .ia-type-arrow   { color: #94a3b8 !important; }
+
+/* Upload card header banner */
+body.dark .ia-upload-card { background: #111111 !important; border-color: #2a2a2a !important; }
+body.dark .ia-card-header {
+  background: #1a1a1a !important;
+  border-bottom-color: #2a2a2a !important;
+}
+body.dark .ia-card-header-icon {
+  background: #2a2a2a !important;
+  color: #e2e8f0 !important;
+  box-shadow: none !important;
+}
+body.dark .ia-card-header-icon svg { color: #e2e8f0 !important; }
+body.dark .ia-card-header-title { color: #f1f5f9 !important; }
+body.dark .ia-card-header-sub   { color: #94a3b8 !important; }
+body.dark .ia-card-change-btn {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .ia-card-change-btn:hover {
+  background: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+/* Tip bar */
+body.dark .ia-tip-bar {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #94a3b8 !important;
+}
+body.dark .ia-tip-bar svg { color: #94a3b8 !important; }
+
+/* Dropzone */
+body.dark .ia-dropzone {
+  background: #0a0a0a !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .ia-dropzone:hover,
+body.dark .ia-dropzone.drag-over {
+  background: #111111 !important;
+  border-color: #e2e8f0 !important;
+}
+body.dark .ia-dropzone-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .ia-dropzone-icon svg { color: #e2e8f0 !important; }
+body.dark .ia-dropzone-title { color: #f1f5f9 !important; }
+body.dark .ia-dropzone-sub   { color: #94a3b8 !important; }
+body.dark .ia-dropzone-hint  {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #94a3b8 !important;
+}
+body.dark .ia-preview-overlay { background: rgba(0, 0, 0, 0.7) !important; }
+body.dark .ia-preview-filename { color: #e2e8f0 !important; }
+
+/* Action row buttons */
+body.dark .ia-action-btn {
+  background: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+body.dark .ia-action-btn:hover:not(:disabled) {
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+/* Analyse Now primary CTA */
+body.dark .ia-analyse-btn {
+  background: #e2e8f0 !important;
+  color: #0a0a0a !important;
+  border: none !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.12) !important;
+}
+body.dark .ia-analyse-btn:hover:not(:disabled) {
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 0 10px 28px rgba(255, 255, 255, 0.22) !important;
+}
+body.dark .ia-analyse-btn:disabled {
+  background: #1a1a1a !important;
+  color: #94a3b8 !important;
+  box-shadow: none !important;
+}
+body.dark .ia-spinner {
+  border-color: #2a2a2a !important;
+  border-top-color: #e2e8f0 !important;
+}
+
+/* Feature cards row */
+body.dark .ia-feature-card {
+  background: #111111 !important;
+  border-color: #2a2a2a !important;
+}
+body.dark .ia-feature-card:hover { border-color: #3a3a3a !important; }
+body.dark .ia-feature-icon {
+  background: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+  color: #e2e8f0 !important;
+  box-shadow: none !important;
+}
+body.dark .ia-feature-icon svg { color: #e2e8f0 !important; }
+body.dark .ia-feature-title { color: #f1f5f9 !important; }
+body.dark .ia-feature-desc  { color: #94a3b8 !important; }
+
+/* Error bar — semantic red preserved. */
+body.dark .ia-error-bar {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #fca5a5 !important;
+}

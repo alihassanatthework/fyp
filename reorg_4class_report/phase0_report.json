@@ -1,0 +1,95 @@
+{
+  "verify": {
+    "acne": {
+      "train": 7979,
+      "val": 1995,
+      "corrupt_in_sample": 0,
+      "sample_size": 300,
+      "val_train_leak_pct": 0.0,
+      "leak_detail": {
+        "val_sampled": 250,
+        "near_dup": 0,
+        "pct": 0.0
+      }
+    },
+    "dryness_new": {
+      "train": 5253,
+      "val": 1312,
+      "corrupt_in_sample": 0,
+      "sample_size": 300,
+      "val_train_leak_pct": 0.0,
+      "leak_detail": {
+        "val_sampled": 250,
+        "near_dup": 0,
+        "pct": 0.0
+      }
+    },
+    "dark_spots": {
+      "train": 15851,
+      "val": 3963,
+      "corrupt_in_sample": 0,
+      "sample_size": 300,
+      "val_train_leak_pct": 0.0,
+      "leak_detail": {
+        "val_sampled": 250,
+        "near_dup": 0,
+        "pct": 0.0
+      }
+    },
+    "normal": {
+      "train": 10543,
+      "val": 2636,
+      "corrupt_in_sample": 0,
+      "sample_size": 300,
+      "val_train_leak_pct": 0.0,
+      "leak_detail": {
+        "val_sampled": 250,
+        "near_dup": 0,
+        "pct": 0.0
+      }
+    }
+  },
+  "carve": {
+    "acne": {
+      "moved_to_test": 1000
+    },
+    "dryness_new": {
+      "moved_to_test": 656
+    },
+    "dark_spots": {
+      "moved_to_test": 1982
+    },
+    "normal": {
+      "moved_to_test": 1318
+    }
+  },
+  "final": {
+    "acne": {
+      "train": 7979,
+      "val": 995,
+      "test": 1000
+    },
+    "dryness_new": {
+      "train": 5253,
+      "val": 656,
+      "test": 656
+    },
+    "dark_spots": {
+      "train": 15851,
+      "val": 1981,
+      "test": 1982
+    },
+    "normal": {
+      "train": 10543,
+      "val": 1318,
+      "test": 1318
+    },
+    "_grand": {
+      "train": 39626,
+      "val": 4950,
+      "test": 4956
+    }
+  },
+  "imbalance_total": 3.018126428027418,
+  "elapsed_sec": 23.7
+}

@@ -288,19 +288,94 @@ class ForgotPasswordView(APIView):
         frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
         reset_url = f'{frontend_url}/reset-password/{uid}/{token}/'
 
-        subject = 'Reset your AI Skin Assistant password'
-        message = (
-            f'Hi {user.first_name or user.email},\n\n'
-            f'You requested a password reset for your AI Skin Assistant account.\n\n'
-            f'Click the link below to set a new password:\n'
-            f'{reset_url}\n\n'
-            f'This link expires in 1 hour.\n\n'
-            f'If you did not request this, you can safely ignore this email.\n\n'
-            f'— AI Skin Assistant Team'
+        # ── Build the multipart transactional email ──
+        # Plain-text + HTML version, plus headers that flag this as a
+        # transactional (one-to-one, user-initiated) message so Gmail
+        # routes it to Primary instead of Promotions / Spam.
+        from django.core.mail import EmailMultiAlternatives
+
+        first_name = user.first_name or user.email.split('@')[0]
+        subject = 'Reset your ME Skin Assistant password'
+        text_body = (
+            f"Hi {first_name},\n\n"
+            f"You asked to reset the password for your ME Skin Assistant account.\n\n"
+            f"Open this link to set a new password (expires in 1 hour):\n"
+            f"{reset_url}\n\n"
+            f"If you didn't request this, you can safely ignore this email — "
+            f"your password won't change.\n\n"
+            f"— The ME Skin Assistant team"
         )
+        html_body = f"""<!doctype html>
+<html><body style="margin:0;padding:0;background:#f4f4f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#111827;line-height:1.55;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f4f4f7;padding:24px 0;">
+  <tr><td align="center">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560"
+           style="max-width:560px;background:#ffffff;border-radius:12px;
+                  box-shadow:0 1px 3px rgba(0,0,0,0.06);overflow:hidden;">
+      <tr><td style="padding:28px 32px 16px;">
+        <p style="margin:0 0 6px;font-size:13px;letter-spacing:0.04em;
+                  color:#6b7280;text-transform:uppercase;">ME Skin Assistant</p>
+        <h1 style="margin:0;font-size:22px;font-weight:700;color:#111827;">
+          Reset your password
+        </h1>
+      </td></tr>
+      <tr><td style="padding:8px 32px 0;">
+        <p style="margin:0 0 14px;font-size:15px;">Hi {first_name},</p>
+        <p style="margin:0 0 14px;font-size:15px;">
+          You asked to reset the password for your <strong>ME Skin Assistant</strong>
+          account. Click the button below to choose a new one. This link expires in
+          <strong>1 hour</strong>.
+        </p>
+      </td></tr>
+      <tr><td align="center" style="padding:18px 32px 8px;">
+        <a href="{reset_url}"
+           style="display:inline-block;background:#4338ca;color:#ffffff;
+                  text-decoration:none;padding:12px 28px;border-radius:8px;
+                  font-weight:600;font-size:15px;">
+          Reset password
+        </a>
+      </td></tr>
+      <tr><td style="padding:8px 32px 4px;">
+        <p style="margin:0 0 8px;font-size:13px;color:#6b7280;">
+          If the button doesn't work, copy and paste this URL into your browser:
+        </p>
+        <p style="margin:0 0 14px;font-size:13px;word-break:break-all;">
+          <a href="{reset_url}" style="color:#4338ca;">{reset_url}</a>
+        </p>
+      </td></tr>
+      <tr><td style="padding:14px 32px 28px;border-top:1px solid #f3f4f6;">
+        <p style="margin:0;font-size:13px;color:#6b7280;">
+          If you didn't request this, you can safely ignore this email —
+          your password won't change.
+        </p>
+      </td></tr>
+    </table>
+    <p style="margin:14px 0 0;font-size:12px;color:#9ca3af;">
+      Sent because you requested a password reset on ME Skin Assistant.
+    </p>
+  </td></tr>
+</table>
+</body></html>"""
 
         try:
-            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                body=text_body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[user.email],
+                reply_to=[settings.DEFAULT_FROM_EMAIL],
+                headers={
+                    # Tell Gmail this is a one-to-one transactional message.
+                    'X-Entity-Ref-ID':           f'pw-reset-{uid}',
+                    'X-Auto-Response-Suppress':  'All',
+                    'Auto-Submitted':            'auto-generated',
+                    'X-Mailer':                  'ME Skin Assistant',
+                    'List-Unsubscribe':          f'<mailto:{settings.EMAIL_HOST_USER}?subject=Unsubscribe>',
+                    'Precedence':                'transactional',
+                },
+            )
+            msg.attach_alternative(html_body, 'text/html')
+            msg.send(fail_silently=False)
             logger.info("Password reset email sent to: %s", user.email)
         except Exception as exc:
             logger.error("Failed to send reset email to %s: %s", user.email, exc)
