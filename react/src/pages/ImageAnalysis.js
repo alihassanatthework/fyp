@@ -9,6 +9,8 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAnalysis } from '../hooks/useAnalysis';
 import { useCamera } from '../hooks/useCamera';
+import apiClient from '../api/client';
+import { API_ENDPOINTS } from '../api/config';
 import './ImageAnalysis.css';
 
 const TYPE_META = {
@@ -40,6 +42,16 @@ export default function ImageAnalysis() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [error, setError] = useState(false);
   const [serverError, setServerError] = useState('');
+  // Daily scan quota (Free tier). null until loaded; {is_premium, used, limit, remaining}.
+  const [quota, setQuota] = useState(null);
+
+  const fetchQuota = async () => {
+    try {
+      const res = await apiClient.get(API_ENDPOINTS.ANALYSIS.STATS);
+      if (res?.data?.scan_quota) setQuota(res.data.scan_quota);
+    } catch (e) { /* non-blocking */ }
+  };
+  useEffect(() => { fetchQuota(); }, []);
   const fileRef = useRef();
   const uploadInFlightRef = useRef(false);
   const navigate = useNavigate();
@@ -112,6 +124,7 @@ export default function ImageAnalysis() {
       }
     } finally {
       uploadInFlightRef.current = false;
+      fetchQuota();   // refresh remaining-scans count after each attempt
     }
   };
 
@@ -217,23 +230,19 @@ export default function ImageAnalysis() {
                     ref={fileRef}
                     type="file"
                     className="hidden"
+                    style={{ display: 'none' }}
                     accept=".jpg,.jpeg,.png,.heic"
                     onClick={e => { e.stopPropagation(); e.target.value = ''; }}
                     onChange={e => validateAndSet(e.target.files[0])}
                   />
 
                   {file && previewUrl ? (
-                    <>
-                      <div className="ia-preview-wrap">
-                        <img src={previewUrl} alt="Preview"/>
-                        <div className="ia-preview-overlay">
-                          <span className="ia-preview-filename">{file.name}</span>
-                        </div>
+                    <div className="ia-preview-wrap">
+                      <img src={previewUrl} alt="Preview"/>
+                      <div className="ia-preview-overlay">
+                        <span className="ia-preview-filename">{file.name}</span>
                       </div>
-                      <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', color:'#16a34a', fontWeight:700, fontSize:'0.88rem' }}>
-                        <CheckCircle2 size={18}/> Image ready — click Analyse Now
-                      </div>
-                    </>
+                    </div>
                   ) : (
                     <>
                       <div className="ia-dropzone-icon">
@@ -245,6 +254,14 @@ export default function ImageAnalysis() {
                     </>
                   )}
                 </label>
+
+                {/* Ready status — clean text UNDER the card */}
+                {file && previewUrl && (
+                  <div className="ia-ready-status">
+                    <CheckCircle2 size={16}/>
+                    <span>Image ready — click <strong>Analyse Now</strong></span>
+                  </div>
+                )}
 
                 {/* Choose / Take buttons */}
                 <div className="ia-action-row">
@@ -266,9 +283,34 @@ export default function ImageAnalysis() {
                   <div className="ia-error-bar">{serverError}</div>
                 )}
 
+                {/* Daily scan quota (Free tier) */}
+                {quota && !quota.is_premium && quota.remaining > 0 && (
+                  <div className="ia-scan-quota">
+                    <ScanLine size={14}/> {quota.remaining}/{quota.limit} scans left today
+                  </div>
+                )}
+                {quota && !quota.is_premium && quota.remaining <= 0 && (
+                  <div className="ia-scan-limit">
+                    <p className="ia-scan-limit-title">
+                      Daily scan limit reached ({quota.limit}/{quota.limit})
+                    </p>
+                    <p className="ia-scan-limit-sub">
+                      Your free scans reset at midnight. Upgrade to Premium for unlimited scans.
+                    </p>
+                    <button className="ia-upgrade-btn" onClick={() => navigate('/upgrade')}>
+                      <Sparkles size={14}/> Upgrade to Premium
+                    </button>
+                  </div>
+                )}
+                {/* Premium users: no counter shown (unlimited). */}
+
                 {/* Analyse button */}
                 {file && (
-                  <button className="ia-analyse-btn" onClick={handleAnalyze} disabled={loading}>
+                  <button
+                    className="ia-analyse-btn"
+                    onClick={handleAnalyze}
+                    disabled={loading || (quota && !quota.is_premium && quota.remaining <= 0)}
+                  >
                     {loading
                       ? <><span className="ia-spinner"/>Analysing…</>
                       : <><Sparkles size={16}/> Analyse Now</>}

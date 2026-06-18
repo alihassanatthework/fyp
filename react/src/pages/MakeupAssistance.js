@@ -325,125 +325,6 @@ function buildSteps(event, rec) {
   return steps.filter(Boolean);
 }
 
-/* ─── Simulate "virtual makeup" on canvas ───────────────────────── */
-function drawMakeupOverlay(canvas, img, rec) {
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width;
-  const H = canvas.height;
-
-  // Draw original image
-  ctx.drawImage(img, 0, 0, W, H);
-
-  // Overlay helpers
-  function hexToRgba(hex, a) {
-    const r = parseInt(hex.slice(1,3),16);
-    const g = parseInt(hex.slice(3,5),16);
-    const b = parseInt(hex.slice(5,7),16);
-    return `rgba(${r},${g},${b},${a})`;
-  }
-
-  // Safe colour reader: returns the first hex in cat.shades[], or a
-  // neutral grey fallback so a missing category doesn't crash the
-  // canvas overlay (would otherwise unmount the whole results panel).
-  const colorOf = (cat, fallback) => {
-    const obj = rec?.[cat];
-    if (obj && Array.isArray(obj.shades) && obj.shades[0]?.color) {
-      return obj.shades[0].color;
-    }
-    return fallback;
-  };
-
-  // Approximate face regions (normalised ratios for a front-facing portrait)
-  const cx = W * 0.5;
-  const cy = H * 0.42;
-  const faceW = W * 0.38;
-  const faceH = H * 0.52;
-
-  // ── Lips overlay ──
-  const lipColor = colorOf('lips', '#C4788A');
-  const lipY = cy + faceH * 0.33;
-  ctx.save();
-  ctx.globalAlpha = 0.55;
-  ctx.fillStyle = hexToRgba(lipColor, 0.7);
-  ctx.beginPath();
-  ctx.ellipse(cx, lipY, faceW * 0.22, faceH * 0.055, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // ── Blush overlays ──
-  const blushColor = colorOf('blush', '#FF7F60');
-  [cx - faceW * 0.42, cx + faceW * 0.42].forEach(bx => {
-    const grd = ctx.createRadialGradient(bx, cy + faceH * 0.13, 0, bx, cy + faceH * 0.13, faceW * 0.28);
-    grd.addColorStop(0, hexToRgba(blushColor, 0.38));
-    grd.addColorStop(1, hexToRgba(blushColor, 0));
-    ctx.save();
-    ctx.globalAlpha = 0.75;
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.ellipse(bx, cy + faceH * 0.13, faceW * 0.28, faceH * 0.14, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  });
-
-  // ── Highlighter on brow bone ──
-  const hlColor = colorOf('highlighter', '#FDEBD0');
-  [cx - faceW * 0.22, cx + faceW * 0.22].forEach(hx => {
-    const grd = ctx.createRadialGradient(hx, cy - faceH * 0.13, 0, hx, cy - faceH * 0.13, faceW * 0.15);
-    grd.addColorStop(0, hexToRgba(hlColor, 0.5));
-    grd.addColorStop(1, hexToRgba(hlColor, 0));
-    ctx.save();
-    ctx.globalAlpha = 0.65;
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.ellipse(hx, cy - faceH * 0.13, faceW * 0.15, faceH * 0.06, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  });
-
-  // ── Eye shadow ──
-  const eyeColor = colorOf('eyes', '#A0785A');
-  [cx - faceW * 0.22, cx + faceW * 0.22].forEach(ex => {
-    const grd = ctx.createRadialGradient(ex, cy - faceH * 0.04, 0, ex, cy - faceH * 0.04, faceW * 0.15);
-    grd.addColorStop(0, hexToRgba(eyeColor, 0.45));
-    grd.addColorStop(1, hexToRgba(eyeColor, 0));
-    ctx.save();
-    ctx.globalAlpha = 0.65;
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.ellipse(ex, cy - faceH * 0.04, faceW * 0.15, faceH * 0.07, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  });
-
-  // ── Contour under cheeks ──
-  const ctColor = colorOf('contour', '#7D6B5D');
-  [cx - faceW * 0.44, cx + faceW * 0.44].forEach((ccx, i) => {
-    const grd = ctx.createRadialGradient(ccx, cy + faceH * 0.22, 0, ccx, cy + faceH * 0.22, faceW * 0.22);
-    grd.addColorStop(0, hexToRgba(ctColor, 0.28));
-    grd.addColorStop(1, hexToRgba(ctColor, 0));
-    ctx.save();
-    ctx.globalAlpha = 0.6;
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.ellipse(ccx, cy + faceH * 0.22, faceW * 0.22, faceH * 0.10, i === 0 ? -0.3 : 0.3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  });
-
-  // Glamour overlay text
-  ctx.save();
-  ctx.globalAlpha = 0.72;
-  ctx.fillStyle = 'rgba(0,0,0,0.42)';
-  ctx.fillRect(0, H - 42, W, 42);
-  ctx.restore();
-  ctx.save();
-  ctx.fillStyle = '#fff';
-  ctx.font = `bold ${Math.max(11, W * 0.033)}px Inter, sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.fillText('✨ Virtual Makeup Preview', cx, H - 16);
-  ctx.restore();
-}
-
 /* ─── Loading steps ──────────────────────────────────────────────── */
 const LOADING_STEPS = [
   'Detecting facial features…',
@@ -487,11 +368,9 @@ export default function MakeupAssistance() {
   /* Results */
   const [rec,       setRec]       = useState(null);
   const [showSteps, setShowSteps] = useState(false);
-  const [showPreview, setShowPreview] = useState(true);
 
   /* Refs */
   const fileInputRef   = useRef(null);
-  const canvasRef      = useRef(null);
   const resultsRef     = useRef(null);
 
   /* ── Handle image file ── */
@@ -670,17 +549,6 @@ export default function MakeupAssistance() {
       setProgress(0);
     }
   };
-
-  /* ── Draw canvas when results arrive ── */
-  useEffect(() => {
-    if (phase !== 'done' || !rec || !imgEl || !canvasRef.current) return;
-    const canvas = canvasRef.current;
-    const MAX = 640;
-    const ratio = Math.min(MAX / imgEl.width, MAX / imgEl.height, 1);
-    canvas.width  = imgEl.width  * ratio;
-    canvas.height = imgEl.height * ratio;
-    drawMakeupOverlay(canvas, imgEl, rec);
-  }, [phase, rec, imgEl, showPreview]);
 
   /* ── Reset ── */
   const handleReset = () => {
@@ -921,27 +789,8 @@ export default function MakeupAssistance() {
                 </div>
               </div>
 
-              {/* Virtual preview panel */}
+              {/* Right column — actions + summary (AR preview removed) */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div className="mua-preview-section">
-                  <div className="mua-preview-section-header">
-                    <span className="mua-preview-section-title">
-                      <Wand2 size={15}/> Virtual Makeup Preview
-                    </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <span className="mua-preview-badge">AI Preview</span>
-                      <button className="mua-toggle-preview" onClick={() => setShowPreview(p => !p)}>
-                        {showPreview ? 'Hide' : 'Show'}
-                      </button>
-                    </div>
-                  </div>
-                  {showPreview && (
-                    <div className="mua-preview-canvas-wrap">
-                      <canvas ref={canvasRef}/>
-                    </div>
-                  )}
-                </div>
-
                 {/* Book Salon Appointment */}
                 <button
                   className="mua-salon-btn"

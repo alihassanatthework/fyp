@@ -225,7 +225,27 @@ def _stable_seed(*parts) -> int:
 
 
 def _build_makeup_prompt(face_shape, skin_tone, undertone, occasion, skin_conditions):
+    import random
     conditions = ', '.join(skin_conditions) if skin_conditions else 'none reported'
+
+    # Fix 2 — controlled variety so the same inputs don't always look identical.
+    look_angle = random.choice([
+        'natural radiant', 'soft glam', 'bold dramatic', 'fresh minimal',
+        'romantic rosy', 'sultry smoky', 'modern editorial', 'classic timeless',
+    ])
+
+    # Fix 1 — every shade MUST be derived from skin tone + undertone + occasion,
+    # not a one-size-fits-all palette. This is what makes each face's shades differ.
+    shade_directive = (
+        "SHADE DIRECTIVE — derive EVERY shade from ALL of:\n"
+        f"  • Undertone '{undertone}': warm → golden/peach/bronze/terracotta families; "
+        "cool → pink/berry/plum/rose families; neutral → balanced taupe/mauve.\n"
+        f"  • Skin tone '{skin_tone}': deeper skin → richer, more pigmented shades; "
+        "fairer skin → softer, lighter washes.\n"
+        f"  • Occasion '{occasion}': day/casual → subtle; evening/wedding → intensified.\n"
+        f"  • Interpret through this look angle: '{look_angle}'.\n"
+        "  • Make the result DISTINCT to this exact face — avoid defaulting to the same look.\n"
+    )
 
     example1 = (
         'EXAMPLE — (Oval, Medium, warm, evening, none):\n'
@@ -262,6 +282,7 @@ def _build_makeup_prompt(face_shape, skin_tone, undertone, occasion, skin_condit
         "- Shade names must reference the skin tone (e.g. 'warm beige', 'cool ivory')\n"
         "- Avoid brand names\n"
         "- Adapt for active skin conditions (e.g. avoid heavy powders on dryness)\n\n"
+        f"{shade_directive}\n"
         f"{example1}\n{example2}\n"
         "NOW GENERATE FOR:\n"
         f"- Face shape : {face_shape}\n"
@@ -297,6 +318,23 @@ def get_makeup_suggestions(face_shape, skin_tone, occasion='everyday',
     """
     prompt = _build_makeup_prompt(face_shape, skin_tone, undertone, occasion, skin_conditions or [])
     seed = _stable_seed(face_shape, skin_tone, undertone, occasion)
+
+    # ── PRIMARY: Groq (large model, reliable JSON). Falls through to Ollama. ──
+    try:
+        from core.llm_groq import groq_json, groq_available
+        if groq_available():
+            parsed = groq_json(
+                prompt,
+                system=("You are a professional makeup artist. Respond with ONLY "
+                        "a valid JSON object matching the requested schema — no prose."),
+                temperature=0.55,   # Fix 2 — more variety between faces/runs
+            )
+            if parsed and _validate_makeup_json(parsed):
+                logger.info("Makeup suggestions via Groq.")
+                return parsed
+            logger.warning("Groq makeup output invalid; trying Ollama.")
+    except Exception as exc:
+        logger.warning("Groq makeup path errored (%s); trying Ollama.", exc)
 
     try:
         payload = json.dumps({

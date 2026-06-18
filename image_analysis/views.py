@@ -200,6 +200,26 @@ class AnalyzeImageView(APIView):
                 status=400
             )
 
+        # ── Daily scan limit (Free tier) ──────────────────────────────
+        # Free accounts: capped per calendar day. Premium: unlimited.
+        from .models import scan_quota
+        quota = scan_quota(request.user)
+        if not quota['is_premium'] and quota['remaining'] <= 0:
+            return Response(
+                {
+                    "success": False,
+                    "error": (
+                        f"Daily scan limit reached ({quota['limit']}/{quota['limit']}). "
+                        "Free accounts can run "
+                        f"{quota['limit']} scans per day — your limit resets at midnight. "
+                        "Upgrade to Premium for unlimited scans."
+                    ),
+                    "limit_reached": True,
+                    "scan_quota": quota,
+                },
+                status=429,
+            )
+
         # React requests JSON; legacy flow renders HTML.
         accept = ""
         try:
@@ -292,28 +312,66 @@ class AnalyzeImageView(APIView):
             )
 
         if image_type == 'skin':
-            # SKIN mode: REQUIRE MediaPipe to detect a human face.
-            # HSV "skin colour" detection alone is unreliable — orange cat fur,
-            # wood, tan objects all match the skin hue range. MediaPipe's face
-            # mesh model is trained specifically on human faces, so only a real
-            # human face will pass this check.
+            # DISABLED: strict face detection requirement
+            # The previous logic REQUIRED MediaPipe to detect a human face and
+            # rejected everything else, which blocked legitimate body-skin photos
+            # (arm, leg, back, etc.). Preserved here for reference:
+            #
+            # try:
+            #     face_crop = detector.detect_and_crop_face(img)
+            #     unique_face = f"face_{uuid.uuid4().hex[:8]}.jpg"
+            #     face_path = os.path.join(processed_dir, unique_face)
+            #     cv2.imwrite(face_path, cv2.cvtColor(face_crop, cv2.COLOR_RGB2BGR))
+            #     logger.debug("Face crop saved at: %s", face_path)
+            #     normalized_crop = face_crop
+            # except Exception as e:
+            #     logger.warning("Face not detected: %s", e)
+            #     _clear_inflight(cache_key)
+            #     return Response(
+            #         {"success": False,
+            #          "error": "No human face detected. Please upload a clear, well-lit photo of your face (no hats, no obstructions)."},
+            #         status=400,
+            #     )
+
+            # SKIN LOGIC: validates human skin presence, not limited to facial detection
+            # Prefer a face crop when a face IS present (best ROI for facial
+            # conditions). When no face is found, accept ANY image that contains a
+            # sufficient proportion of human-skin-coloured pixels using YCrCb skin
+            # segmentation — so arm / leg / back / hand photos are allowed. Images
+            # with no skin tones at all (objects, screenshots, animals on neutral
+            # backgrounds) are still rejected.
+            face_crop = None
             try:
                 face_crop = detector.detect_and_crop_face(img)
+            except Exception as e:
+                logger.info("No face detected, falling back to skin-presence check: %s", e)
+                face_crop = None
+
+            if face_crop is not None:
                 unique_face = f"face_{uuid.uuid4().hex[:8]}.jpg"
                 face_path = os.path.join(processed_dir, unique_face)
                 cv2.imwrite(face_path, cv2.cvtColor(face_crop, cv2.COLOR_RGB2BGR))
                 logger.debug("Face crop saved at: %s", face_path)
                 normalized_crop = face_crop
-            except Exception as e:
-                logger.warning("Face not detected: %s", e)
-                _clear_inflight(cache_key)
-                return Response(
-                    {
-                        "success": False,
-                        "error": "No human face detected. Please upload a clear, well-lit photo of your face (no hats, no obstructions).",
-                    },
-                    status=400,
-                )
+            else:
+                # Generic human-skin presence: ratio of skin-coloured pixels in
+                # YCrCb space (standard Cr 133-173, Cb 77-127 chrominance range).
+                ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+                skin_mask = cv2.inRange(ycrcb, (0, 133, 77), (255, 173, 127))
+                skin_ratio = float(cv2.countNonZero(skin_mask)) / float(skin_mask.size or 1)
+                logger.info("Skin mode (no face): skin-pixel ratio = %.3f", skin_ratio)
+
+                if skin_ratio < 0.15:
+                    _clear_inflight(cache_key)
+                    return Response(
+                        {
+                            "success": False,
+                            "error": "No human skin detected. Please upload a clear, well-lit photo of a skin area (face, arm, leg, back, hand, etc.).",
+                        },
+                        status=400,
+                    )
+                # Accept the full image as the skin ROI (RGB for the pipeline).
+                normalized_crop = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         elif image_type == 'scalp':
             # SCALP mode: REQUIRE proper scalp detection via MediaPipe face
@@ -407,6 +465,9 @@ class AnalyzeImageView(APIView):
                 analysis_type=image_type,
                 user_profile=user_profile,
                 medical_history=medical_history,
+                # Full uncropped image (RGB) for the dryness specialist, whose
+                # signal weakens on the tight face crop.
+                original_image=cv2.cvtColor(img, cv2.COLOR_BGR2RGB),
             )
             logger.info("Pipeline finished in %.2fs — keys: %s", time() - pipeline_start, list(pipeline_result.keys()))
             

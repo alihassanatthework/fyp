@@ -48,7 +48,7 @@ const BODY_TYPES = [
     desc: 'Shoulders, waist, and hips are similar width. Adding curves through clothing creates dimension.',
   },
   {
-    id: 'inverted', label: 'Inverted Triangle', emoji: '🔻D0',
+    id: 'inverted', label: 'Inverted Triangle', emoji: '🔻',
     desc: 'Broader shoulders, narrower hips. Volume on lower half balances proportions beautifully.',
   },
   {
@@ -516,109 +516,65 @@ const LOADING_STEPS = [
 /* ── Card configuration ── */
 const CARD_KEYS = ['tops','bottoms','dresses','jackets','footwear','accessories','jewelry'];
 
-/* ── Canvas outfit overlay ── */
-function drawOutfitOverlay(canvas, img, rec, bodyType) {
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width;
-  const H = canvas.height;
-  ctx.drawImage(img, 0, 0, W, H);
+// Title/icon/colours per category — the LLM only returns {items, tip}, so the
+// card heading + icon come from here.
+const CATEGORY_META = {
+  tops:        { title: 'Tops',                 icon: '👕', bg: '#EFF6FF', color: '#1D4ED8' },
+  bottoms:     { title: 'Bottoms',              icon: '👖', bg: '#F5F3FF', color: '#6D28D9' },
+  dresses:     { title: 'Dresses & Statement',  icon: '👗', bg: '#FDF2F8', color: '#9D174D' },
+  jackets:     { title: 'Jackets & Outerwear',  icon: '🧥', bg: '#ECFDF5', color: '#065F46' },
+  footwear:    { title: 'Footwear',             icon: '👞', bg: '#FFF7ED', color: '#9A3412' },
+  accessories: { title: 'Accessories',          icon: '👜', bg: '#FFFBEB', color: '#92400E' },
+  jewelry:     { title: 'Jewellery',            icon: '💎', bg: '#FDF4FF', color: '#6B21A8' },
+};
 
-  function hexToRgba(hex, a) {
-    const r = parseInt(hex.slice(1,3),16);
-    const g = parseInt(hex.slice(3,5),16);
-    const b = parseInt(hex.slice(5,7),16);
-    return 'rgba('+r+','+g+','+b+','+a+')';
+/* ── Resolve a recommended colour to a real hex swatch ──
+   The LLM may return colours as {name} (no hex) or {name, hex/color}.
+   We honour an explicit hex, else map common fashion colour names. */
+const FASHION_COLOR_HEX = {
+  black:'#1C1C1C', white:'#FFFFFF', ivory:'#FFFFF0', cream:'#FFFDD0', beige:'#F5F5DC',
+  charcoal:'#36454F', grey:'#808080', gray:'#808080', silver:'#C0C0C0',
+  navy:'#1A2456', 'midnight navy':'#191970', midnight:'#191970', blue:'#1D4ED8',
+  'royal blue':'#4169E1', teal:'#008080', denim:'#1560BD', cobalt:'#0047AB',
+  burgundy:'#7B1E3E', bordeaux:'#7B1E3E', maroon:'#800000', wine:'#722F37',
+  red:'#B22222', crimson:'#DC143C', rust:'#B7410E', terracotta:'#E2725B', coral:'#FF7F50',
+  pink:'#F4A7A7', blush:'#DE99A0', rose:'#FF5C8A', mauve:'#9C687F', plum:'#8E4585',
+  purple:'#6B21A8', lavender:'#C9A0DC', lilac:'#C8A2C8',
+  green:'#3F704D', olive:'#808000', sage:'#9CAF88', emerald:'#50C878', forest:'#228B22', mint:'#98FF98',
+  yellow:'#E4C441', gold:'#D4AF37', mustard:'#E1AD01', champagne:'#F7E7CE',
+  orange:'#E07B39', peach:'#FFCBA4', apricot:'#FBCEB1',
+  brown:'#8B5A2B', chocolate:'#5C3317', camel:'#C19A6B', tan:'#D2B48C', taupe:'#8B7E74',
+  khaki:'#C3B091', sand:'#C2B280', nude:'#E3BC9A',
+};
+function resolveColorHex(c) {
+  if (c && typeof c === 'object') {
+    const hex = c.hex || c.color;
+    if (typeof hex === 'string' && /^#?[0-9a-fA-F]{3,6}$/.test(hex.trim())) {
+      return hex.trim().startsWith('#') ? hex.trim() : '#' + hex.trim();
+    }
+    const key = String(c.name || '').toLowerCase().trim();
+    if (FASHION_COLOR_HEX[key]) return FASHION_COLOR_HEX[key];
+    for (const k in FASHION_COLOR_HEX) { if (key.includes(k)) return FASHION_COLOR_HEX[k]; }
+  } else if (typeof c === 'string') {
+    const key = c.toLowerCase().trim();
+    if (FASHION_COLOR_HEX[key]) return FASHION_COLOR_HEX[key];
+    for (const k in FASHION_COLOR_HEX) { if (key.includes(k)) return FASHION_COLOR_HEX[k]; }
   }
-
-  const c1 = rec.colors[0]?.color || '#6366f1';
-  const c2 = rec.colors[1]?.color || '#a855f7';
-  const c3 = rec.colors[2]?.color || '#ec4899';
-
-  // Clothing silhouette overlay — torso
-  const cx = W * 0.5;
-  const shoulderY = H * 0.22;
-  const waistY    = H * 0.48;
-  const hemY      = H * 0.78;
-  const shoulderW = W * 0.38;
-  const waistW    = W * 0.28;
-  const hemW      = W * 0.36;
-
-  // Top/blouse gradient
-  const topGrd = ctx.createLinearGradient(cx - shoulderW, shoulderY, cx + shoulderW, waistY);
-  topGrd.addColorStop(0, hexToRgba(c1, 0.45));
-  topGrd.addColorStop(1, hexToRgba(c2, 0.4));
-  ctx.save();
-  ctx.globalAlpha = 0.7;
-  ctx.fillStyle = topGrd;
-  ctx.beginPath();
-  ctx.moveTo(cx - shoulderW, shoulderY);
-  ctx.lineTo(cx + shoulderW, shoulderY);
-  ctx.lineTo(cx + waistW,    waistY);
-  ctx.lineTo(cx - waistW,    waistY);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-
-  // Skirt / bottom
-  const botGrd = ctx.createLinearGradient(cx - waistW, waistY, cx + hemW, hemY);
-  botGrd.addColorStop(0, hexToRgba(c2, 0.4));
-  botGrd.addColorStop(1, hexToRgba(c3, 0.35));
-  ctx.save();
-  ctx.globalAlpha = 0.65;
-  ctx.fillStyle = botGrd;
-  ctx.beginPath();
-  ctx.moveTo(cx - waistW, waistY);
-  ctx.lineTo(cx + waistW, waistY);
-  ctx.lineTo(cx + hemW,   hemY);
-  ctx.lineTo(cx - hemW,   hemY);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-
-  // Shimmer accent lines
-  ctx.save();
-  ctx.globalAlpha = 0.18;
-  ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 1.5;
-  for (let i = 0; i < 5; i++) {
-    const x = cx - shoulderW + (shoulderW * 2 * i) / 4;
-    ctx.beginPath();
-    ctx.moveTo(x, shoulderY);
-    ctx.lineTo(x - 5, waistY);
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  // Colour palette swatches at bottom
-  const swatchW = 24; const swatchH = 18; const swatchGap = 6;
-  const totalSwatch = rec.colors.length * (swatchW + swatchGap) - swatchGap;
-  let sx = cx - totalSwatch / 2;
-  rec.colors.forEach(col => {
-    ctx.save();
-    ctx.fillStyle = col.color;
-    ctx.beginPath();
-    ctx.roundRect(sx, H - 36, swatchW, swatchH, 4);
-    ctx.fill();
-    ctx.restore();
-    sx += swatchW + swatchGap;
-  });
-
-  // Footer label
-  ctx.save();
-  ctx.fillStyle = 'rgba(0,0,0,0.5)';
-  ctx.fillRect(0, H - 52, W, 52);
-  ctx.restore();
-  ctx.save();
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold '+Math.max(10,W*0.03)+'px Inter,sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('✨ AI Outfit Preview  –  '+rec.palette, cx, H - 42);
-  ctx.restore();
+  return '#9aa0aa';
 }
 
 /* ── Build styling guide steps ── */
 function buildGuideSteps(eventLabel, rec, bodyType) {
   const bt = BODY_TIPS[bodyType?.id] || BODY_TIPS.rectangle;
+  rec = rec || {};
+  // Defensive accessors — the backend payload may omit some categories.
+  const items = (cat) => (Array.isArray(cat?.items) ? cat.items.filter(Boolean) : []);
+  const tipOf = (cat) => (cat && typeof cat.tip === 'string' ? cat.tip : '');
+  const first = (cat, fallback) => items(cat)[0] || fallback;
+  const join  = (cat, n, sep, fallback) => {
+    const arr = items(cat).slice(0, n);
+    return arr.length ? arr.join(sep) : fallback;
+  };
   return [
     {
       title: 'Start with the right base',
@@ -628,7 +584,7 @@ function buildGuideSteps(eventLabel, rec, bodyType) {
     {
       title: 'Pick your hero piece',
       desc: 'Decide whether today is about a statement top, a show-stopping dress, or a bold bottom. Build the outfit around one standout piece.',
-      tip: 'For '+eventLabel+': consider '+rec.dresses.items[0]+' as your hero.',
+      tip: 'For '+eventLabel+': consider '+first(rec.dresses, 'a standout dress')+' as your hero.',
     },
     {
       title: 'Dress for your body shape',
@@ -642,22 +598,22 @@ function buildGuideSteps(eventLabel, rec, bodyType) {
     },
     {
       title: 'Layer strategically',
-      desc: 'Add depth with a jacket or cover-up. Options: '+rec.jackets.items.slice(0,2).join(' or ')+'. Layering also allows for temperature adaptability.',
-      tip: 'A '+rec.jackets.items[0]+' is ideal for '+eventLabel,
+      desc: 'Add depth with a jacket or cover-up. Options: '+join(rec.jackets, 2, ' or ', 'a tailored jacket or blazer')+'. Layering also allows for temperature adaptability.',
+      tip: 'A '+first(rec.jackets, 'tailored jacket')+' is ideal for '+eventLabel,
     },
     {
       title: 'Select your footwear',
-      desc: rec.footwear.tip+' Best options for '+eventLabel+': '+rec.footwear.items.slice(0,2).join(', ')+'.',
+      desc: (tipOf(rec.footwear)+' Best options for '+eventLabel+': '+join(rec.footwear, 2, ', ', 'classic heels or flats')+'.').trim(),
       tip: 'Shoes set the tone of the entire outfit.',
     },
     {
       title: 'Choose your bag',
-      desc: rec.accessories.tip+' Top picks: '+rec.accessories.items.join(', ')+'.',
+      desc: (tipOf(rec.accessories)+' Top picks: '+join(rec.accessories, 99, ', ', 'a structured clutch or tote')+'.').trim(),
       tip: 'A quality bag elevates even a simple outfit.',
     },
     {
       title: 'Add jewellery and accessories',
-      desc: rec.jewelry.tip+' Suggested pieces: '+rec.jewelry.items.slice(0,3).join(', ')+'.',
+      desc: (tipOf(rec.jewelry)+' Suggested pieces: '+join(rec.jewelry, 3, ', ', 'delicate earrings and a necklace')+'.').trim(),
       tip: 'Layer pieces thoughtfully — not all at once.',
     },
     {
@@ -666,6 +622,25 @@ function buildGuideSteps(eventLabel, rec, bodyType) {
       tip: 'You are ready. Own your look.',
     },
   ];
+}
+
+/* Ensure every field the UI reads exists, with safe defaults, so a partial
+   backend payload can never crash the render or the guide builder. */
+function normalizeRec(raw) {
+  const r = (raw && typeof raw === 'object') ? { ...raw } : {};
+  const cat = (c) => ({
+    items: Array.isArray(c?.items) ? c.items.filter(Boolean) : [],
+    tip:   typeof c?.tip === 'string' ? c.tip : '',
+  });
+  // Outfit categories the cards + guide steps read.
+  ['tops','bottoms','dresses','jackets','footwear','accessories','jewelry'].forEach(k => {
+    r[k] = cat(r[k]);
+  });
+  // Colour + aesthetic arrays the render maps over.
+  r.colors          = Array.isArray(r.colors) ? r.colors : [];
+  r.aesthetics      = Array.isArray(r.aesthetics) ? r.aesthetics : [];
+  r.aestheticColors = Array.isArray(r.aestheticColors) ? r.aestheticColors : [];
+  return r;
 }
 
 /* ════════════════════════════════════════════════════════════════════
@@ -696,6 +671,7 @@ export default function FashionAssistance() {
   const [hip,    setHip]    = useState('');
   const [bodyTypePick, setBodyTypePick] = useState('');
   const [season, setSeason] = useState('all-season');
+  const [gender, setGender] = useState('female');   // drives male/female suggestions
   const [detectedBody,  setDetectedBody]  = useState(null);
 
   /* Analysis */
@@ -707,11 +683,9 @@ export default function FashionAssistance() {
   const [rec,          setRec]          = useState(null);
   const [showGuide,    setShowGuide]    = useState(false);
   const [showTips,     setShowTips]     = useState(true);
-  const [showPreview,  setShowPreview]  = useState(true);
 
   /* Refs */
   const fileInputRef = useRef(null);
-  const canvasRef    = useRef(null);
   const resultsRef   = useRef(null);
 
   /* ── Load image file ── */
@@ -824,6 +798,7 @@ export default function FashionAssistance() {
       if (hip)          formData.append('hip',   hip);
       if (bodyTypePick) formData.append('body_type', bodyTypePick);
       if (season)       formData.append('season', season);
+      formData.append('gender', gender);
 
       const res = await apiClient.post(API_ENDPOINTS.FASHION.SUGGEST, formData, {
         headers: { 'Accept': 'application/json' },
@@ -842,9 +817,10 @@ export default function FashionAssistance() {
         : BODY_TYPES[0];
       setDetectedBody(detected);
 
-      // ── P1 — backend now returns the exact frontend schema ──
-      // No defensive merge needed; trust the validated payload.
-      const suggestions = data.suggestions || data;
+      // ── Normalize the payload so every field the UI reads always exists ──
+      // The backend may omit categories / colour arrays; fill safe defaults
+      // so neither the render nor buildGuideSteps can crash.
+      const suggestions = normalizeRec(data.suggestions || data);
       const merged = {
         ...suggestions,
         _serverDetected: {
@@ -867,17 +843,6 @@ export default function FashionAssistance() {
       setProgress(0);
     }
   };
-
-  /* ── Draw canvas overlay when results ready ── */
-  useEffect(() => {
-    if (phase !== 'done' || !rec || !imgEl || !canvasRef.current || !showPreview) return;
-    const canvas = canvasRef.current;
-    const MAX = 660;
-    const ratio = Math.min(MAX / imgEl.width, MAX / imgEl.height, 1);
-    canvas.width  = imgEl.width  * ratio;
-    canvas.height = imgEl.height * ratio;
-    drawOutfitOverlay(canvas, imgEl, rec, detectedBody);
-  }, [phase, rec, imgEl, showPreview, detectedBody]);
 
   /* ── Reset ── */
   const handleReset = () => {
@@ -1022,12 +987,33 @@ export default function FashionAssistance() {
                 )}
               </div>
 
+              {/* Gender — drives male vs female recommendations */}
+              <div className="card" style={{ padding:'1.25rem' }}>
+                <p className="fa-section-label">Step 2 · Gender</p>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: '0.7rem' }}>
+                  Recommendations are tailored to your selection.
+                </p>
+                <div style={{ display: 'flex', gap: '0.6rem' }}>
+                  {[{ id: 'female', label: 'Female' }, { id: 'male', label: 'Male' }].map(g => (
+                    <button
+                      key={g.id}
+                      type="button"
+                      onClick={() => setGender(g.id)}
+                      className={`fa-gender-btn ${gender === g.id ? 'selected' : ''}`}
+                    >
+                      {g.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* P1 — Measurement inputs (optional but preferred) ── */}
               <div className="card" style={{ padding:'1.25rem' }}>
-                <p className="fa-section-label">Step 2.5 · Your Measurements (optional)</p>
+                <p className="fa-section-label">Step 2.5 · Your Measurements (recommended)</p>
                 <p style={{ fontSize: '0.78rem', color: 'var(--text-tertiary)', marginBottom: '0.85rem' }}>
-                  Add cm measurements for the most accurate body-type detection,
-                  OR pick a body type below if you'd rather skip.
+                  ✨ For the most accurate, personalised results, add your bust/waist/hip
+                  in cm — this detects all body shapes (incl. Hourglass &amp; Apple) that a
+                  photo alone can't. Or pick a body type below to skip.
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
                   <input
@@ -1183,7 +1169,10 @@ export default function FashionAssistance() {
                 <div className="fa-rec-grid">
                   {CARD_KEYS.map((key, i) => {
                     const item = rec[key];
-                    if (!item || typeof item !== 'object' || !Array.isArray(item.items)) return null;
+                    const meta = CATEGORY_META[key] || { title: key, icon: '✦', bg: '#eef2ff', color: '#4f46e5' };
+                    // Skip categories the LLM left empty (e.g. dresses for men).
+                    if (!item || typeof item !== 'object'
+                        || !Array.isArray(item.items) || item.items.length === 0) return null;
                     return (
                       <div
                         className="fa-rec-card"
@@ -1193,12 +1182,12 @@ export default function FashionAssistance() {
                         <div className="fa-rec-card-head">
                           <div
                             className="fa-rec-card-ico"
-                            style={{ background: item.bg, color: item.color }}
+                            style={{ background: meta.bg, color: meta.color }}
                           >
-                            {item.icon}
+                            {meta.icon}
                           </div>
                           <div>
-                            <div className="fa-rec-card-title">{item.title}</div>
+                            <div className="fa-rec-card-title">{meta.title}</div>
                             <div className="fa-rec-card-sub">{eventLabel}</div>
                           </div>
                         </div>
@@ -1213,57 +1202,18 @@ export default function FashionAssistance() {
                   })}
                 </div>
 
-                {/* Colour palette — modern aesthetic cards */}
-                <div className="card" style={{ padding:'1.15rem', marginTop:'1rem' }}>
-                  <p className="fa-section-label">Recommended Colour Palette</p>
-                  <div className="fa-palette-grid">
-                    {(Array.isArray(rec.colors) ? rec.colors : []).map((c,i) => {
-                      // Defensive: backend may return strings, objects, or odd shapes
-                      const name  = c && typeof c === 'object' ? (c.name  || 'Colour') : String(c);
-                      const color = c && typeof c === 'object' ? (c.color || '#888')   : '#888';
-                      return (
-                        <div className="fa-palette-card" key={i}>
-                          <div className="fa-palette-swatch" style={{ background: color }}/>
-                          <div className="fa-palette-card-body">
-                            <span className="fa-palette-name">{name}</span>
-                            <span className="fa-palette-hex">{String(color).toUpperCase()}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
               </div>
 
               {/* Right: preview + glance */}
               <div style={{ display:'flex', flexDirection:'column', gap:'1.25rem' }}>
 
-                {/* Virtual outfit preview */}
-                <div className="fa-preview-section">
-                  <div className="fa-preview-header">
-                    <span className="fa-preview-title">
-                      <Wand2 size={15}/> Virtual Outfit Preview
-                    </span>
-                    <div style={{ display:'flex', alignItems:'center', gap:'0.7rem' }}>
-                      <button className="fa-toggle-preview" onClick={() => setShowPreview(v => !v)}>
-                        {showPreview ? 'Hide' : 'Show'}
-                      </button>
-                    </div>
-                  </div>
-                  {showPreview && (
-                    <div className="fa-preview-canvas-wrap">
-                      <canvas ref={canvasRef}/>
-                    </div>
-                  )}
-                  <div className="fa-preview-header" style={{ borderTop:'1px solid var(--border-color)', borderBottom:'none', justifyContent:'center' }}>
-                    <button
-                      className="fa-salon-btn"
-                      onClick={() => navigate('/bookings?type=salon', { state: { type: 'salon', source: 'fashion' } })}
-                    >
-                      <Scissors size={16}/> Book Salon Appointment
-                    </button>
-                  </div>
-                </div>
+                {/* Book Salon Appointment (AR outfit preview removed) */}
+                <button
+                  className="fa-salon-btn"
+                  onClick={() => navigate('/bookings?type=salon', { state: { type: 'salon', source: 'fashion' } })}
+                >
+                  <Scissors size={16}/> Book Salon Appointment
+                </button>
 
                 {/* Quick glance */}
                 <div className="card" style={{ padding:'1.2rem' }}>
@@ -1282,6 +1232,26 @@ export default function FashionAssistance() {
                         <span className="fa-glance-val">{row.val}</span>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* Colour palette — now in the right column under the glance */}
+                <div className="card" style={{ padding:'1.2rem' }}>
+                  <p className="fa-section-label">Recommended Colour Palette</p>
+                  <div className="fa-palette-grid">
+                    {(Array.isArray(rec.colors) ? rec.colors : []).map((c,i) => {
+                      const name  = c && typeof c === 'object' ? (c.name  || 'Colour') : String(c);
+                      const color = resolveColorHex(c);
+                      return (
+                        <div className="fa-palette-card" key={i}>
+                          <div className="fa-palette-swatch" style={{ background: color }}/>
+                          <div className="fa-palette-card-body">
+                            <span className="fa-palette-name">{name}</span>
+                            <span className="fa-palette-hex">{String(color).toUpperCase()}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

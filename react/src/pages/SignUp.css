@@ -323,3 +323,42 @@
   color: var(--blue-600);
   text-decoration: underline;
 }
+
+/* ── Theme toggle on the (white) signup card — clear in light mode ── */
+.signup-form-panel .theme-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: #eef1f6;                 /* visible light-gray track */
+  border: 1px solid #d8dee9;
+}
+.signup-form-panel .theme-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #475569;                       /* readable slate text */
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.signup-form-panel .theme-btn:hover { color: #1e293b; }
+.signup-form-panel .theme-btn.active {
+  background: #ffffff;                   /* white pill on gray track */
+  color: #4f46e5;                        /* indigo active label */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+/* Dark mode keeps the global dark overrides */
+body.dark .signup-form-panel .theme-toggle {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+}
+body.dark .signup-form-panel .theme-btn { color: #94a3b8; }
+body.dark .signup-form-panel .theme-btn.active {
+  background: #2a2a2a;
+  color: #ffffff;
+}

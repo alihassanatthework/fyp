@@ -75,6 +75,14 @@ def makeup_suggest(request):
     if image.size > 10 * 1024 * 1024:
         return Response({'error': 'Image must be under 10MB.'}, status=400)
 
+    # Require a visible human face (MediaPipe FaceMesh) before processing.
+    from core.ai_models.upload_validation import has_face
+    if not has_face(image):
+        return Response(
+            {'error': 'Please upload a clear photo with your face visible'},
+            status=400,
+        )
+
     # Save + analyse
     suggestion = MakeupSuggestion(user=request.user)
     suggestion.image.save(image.name, image, save=True)

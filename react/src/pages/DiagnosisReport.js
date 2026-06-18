@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Download, Bookmark, BookmarkCheck, Bell, ArrowRight, CheckCircle2, ShieldCheck, BarChart3, X } from 'lucide-react';
+import { Download, Bookmark, BookmarkCheck, Bell, ArrowRight, CheckCircle2, ShieldCheck, BarChart3, X, RotateCcw, Home } from 'lucide-react';
 import apiClient from '../api/client';
 import { API_ENDPOINTS } from '../api/config';
 import {
@@ -229,9 +229,19 @@ export default function DiagnosisReport() {
     <div className="diagnosis-page">
       <Navbar title="Diagnosis Report" />
       <main className="diagnosis-main">
-        <div>
-          <h1 className="diagnosis-page-title">Diagnosis Report</h1>
-          <p className="diagnosis-page-subtitle">Complete analysis results with actionable next steps.</p>
+        <div className="diagnosis-page-header">
+          <div>
+            <h1 className="diagnosis-page-title">Diagnosis Report</h1>
+            <p className="diagnosis-page-subtitle">Complete analysis results with actionable next steps.</p>
+          </div>
+          <div className="diagnosis-header-actions">
+            <button className="diagnosis-header-btn" onClick={() => navigate('/analysis')}>
+              <RotateCcw size={14}/> New Analysis
+            </button>
+            <button className="diagnosis-header-btn" onClick={() => navigate('/home')}>
+              <Home size={14}/> Home
+            </button>
+          </div>
         </div>
         <div className="card diagnosis-meta-grid">
           <div className="meta-item">

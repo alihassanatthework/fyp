@@ -318,6 +318,12 @@ else:
 OLLAMA_URL    = os.getenv('OLLAMA_URL',   'http://localhost:11434')
 OLLAMA_MODEL  = os.getenv('OLLAMA_MODEL', 'llama3.2')
 
+# ── Groq LLM (PRIMARY recommendation engine for makeup/fashion) ──────
+# Set GROQ_API_KEY in .env to enable. When empty, the code transparently
+# falls back to the local Ollama model. Free key: https://console.groq.com
+GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
+GROQ_MODEL   = os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile')
+
 # ── Email Settings ───────────────────────────────────────────────
 # In development without EMAIL_HOST_USER set, emails print to the
 # terminal. With EMAIL_HOST_USER + EMAIL_HOST_PASSWORD set, real SMTP

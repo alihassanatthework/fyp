@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Edit3, ShieldCheck, AlertCircle, Heart, Pill, CalendarClock, Lock } from 'lucide-react';
+import { Home, Edit3, ShieldCheck, AlertCircle, Heart, Pill, CalendarClock, Lock, Crown, Sparkles } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import EditProfileModal from '../components/EditProfileModal';
@@ -152,6 +152,7 @@ export default function UserProfile() {
   const u = profileData?.user || {};
   const profile = profileData?.profile || {};
   const med = profileData?.medical_history || {};
+  const isPremium = profile?.account_type === 'premium';
 
   const conditions = getConditionsFromMedicalHistory(med);
   const hasAllergies = med.has_allergies;
@@ -203,10 +204,31 @@ export default function UserProfile() {
                   <label className="profile-field-label">{f.label}</label>
                   <div className="profile-field-value">
                     {f.value || <span className="profile-field-empty">Not provided</span>}
+                    {f.label === 'Full Name' && isPremium && (
+                      <Crown size={15} className="profile-crown" aria-label="Premium" />
+                    )}
                   </div>
                 </div>
               ))}
             </div>
+
+            {/* Account tier + upgrade (free users only) */}
+            {!isPremium && (
+              <div className="profile-upgrade">
+                <div>
+                  <p className="profile-upgrade-title">Free Account</p>
+                  <p className="profile-upgrade-sub">5 scans/day · upgrade for unlimited</p>
+                </div>
+                <button className="profile-upgrade-btn" onClick={() => navigate('/upgrade')}>
+                  <Sparkles size={14}/> Upgrade to Premium
+                </button>
+              </div>
+            )}
+            {isPremium && (
+              <div className="profile-premium-row">
+                <Crown size={15}/> Premium · unlimited scans
+              </div>
+            )}
           </div>
 
           {/* Health panel */}

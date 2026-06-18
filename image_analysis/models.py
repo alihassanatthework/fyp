@@ -98,7 +98,11 @@ class AnalysisResult(models.Model):
             "max_severity": self.max_severity,
             "severity": self.severity_label,
             "recommend_dermatologist": self.recommend_dermatologist,
+            # Human-friendly label (kept for backward compatibility) …
             "date": self.created_at.strftime("%d %b %Y · %I:%M %p"),
+            # … plus a clean ISO timestamp the frontend can reliably parse
+            # (the "·" in `date` makes new Date() return Invalid Date).
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -185,3 +189,36 @@ def create_diagnosis_and_recommendations(sender, instance, created, **kwargs):
         )
     except Exception as exc:
         logger.warning("Signal create_diagnosis_and_recommendations failed: %s", exc)
+
+
+# ── Daily scan-limit helpers (Free tier cap, Premium unlimited) ──────
+# Free accounts may run up to FREE_DAILY_SCAN_LIMIT scans per CALENDAR DAY
+# (resets at midnight, server timezone). Premium accounts are unlimited.
+FREE_DAILY_SCAN_LIMIT = 5
+
+
+def scans_used_today(user) -> int:
+    """Count of analyses this user created today (server-local calendar day)."""
+    from django.utils import timezone
+    today = timezone.localdate()
+    return AnalysisResult.objects.filter(user=user, created_at__date=today).count()
+
+
+def scan_quota(user) -> dict:
+    """Return the user's daily scan quota status.
+    { account_type, is_premium, used, limit, remaining }.
+    For premium, limit and remaining are None (unlimited)."""
+    from django.conf import settings
+    prof = getattr(user, 'profile', None)
+    account_type = getattr(prof, 'account_type', 'free') if prof else 'free'
+    is_premium = (account_type == 'premium')
+    limit = None if is_premium else int(getattr(settings, 'FREE_DAILY_SCAN_LIMIT', FREE_DAILY_SCAN_LIMIT))
+    used = scans_used_today(user)
+    remaining = None if is_premium else max(0, limit - used)
+    return {
+        'account_type': account_type,
+        'is_premium': is_premium,
+        'used': used,
+        'limit': limit,
+        'remaining': remaining,
+    }

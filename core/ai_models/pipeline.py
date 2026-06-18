@@ -20,6 +20,7 @@ from .mediapipe_detector import FaceScalpDetector
 from .unet_segmenter import UNetSegmenter
 from .roi_extractor import extract_roi_from_mask
 from .efficientnet_classifier import EfficientNetClassifier
+from .dryness_detector import DrynessDetector
 from .yolo_detector import YOLODetector
 from .xgboost_severity import XGBoostSeverityClassifier
 from .llm_recommender import LLMRecommender
@@ -101,6 +102,13 @@ class AIAnalysisPipeline:
                 model_path=model_configs.get('normal_binary_path'),
                 device=self.device,
             )
+            # Specialist binary dryness detector (cosmetic dry-vs-not_dry).
+            # Catches everyday dryness the 4-class model misreads as acne.
+            # is_available()==False when the .pth is absent → no-op.
+            self.dryness_detector = DrynessDetector(
+                model_path=model_configs.get('dryness_specialist_path'),
+                device=self.device,
+            )
 
             self._initialized = True
     
@@ -110,6 +118,7 @@ class AIAnalysisPipeline:
         analysis_type: str = 'skin',
         user_profile: Optional[Dict] = None,
         medical_history: Optional[Dict] = None,
+        original_image: Optional[np.ndarray] = None,
     ) -> Dict:
         """
         Process image through complete AI pipeline.
@@ -229,6 +238,40 @@ class AIAnalysisPipeline:
                         print(f"🧪 NormalDetector applied: p_normal={p_normal:.3f}  "
                               f"final_scores={condition_scores}")
 
+                # ── Dryness specialist override (Pattern 1) ──
+                # The 4-class "dryness" was trained on dermnet dermatology
+                # photos and misreads cosmetic dry skin as acne. When the
+                # dedicated binary dryness model is confident (P(dry) >=
+                # threshold), set dryness to P(dry) and rescale the other three
+                # classes to fill the remaining mass.
+                if (self.dryness_detector is not None
+                        and self.dryness_detector.is_available()
+                        and 'dryness' in condition_scores):
+                    # The dryness specialist was trained on fuller facial skin
+                    # photos; the tight face crop weakens its signal. Prefer the
+                    # original (uncropped) image when the caller provides it.
+                    dry_input = original_image if original_image is not None else roi_for_classification
+                    p_dry = self.dryness_detector.predict(dry_input)
+                    print(f"🧴 DrynessDetector P(dry)={p_dry}  "
+                          f"(input={'original' if original_image is not None else 'crop'})  "
+                          f"threshold={self.dryness_detector.threshold:.2f}  "
+                          f"→ {'OVERRIDE' if (p_dry is not None and p_dry >= self.dryness_detector.threshold) else 'no override'}")
+                    if p_dry is not None and p_dry >= self.dryness_detector.threshold:
+                        other_keys = [k for k in condition_scores if k != 'dryness']
+                        other_sum = sum(condition_scores[k] for k in other_keys)
+                        if other_sum > 1e-9:
+                            scale = (1.0 - p_dry) / other_sum
+                            for k in other_keys:
+                                condition_scores[k] = float(condition_scores[k] * scale)
+                        else:
+                            even = (1.0 - p_dry) / max(len(other_keys), 1)
+                            for k in other_keys:
+                                condition_scores[k] = float(even)
+                        condition_scores['dryness'] = float(p_dry)
+                        print(f"🧴 DrynessDetector override: P(dry)={p_dry:.3f} "
+                              f">= {self.dryness_detector.threshold:.2f} → "
+                              f"final_scores={condition_scores}")
+
                 raw_scores = condition_scores
                 detected_conditions = self._process_skin_conditions(condition_scores)
             else:
@@ -328,6 +371,12 @@ class AIAnalysisPipeline:
                 'confidence': float(condition_scores.get('normal', 0.5)),
                 'type': 'skin'
             })
+
+        # Highest-confidence condition must be primary (the "Detected
+        # Condition" headline). Without this, conditions were returned in
+        # fixed class order (acne first), so the headline could disagree with
+        # the score chart after a specialist override.
+        detected.sort(key=lambda d: d['confidence'], reverse=True)
 
         return detected
     
@@ -461,11 +510,21 @@ def get_pipeline(model_configs: Optional[Dict] = None) -> AIAnalysisPipeline:
             'core/models/unet_checkpoints/best_model.pth'
         ]
         model_configs["yolo_path"] = "core/models/yolo_scalp.pt"
-        model_configs["efficientnet_path"] = "core/ai_models/efficientnet_b4_skin.pth"
+        # Primary 4-class classifier. Prefer the clean-data v2 model
+        # (trained on de-leaked dataset, 0.89 held-out test acc); fall back to
+        # the legacy weights if the v2 file is not present.
+        from pathlib import Path as _Path
+        _primary_v2 = "core/ai_models/efficientnet_b4_primary_v2.pth"
+        _primary_legacy = "core/ai_models/efficientnet_b4_skin.pth"
+        model_configs["efficientnet_path"] = (
+            _primary_v2 if _Path(_primary_v2).exists() else _primary_legacy
+        )
         model_configs["xgboost_path"] = "core/models/severity_model.json"
         # Optional specialist binary normal/abnormal classifier. If the file
         # does not exist the pipeline runs in legacy B4-only mode.
         model_configs["normal_binary_path"] = "core/ai_models/efficientnet_b0_normal_binary.pth"
+        # Specialist binary dryness model (cosmetic dry vs not_dry).
+        model_configs["dryness_specialist_path"] = "core/ai_models/dryness_v2.pth"
         for p in possible_paths:
             try:
                 from pathlib import Path
@@ -500,6 +559,7 @@ def process_image(
     model_configs: Optional[Dict] = None,
     user_profile: Optional[Dict] = None,
     medical_history: Optional[Dict] = None,
+    original_image: Optional[np.ndarray] = None,
 ) -> Dict:
     """
     Convenience function to process an image through the pipeline.
@@ -520,4 +580,5 @@ def process_image(
         analysis_type,
         user_profile=user_profile,
         medical_history=medical_history,
+        original_image=original_image,
     )

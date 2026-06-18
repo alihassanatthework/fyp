@@ -59,32 +59,64 @@ def fashion_suggest(request):
     if image.size > 10 * 1024 * 1024:
         return Response({'error': 'Image must be under 10MB.'}, status=400)
 
+    # Require a full body in frame (MediaPipe Pose — shoulders, hips, knees,
+    # ankles all detected) before processing.
+    from core.ai_models.upload_validation import has_full_body
+    if not has_full_body(image):
+        return Response(
+            {'error': 'Please upload a full-body photo for accurate fashion recommendations'},
+            status=400,
+        )
+
     # ── Body type resolution ──
     # 1. Explicit user choice wins (UI fallback selector).
     user_body_choice = request.data.get('body_type')
     body_type = detect_body_type(user_body_choice, bust=bust, waist=waist, hip=hip)
-    # 2. If still Unknown and no measurements supplied → tell the UI to ask.
-    if body_type == 'Unknown' and not user_body_choice and not any([bust, waist, hip]):
-        return Response({
-            'error': 'body_type_required',
-            'message': 'Provide bust/waist/hip measurements (cm) OR pick a body_type explicitly.',
-            'valid_body_types': ['Hourglass', 'Pear', 'Apple', 'Rectangle', 'Inverted Triangle'],
-        }, status=400)
 
+    # Save the image first so we can analyse the photo (skin tone + pose).
     suggestion = FashionSuggestion(user=request.user, event_type=event_normalised)
     suggestion.image.save(image.name, image, save=True)
     image_path = suggestion.image.path
 
+    # 2. No choice and no measurements → estimate body type from the PHOTO
+    #    using MediaPipe Pose (shoulder-vs-hip ratio).
+    if body_type == 'Unknown' and not user_body_choice and not any([bust, waist, hip]):
+        from .services import detect_body_type_from_pose
+        body_type = detect_body_type_from_pose(image_path)
+        # 3. Only if the photo ALSO can't determine it → ask the user.
+        if body_type == 'Unknown':
+            suggestion.delete()  # no orphan record
+            return Response({
+                'error': 'body_type_required',
+                'message': 'Provide bust/waist/hip measurements (cm) OR pick a body_type explicitly.',
+                'valid_body_types': ['Hourglass', 'Pear', 'Apple', 'Rectangle', 'Inverted Triangle'],
+            }, status=400)
+
     skin_tone = detect_skin_tone(image_path)
+
+    # Undertone (warm/cool/neutral) drives the colour palette — reuse the
+    # makeup detector which already computes it from skin patches.
+    undertone = 'neutral'
+    try:
+        from makeup.services import detect_skin_tone_and_undertone
+        tone_info = detect_skin_tone_and_undertone(image_path)
+        undertone = (tone_info or {}).get('undertone', 'neutral') or 'neutral'
+    except Exception:
+        undertone = 'neutral'
 
     measurements = {'bust': bust, 'waist': waist, 'hip': hip} if any([bust, waist, hip]) else None
     season = request.data.get('season') or 'all-season'
+    gender = (request.data.get('gender') or 'female').strip().lower()
+    if gender not in ('male', 'female'):
+        gender = 'female'
     suggestions = get_fashion_suggestions(
         body_type=body_type,
         skin_tone=skin_tone,
         event_type=event_normalised,
         measurements=measurements,
         season=season,
+        gender=gender,
+        undertone=undertone,
     )
 
     suggestion.body_type   = body_type

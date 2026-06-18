@@ -107,10 +107,49 @@ def detect_body_type(image_path_or_user_choice, bust=None, waist=None, hip=None)
     return classify_body_type(bust, waist, hip)
 
 
-# Backward-compatible thin shim — pose-based caller now returns Unknown
-# so the system asks the user.
-def detect_body_type_from_pose(_image_path: str) -> str:
-    return 'Unknown'
+def detect_body_type_from_pose(image_path: str) -> str:
+    """Estimate body type from a full-body photo using MediaPipe Pose.
+
+    Uses the shoulder-width vs hip-width ratio (both horizontal distances, so
+    the ratio is scale- and distance-invariant — this is what made the old
+    implementation degenerate: it didn't normalise correctly).
+
+    Pose gives shoulders + hips reliably but NOT the waist, so it can place:
+        shoulders wider  → Inverted Triangle
+        hips wider        → Pear
+        balanced          → Rectangle
+    (Hourglass/Apple need a waist measurement, so we don't guess those here.)
+    Returns 'Unknown' if a confident pose can't be found.
+    """
+    try:
+        import cv2
+        import mediapipe as mp
+        img = cv2.imread(image_path)
+        if img is None:
+            return 'Unknown'
+        rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        with mp.solutions.pose.Pose(static_image_mode=True, model_complexity=1,
+                                    min_detection_confidence=0.5) as pose:
+            res = pose.process(rgb)
+        if not res.pose_landmarks:
+            return 'Unknown'
+        lm = res.pose_landmarks.landmark
+        # 11/12 shoulders, 23/24 hips
+        for idx in (11, 12, 23, 24):
+            if lm[idx].visibility < 0.5:
+                return 'Unknown'
+        shoulder_w = abs(lm[11].x - lm[12].x)
+        hip_w      = abs(lm[23].x - lm[24].x)
+        if hip_w <= 1e-6:
+            return 'Unknown'
+        ratio = shoulder_w / hip_w
+        if ratio >= 1.10:
+            return 'Inverted Triangle'
+        if ratio <= 0.90:
+            return 'Pear'
+        return 'Rectangle'
+    except Exception:
+        return 'Unknown'
 
 
 # ── Ollama Fashion Suggestions ───────────────────────────────────────────────
@@ -120,7 +159,35 @@ def _stable_seed(*parts) -> int:
     return int(h[:8], 16)
 
 
-def _build_fashion_prompt(body_type, skin_tone, event, measurements=None, season='all-season'):
+def _build_fashion_prompt(body_type, skin_tone, event, measurements=None, season='all-season',
+                          gender='female', undertone='neutral'):
+    import random
+    g = 'men' if str(gender).lower() == 'male' else 'women'
+    gender_line = (f"- Audience: {g}'s fashion ONLY. Every item (tops, bottoms, "
+                   f"dresses/outerwear, footwear, accessories, jewellery) must be "
+                   f"appropriate for {g}. Do not suggest items for the other gender.\n")
+
+    # Fix 2 — controlled variety: rotate a styling angle so repeat runs differ.
+    style_angle = random.choice([
+        'modern minimalist', 'timeless classic', 'bold statement', 'soft romantic',
+        'editorial high-fashion', 'relaxed elevated', 'sleek monochrome', 'eclectic mix',
+    ])
+
+    # Fix 1 — palette MUST be derived from skin tone + undertone + season + event,
+    # NOT a generic event palette. This is what makes each person's colours differ.
+    color_directive = (
+        "COLOUR DIRECTIVE — derive the 5-colour palette from ALL of:\n"
+        f"  • Undertone '{undertone}': warm → earthy/golden (terracotta, olive, camel, rust, gold); "
+        "cool → jewel tones (sapphire, emerald, plum, burgundy, icy grey); "
+        "neutral → balanced (taupe, soft white, slate, dusty rose).\n"
+        f"  • Skin tone '{skin_tone}': deeper skin → richer, more saturated colours; "
+        "fairer skin → softer, lighter values.\n"
+        f"  • Season '{season}': spring/summer → lighter & brighter; autumn/winter → deeper & warmer.\n"
+        f"  • Event '{event}': adjust formality/contrast to suit.\n"
+        "  • Make the palette DISTINCT to this exact combination — avoid defaulting to "
+        "the same neutrals every time.\n"
+        f"  • Styling angle for this look: '{style_angle}'.\n"
+    )
     measurement_line = ''
     if measurements:
         m = measurements
@@ -199,10 +266,13 @@ def _build_fashion_prompt(body_type, skin_tone, event, measurements=None, season
         "- EXACTLY 4 aesthetics — short evocative single words or two-word phrases\n"
         "- Tip strings under 130 characters each\n"
         "- No brand names; describe pieces by silhouette and fabric\n\n"
+        f"{color_directive}\n"
         f"{example1}\n{example2}\n"
         "NOW GENERATE FOR:\n"
+        f"{gender_line}"
         f"- Body type : {body_type}\n"
         f"- Skin tone : {skin_tone}\n"
+        f"- Undertone : {undertone}\n"
         f"- Event     : {event}\n"
         f"{measurement_line}"
         f"- Season    : {season}\n\n"
@@ -249,14 +319,33 @@ def _validate_fashion_json(parsed):
 
 
 def get_fashion_suggestions(body_type, skin_tone, event_type,
-                             measurements=None, season='all-season'):
+                             measurements=None, season='all-season', gender='female',
+                             undertone='neutral'):
     """
     Call Ollama with strict category schema. Validate exact shape.
     Fall back to rule-based if anything fails.
     """
     event = EVENT_ALIASES.get(str(event_type).lower().strip(), 'casual')
-    prompt = _build_fashion_prompt(body_type, skin_tone, event, measurements, season)
+    prompt = _build_fashion_prompt(body_type, skin_tone, event, measurements, season, gender, undertone)
     seed = _stable_seed(body_type, skin_tone, event, season)
+
+    # ── PRIMARY: Groq (large model, reliable JSON). Falls through to Ollama. ──
+    try:
+        from core.llm_groq import groq_json, groq_available
+        if groq_available():
+            parsed = groq_json(
+                prompt,
+                system=("You are a professional fashion stylist. Respond with ONLY "
+                        "a valid JSON object matching the requested schema — no prose. "
+                        "Include EVERY category key requested."),
+                temperature=0.65,   # Fix 2 — more variety between users/runs
+            )
+            if parsed and _validate_fashion_json(parsed):
+                logger.info("Fashion suggestions via Groq.")
+                return parsed
+            logger.warning("Groq fashion output invalid; trying Ollama.")
+    except Exception as exc:
+        logger.warning("Groq fashion path errored (%s); trying Ollama.", exc)
 
     try:
         payload = json.dumps({

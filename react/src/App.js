@@ -8,6 +8,7 @@ import ImageAnalysis from './pages/ImageAnalysis';
 import DiagnosisReport from './pages/DiagnosisReport';
 import AnalysisHistory from './pages/AnalysisHistory';
 import UserProfile from './pages/UserProfile';
+import UpgradePremium from './pages/UpgradePremium';
 import Contact from './pages/Contact';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
@@ -58,6 +59,7 @@ function App() {
             <Route path="/diagnosis"          element={<ProtectedRoute><DiagnosisReport /></ProtectedRoute>} />
             <Route path="/analysis-history"   element={<ProtectedRoute><AnalysisHistory /></ProtectedRoute>} />
             <Route path="/profile"            element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+            <Route path="/upgrade"            element={<ProtectedRoute><UpgradePremium /></ProtectedRoute>} />
             <Route path="/makeup-assistance"  element={<ProtectedRoute><MakeupAssistance /></ProtectedRoute>} />
             <Route path="/fashion-assistance" element={<ProtectedRoute><FashionAssistance /></ProtectedRoute>} />
             <Route path="/bookings"           element={<ProtectedRoute><Bookings /></ProtectedRoute>} />

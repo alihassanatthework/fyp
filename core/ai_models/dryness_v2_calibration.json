@@ -25,7 +25,7 @@
     "rot-10",
     "brightness+0.15"
   ],
-  "decision_threshold": 0.53,
+  "decision_threshold": 0.5,
   "threshold_selection": "F1-optimal on val with TTA",
   "val_metrics_at_chosen": {
     "threshold": 0.53,

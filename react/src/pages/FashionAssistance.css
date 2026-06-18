@@ -967,3 +967,28 @@ body.dark .fa-step-tip   {
   color: #94a3b8 !important;
 }
 body.dark .fa-divider    { background: #2a2a2a !important; }
+
+/* ── Gender selector ── */
+.fa-gender-btn {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border-radius: 0.7rem;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.fa-gender-btn:hover { border-color: #a855f7; }
+.fa-gender-btn.selected {
+  border-color: #7c3aed;
+  background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+  color: #6d28d9;
+}
+body.dark .fa-gender-btn.selected {
+  background: rgba(124, 58, 237, 0.22);
+  color: #c4b5fd;
+  border-color: #7c3aed;
+}

@@ -91,7 +91,7 @@ function HealthScoreCard({ score, trend, streak, onWrapped }) {
       </div>
       <div className="bento-health-ring">
         <svg viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="50" stroke="rgba(255,255,255,0.12)" strokeWidth="10" fill="none"/>
+          <circle className="bento-health-track" cx="60" cy="60" r="50" strokeWidth="10" fill="none"/>
           <circle
             cx="60" cy="60" r="50"
             stroke={ringColor}

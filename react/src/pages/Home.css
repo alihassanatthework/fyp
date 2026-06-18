@@ -580,3 +580,11 @@ body.dark .bento-book-opt.active svg {
     min-height: 38px;
   }
 }
+
+/* ── Skin Health gauge track — visible in both themes ── */
+.bento-health-track {
+  stroke: rgba(15, 23, 42, 0.12);   /* dark-on-light → visible on white card */
+}
+body.dark .bento-health-track {
+  stroke: rgba(255, 255, 255, 0.14); /* light-on-dark → visible on dark card */
+}

@@ -4,6 +4,7 @@ from .views import (
     ProfileView, ChangePasswordView,
     ForgotPasswordView, ResetPasswordView,
     UserListView, UserRoleView, MyRoleView,
+    UpgradeAccountView,
 )
 
 urlpatterns = [
@@ -19,6 +20,9 @@ urlpatterns = [
     # Profile
     path('profile/',        ProfileView.as_view(), name='user-profile'),
     path('profile/update/', ProfileView.as_view(), name='user-profile-update'),
+
+    # Account tier
+    path('account/upgrade/', UpgradeAccountView.as_view(), name='account-upgrade'),
 
     # Role
     path('auth/my-role/',              MyRoleView.as_view(),  name='my-role'),

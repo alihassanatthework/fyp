@@ -37,17 +37,15 @@ export default function Footer() {
         </div>
 
         <nav className="footer-links">
+          <Link to="/fashion-assistance">Fashion Assistance</Link>
+          <Link to="/makeup-assistance">Makeup Assistance</Link>
+          <Link to="/analysis?type=skin">Skin Analysis</Link>
+          <Link to="/analysis?type=scalp">Scalp Analysis</Link>
           <Link to="/privacy">Privacy Policy</Link>
           <Link to="/consent">Consent Form</Link>
-          <Link to="/scalp-treatment">Scalp Treatment</Link>
-          <Link to="/skin-treatment">Skin Treatment</Link>
           <Link to="/report">Report</Link>
           <Link to="/terms">Terms</Link>
           <Link to="/contact">Contact</Link>
-          {/*
-          // Makeup section removed
-          <Link to="/makeup">Makeup</Link>
-          */}
         </nav>
 
         <p className="footer-copy">

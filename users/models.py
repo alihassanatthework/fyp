@@ -48,6 +48,12 @@ class UserProfile(models.Model):
         ('curly', 'Curly'),
         ('coily', 'Coily'),
     ], null=True, blank=True)
+    # Subscription tier. Free accounts are capped at a daily scan limit;
+    # premium accounts are unlimited.
+    account_type = models.CharField(max_length=10, choices=[
+        ('free', 'Free'),
+        ('premium', 'Premium'),
+    ], default='free')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

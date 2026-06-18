@@ -91,6 +91,15 @@ def analysis_stats(request):
     daily timeline, recurring conditions, streak and recent thumbnails
     for the bento dashboard.
     """
+    # Per-user short-TTL cache. This endpoint is the heaviest (many aggregate
+    # queries) and the most-polled by the dashboard, so caching it for a few
+    # seconds dramatically cuts p95/p99 latency under load.
+    from django.core.cache import cache
+    _cache_key = f"analysis_stats:{request.user.id}"
+    _cached = cache.get(_cache_key)
+    if _cached is not None:
+        return Response(_cached)
+
     qs = AnalysisResult.objects.filter(user=request.user)
     total = qs.count()
 
@@ -182,7 +191,7 @@ def analysis_stats(request):
                              or getattr(obj, 'original_image_url', None),
         })
 
-    return Response({
+    payload = {
         'total_scans':     total,
         'skin_scans':      qs.filter(analysis_type='skin').count(),
         'scalp_scans':     qs.filter(analysis_type='scalp').count(),
@@ -199,7 +208,12 @@ def analysis_stats(request):
         'daily_timeline':    daily_counts,
         'recurring_conditions': recurring_conditions,
         'recent_scans':      recent_scans,
-    })
+    }
+    # Daily scan-limit quota (Free tier cap / Premium unlimited).
+    from image_analysis.models import scan_quota
+    payload['scan_quota'] = scan_quota(request.user)
+    cache.set(_cache_key, payload, timeout=15)   # 15s per-user cache
+    return Response(payload)
 
 
 @api_view(["GET"])

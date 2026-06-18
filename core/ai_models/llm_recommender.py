@@ -472,13 +472,34 @@ Required JSON structure:
         user_profile: Dict,
         medical_history: Dict,
     ) -> Optional[Dict]:
-        """Call Ollama and parse the response into a structured dict."""
+        """Generate the care routine. Tries Groq first (large model, reliable
+        JSON), then falls back to the local Ollama model."""
         prompt = self._build_prompt(analysis_results, user_profile, medical_history)
-        raw = _call_ollama(prompt, self.model, self.host, self.timeout)
-        if not raw:
-            return None
 
-        parsed = _extract_json(raw)
+        # ── PRIMARY: Groq ──
+        parsed = None
+        try:
+            from core.llm_groq import groq_json, groq_available
+            if groq_available():
+                parsed = groq_json(
+                    prompt,
+                    system=("You are a careful dermatology/trichology assistant. "
+                            "Respond with ONLY a valid JSON object — no prose. "
+                            "Never prescribe prescription-only medicines."),
+                    temperature=0.3,
+                )
+                if parsed and isinstance(parsed, dict):
+                    print("✅ Skin/scalp recommendations via Groq.")
+        except Exception as exc:
+            print(f"⚠️ Groq recommender path errored ({exc}); trying Ollama.")
+            parsed = None
+
+        # ── FALLBACK: Ollama ──
+        if not (parsed and isinstance(parsed, dict)):
+            raw = _call_ollama(prompt, self.model, self.host, self.timeout)
+            if not raw:
+                return None
+            parsed = _extract_json(raw)
         if parsed and isinstance(parsed, dict):
             # Ensure all expected keys exist
             parsed.setdefault("daily_routine", {"morning": [], "evening": []})

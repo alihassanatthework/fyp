@@ -518,3 +518,19 @@ class MyRoleView(APIView):
         except Exception:
             role = 'user'
         return Response({'role': role})
+
+
+class UpgradeAccountView(APIView):
+    """POST /api/account/upgrade/  — set the user's tier to premium.
+
+    No payment gateway is wired up; this flips account_type so premium
+    features (unlimited scans, crown badge) unlock immediately.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        profile.account_type = 'premium'
+        profile.save(update_fields=['account_type'])
+        logger.info("User %s upgraded to premium", request.user.email)
+        return Response({'success': True, 'account_type': 'premium'})

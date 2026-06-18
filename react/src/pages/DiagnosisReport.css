@@ -554,3 +554,47 @@ body.dark .dr-modal-input::-webkit-calendar-picker-indicator {
     max-width: calc(100vw - 32px);
   }
 }
+
+/* ── Page header with New Analysis / Home actions ── */
+.diagnosis-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.diagnosis-header-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.diagnosis-header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #d8dee9;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.diagnosis-header-btn:hover {
+  background: #f1f5f9;
+  border-color: #c3ccd9;
+  color: #1e293b;
+}
+body.dark .diagnosis-header-btn {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+  color: #e2e8f0;
+}
+body.dark .diagnosis-header-btn:hover {
+  background: #2a2a2a;
+  border-color: #3a3a3a;
+  color: #ffffff;
+}

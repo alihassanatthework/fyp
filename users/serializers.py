@@ -34,6 +34,9 @@ class RegisterSerializer(serializers.Serializer):
     health_conditions = serializers.ListField(
         child=serializers.CharField(), required=False, default=list
     )
+    account_type = serializers.ChoiceField(
+        choices=['free', 'premium'], required=False, default='free'
+    )
 
     def validate_email(self, value):
         email = value.strip().lower()
@@ -57,6 +60,7 @@ class RegisterSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         health_conditions = validated_data.pop('health_conditions', [])
+        account_type = validated_data.pop('account_type', 'free')
         validated_data.pop('confirm_password', None)
 
         # Resolve first/last from either input shape
@@ -80,7 +84,7 @@ class RegisterSerializer(serializers.Serializer):
         )
 
         # Always create profile + medical history rows at registration
-        UserProfile.objects.create(user=user)
+        UserProfile.objects.create(user=user, account_type=account_type)
         UserRole.objects.create(user=user, role='user')  # default role
         med = MedicalHistory.objects.create(user=user)
 
@@ -122,7 +126,8 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('age', 'gender', 'skin_type', 'hair_type', 'updated_at')
+        fields = ('age', 'gender', 'skin_type', 'hair_type', 'account_type', 'updated_at')
+        read_only_fields = ('account_type', 'updated_at')
         read_only_fields = ('updated_at',)
 
 

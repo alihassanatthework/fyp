@@ -20,8 +20,9 @@ export const API_ENDPOINTS = {
 
   // ── Profile (combined user + profile + medical_history) ────────────
   PROFILE: {
-    GET:    '/profile/',
-    UPDATE: '/profile/',
+    GET:     '/profile/',
+    UPDATE:  '/profile/',
+    UPGRADE: '/account/upgrade/',
   },
 
   // ── Skin / scalp analysis pipeline ─────────────────────────────────
