@@ -541,27 +541,46 @@ class AnalyzeImageView(APIView):
                 logger.debug("Pipeline detected conditions: %s", pipeline_result.get('detected_conditions'))
 
                 try:
-                    # Aggregate YOLO detections by class so multiple bboxes
-                    # of the same condition collapse into a single bar at the
-                    # MAX confidence seen for that class.
-                    per_class_max = {}
-                    for det in detections:
-                        label = det.get("condition") or det.get("class", "unknown")
-                        conf = float(det.get("confidence", 0)) * 100
-                        if label not in per_class_max or conf > per_class_max[label]:
-                            per_class_max[label] = conf
+                    # ── Prefer the 5-class scalp classifier's FULL probability
+                    # distribution so every class appears on the chart (mirrors
+                    # the skin chart). Falls back to YOLO per-class max when the
+                    # classifier is not active. ──
+                    SCALP_DISPLAY = {
+                        "Alopecia": "Alopecia",
+                        "Dermatitis": "Dermatitis",
+                        "Infections": "Infection",
+                        "Normal": "Normal Scalp",
+                        "Psoriasis": "Psoriasis",
+                    }
+                    scalp_probs = None
+                    for c in (pipeline_result.get('detected_conditions') or []):
+                        if c.get('type') == 'scalp' and c.get('probs'):
+                            scalp_probs = c['probs']
+                            break
 
-                    # Sort by confidence descending
-                    ordered = sorted(per_class_max.items(), key=lambda kv: kv[1], reverse=True)
-                    labels_raw = [k for k, _ in ordered]
-                    values     = [round(v, 2) for _, v in ordered]
+                    if scalp_probs:
+                        # All classes, highest probability first.
+                        ordered = sorted(scalp_probs.items(), key=lambda kv: kv[1], reverse=True)
+                        labels_raw = [k for k, _ in ordered]
+                        values = [round(v * 100, 2) for _, v in ordered]
+                        chart_title = "Scalp Condition Analysis"
+                    else:
+                        # Legacy YOLO path — aggregate detections by class at MAX conf.
+                        per_class_max = {}
+                        for det in detections:
+                            label = det.get("condition") or det.get("class", "unknown")
+                            conf = float(det.get("confidence", 0)) * 100
+                            if label not in per_class_max or conf > per_class_max[label]:
+                                per_class_max[label] = conf
+                        ordered = sorted(per_class_max.items(), key=lambda kv: kv[1], reverse=True)
+                        labels_raw = [k for k, _ in ordered]
+                        values     = [round(v, 2) for _, v in ordered]
+                        if not labels_raw:
+                            labels_raw = ["Normal Scalp"]
+                            values = [100.0]
+                        chart_title = "YOLOv8 Scalp Detection"
 
-                    # No detections at all = healthy scalp → single green bar
-                    if not labels_raw:
-                        labels_raw = ["Normal Scalp"]
-                        values = [100.0]
-
-                    labels = [l.replace('_', ' ').title() for l in labels_raw]
+                    labels = [SCALP_DISPLAY.get(l, l.replace('_', ' ').title()) for l in labels_raw]
 
                     disease_colors = ["#E07A30", "#D45A4A", "#B3454A", "#8B3E55"]
                     colors = []
@@ -573,11 +592,12 @@ class AnalyzeImageView(APIView):
                             colors.append(disease_colors[di % len(disease_colors)])
                             di += 1
 
-                    fig, ax = plt.subplots(figsize=(5.5, 3.4))
+                    fig, ax = plt.subplots(figsize=(6.2, 3.6))
                     bars = ax.bar(labels, values, color=colors, edgecolor="#444444", linewidth=0.6)
-                    ax.set_title("YOLOv8 Scalp Detection", fontsize=11, fontweight="bold")
+                    ax.set_title(chart_title, fontsize=11, fontweight="bold")
                     ax.set_ylabel("Confidence (%)")
                     ax.set_ylim(0, max(105, max(values) + 10))
+                    ax.set_xticklabels(labels, rotation=15, ha='right', fontsize=9)
                     ax.grid(axis='y', linestyle='--', alpha=0.4)
                     ax.spines['top'].set_visible(False)
                     ax.spines['right'].set_visible(False)
@@ -746,8 +766,68 @@ class AnalyzeImageView(APIView):
                 if area_pct < 15:   return 'Moderate', int(35 + (area_pct - 5)  * 4)
                 return                   'Severe',     int(min(100, 75 + (area_pct - 15) * 1.5))
 
+            # --- Scalp via 5-class classifier (no YOLO boxes / no area) ---
+            # The classifier returns a single predicted class + full per-class
+            # probabilities. Severity is derived from model confidence (there is
+            # no lesion-area segmentation for scalp), so the report shows a real
+            # condition + severity instead of "Normal / Unknown".
+            _scalp_clf = None
+            if image_type == "scalp":
+                for _c in pipeline_result.get('detected_conditions', []):
+                    if _c.get('type') == 'scalp' and _c.get('probs'):
+                        _scalp_clf = _c
+                        break
+
+            if image_type == "scalp" and _scalp_clf is not None:
+                SCALP_DISPLAY = {
+                    "Alopecia": "Alopecia (Hair Loss)", "Dermatitis": "Dermatitis",
+                    "Infections": "Scalp Infection", "Normal": "Healthy Scalp",
+                    "Psoriasis": "Scalp Psoriasis",
+                }
+                # Per-condition clinical weight — how serious the condition is when
+                # present (Infections > Psoriasis ≈ Alopecia > Dermatitis). Used to
+                # scale the confidence-derived severity, since there is no lesion-area
+                # segmentation for scalp.
+                SCALP_WEIGHT = {
+                    "Infections": 1.00, "Psoriasis": 0.90, "Alopecia": 0.85,
+                    "Dermatitis": 0.75,
+                }
+
+                probs = _scalp_clf['probs']
+                top_cls = max(probs, key=probs.get)
+                top_p = float(probs[top_cls])
+                p_normal = float(probs.get('Normal', 0.0))
+                disp = SCALP_DISPLAY.get(top_cls, top_cls)
+
+                if top_cls.lower() == 'normal':
+                    context['conditions'] = [{
+                        'name': 'Healthy Scalp', 'severity_level': 'Healthy',
+                        'severity_score': 0, 'area_pct': 0.0,
+                        'confidence': round(top_p, 3),
+                    }]
+                    context['max_severity'] = 0
+                else:
+                    # Severity = how strongly the disease dominates "Healthy" (margin),
+                    # scaled by the condition's clinical weight. A confident disease
+                    # prediction with low Normal probability → higher severity.
+                    margin = max(0.0, top_p - p_normal)          # 0..1 dominance
+                    weight = SCALP_WEIGHT.get(top_cls, 0.85)
+                    score_int = int(round(min(100, max(8, margin * 100 * weight))))
+                    if score_int < 35:
+                        level = 'Mild'
+                    elif score_int < 70:
+                        level = 'Moderate'
+                    else:
+                        level = 'Severe'
+                    context['conditions'] = [{
+                        'name': disp, 'severity_level': level,
+                        'severity_score': score_int, 'area_pct': 0.0,
+                        'confidence': round(top_p, 3),
+                    }]
+                    context['max_severity'] = score_int
+
             # --- Scalp: build conditions from filtered YOLO detections ---
-            if image_type == "scalp" and pipeline_result.get('yolo_detections'):
+            elif image_type == "scalp" and pipeline_result.get('yolo_detections'):
                 # Aggregate by class, computing total bbox area as a % of frame.
                 frame_h, frame_w = normalized_crop.shape[:2]
                 frame_area = max(1, frame_h * frame_w)
@@ -832,7 +912,9 @@ class AnalyzeImageView(APIView):
                     context['conditions'] = formatted[:3]
 
 
-            if 'severity_scores' in pipeline_result:
+            # Skip for the scalp-classifier path — it already set max_severity
+            # from model confidence (XGBoost severity doesn't apply there).
+            if 'severity_scores' in pipeline_result and _scalp_clf is None:
                 context['max_severity'] = max(
                     [v.get('score', 0) for v in pipeline_result.get('severity_scores', {}).values()],
                     default=0

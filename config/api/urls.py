@@ -2,7 +2,7 @@ from django.urls import path, include
 from image_analysis.views import AnalyzeImageView
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views import analysis_history, analysis_detail, analysis_stats
+from .views import analysis_history, analysis_detail, analysis_stats, submit_report
 
 urlpatterns = [
     # Auth + profile (register, login, logout, me, profile)
@@ -25,6 +25,9 @@ urlpatterns = [
 
     # Dashboard stats summary
     path('analysis/stats/', analysis_stats, name='analysis-stats'),
+
+    # User report / inquiry → emails the official ME inbox
+    path('report/', submit_report, name='submit-report'),
 
     # Analysis history
     path('analysis/history/', analysis_history, name='analysis-history'),

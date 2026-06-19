@@ -94,3 +94,71 @@
   margin-bottom: 0.85rem;
 }
 body.dark .upgrade-success { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+
+/* ── Plan selector ── */
+.upgrade-plans {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin: 1.1rem 0 0.5rem;
+}
+.upgrade-plan {
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 0.1rem; padding: 0.7rem 0.85rem; cursor: pointer;
+  border-radius: 0.8rem; text-align: left;
+  background: var(--bg-secondary); border: 2px solid var(--border-color);
+  transition: all 0.16s ease;
+}
+.upgrade-plan:hover { border-color: #a5b4fc; }
+.upgrade-plan.active { border-color: #4f46e5; background: rgba(79,70,229,0.06); }
+.upgrade-plan-label { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
+.upgrade-plan-price { font-size: 1.25rem; font-weight: 800; color: #4f46e5; }
+.upgrade-plan-sub   { font-size: 0.68rem; color: var(--text-tertiary); }
+
+/* ── Payment form ── */
+.upgrade-pay-form { margin-top: 0.5rem; text-align: left; }
+.upgrade-pay-header {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: 0.85rem; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 0.7rem;
+}
+.upgrade-secure {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 0.25rem;
+  font-size: 0.68rem; font-weight: 600; color: #16a34a;
+}
+.upgrade-field { display: block; margin-bottom: 0.65rem; }
+.upgrade-field > span {
+  display: block; font-size: 0.72rem; font-weight: 600;
+  color: var(--text-secondary); margin-bottom: 0.25rem;
+}
+.upgrade-field input {
+  width: 100%; padding: 0.6rem 0.75rem; font-size: 0.9rem;
+  border-radius: 0.6rem; border: 1px solid var(--border-color);
+  background: var(--bg-primary); color: var(--text-primary);
+  transition: border-color 0.15s;
+}
+.upgrade-field input:focus { outline: none; border-color: #4f46e5; }
+.upgrade-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+.upgrade-demo-note {
+  font-size: 0.7rem; color: var(--text-tertiary);
+  margin-top: 0.6rem; line-height: 1.5; text-align: center;
+}
+
+/* ── Receipt ── */
+.upgrade-receipt { margin-top: 1rem; }
+.upgrade-receipt-rows {
+  list-style: none; padding: 0.85rem 1rem; margin: 0.9rem 0 0.5rem;
+  background: var(--bg-secondary); border: 1px solid var(--border-color);
+  border-radius: 0.8rem;
+}
+.upgrade-receipt-rows li {
+  display: flex; justify-content: space-between; gap: 1rem;
+  font-size: 0.82rem; padding: 0.3rem 0;
+}
+.upgrade-receipt-rows li span:first-child { color: var(--text-tertiary); }
+.upgrade-receipt-rows li span:last-child { font-weight: 600; color: var(--text-primary); }
+.upgrade-redirect { font-size: 0.78rem; color: var(--text-tertiary); text-align: center; margin-top: 0.5rem; }
+
+@media (max-width: 480px) {
+  .upgrade-plans { grid-template-columns: 1fr; }
+}

@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Instagram, Linkedin } from 'lucide-react';
 import StaticPage from '../components/StaticPage';
 
 export default function Contact() {
@@ -15,22 +15,12 @@ export default function Contact() {
       </p>
 
       <ul>
-        <li><strong><Mail size={14} style={{display:'inline',marginRight:6}}/>Email:</strong> <a href="mailto:contact@meapp.placeholder.com">contact@meapp.placeholder.com</a></li>
-        <li><strong><Phone size={14} style={{display:'inline',marginRight:6}}/>Phone:</strong> +1 (555) 010-2024</li>
-        <li><strong><MapPin size={14} style={{display:'inline',marginRight:6}}/>Address:</strong> ME HQ — Placeholder Address, City, Country</li>
+        <li><strong><Mail size={14} style={{display:'inline',marginRight:6}}/>Email:</strong> <a href="mailto:me.offical.team.system@gmail.com">me.offical.team.system@gmail.com</a></li>
+        <li><strong><Instagram size={14} style={{display:'inline',marginRight:6}}/>Instagram:</strong> <a href="https://www.instagram.com/me.offical.team.system/" target="_blank" rel="noreferrer">@me.offical.team.system</a></li>
+        <li><strong><Linkedin size={14} style={{display:'inline',marginRight:6}}/>LinkedIn:</strong> <a href="https://www.linkedin.com/in/me-admin-team/" target="_blank" rel="noreferrer">ME Admin Team</a></li>
       </ul>
 
-      <h2>Team</h2>
-      <ul>
-        <li>Huda Masood</li>
-        <li>Ali Hassan</li>
-        <li>Aqsa Mustafa</li>
-        <li>Sibgha Shezadi</li>
-      </ul>
-
-      <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>
-        (Placeholder contact information — replace with real values before launch.)
-      </p>
+      
     </StaticPage>
   );
 }

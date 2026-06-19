@@ -25,6 +25,12 @@ export const API_ENDPOINTS = {
     UPGRADE: '/account/upgrade/',
   },
 
+  // ── Payments (Safepay: cards + Easypaisa + JazzCash) ───────────────
+  PAYMENTS: {
+    INIT:   '/payments/init/',
+    VERIFY: '/payments/verify/',
+  },
+
   // ── Skin / scalp analysis pipeline ─────────────────────────────────
   ANALYSIS: {
     UPLOAD:  '/analysis/upload/',

@@ -290,10 +290,20 @@ def _build_makeup_prompt(face_shape, skin_tone, undertone, occasion, skin_condit
         f"- Undertone  : {undertone}\n"
         f"- Occasion   : {occasion}\n"
         f"- Active skin conditions: {conditions}\n\n"
+        "ALSO RETURN a 'shades' object: for EACH of foundation, eyes, lips, blush, "
+        "contour, eyeliner, brows, highlighter give 1-2 swatches as "
+        '{"name": "Shade name", "hex": "#RRGGBB"} with REAL hex codes chosen for '
+        f"this skin tone ('{skin_tone}') and undertone ('{undertone}') — a deep skin "
+        "tone must get deeper/richer hex values than a fair one.\n"
         "Output JSON only. No preamble. No explanation.\n"
         '{"foundation": "...", "blush": "...", "eyeshadow": "...",'
         ' "eyeliner": "...", "lipstick": "...", "highlighter": "...",'
-        ' "contouring_tip": "...", "overall_tip": "..."}'
+        ' "contouring_tip": "...", "overall_tip": "...",'
+        ' "shades": {"foundation": [{"name":"","hex":"#RRGGBB"}],'
+        ' "eyes": [{"name":"","hex":"#RRGGBB"}], "lips": [{"name":"","hex":"#RRGGBB"}],'
+        ' "blush": [{"name":"","hex":"#RRGGBB"}], "contour": [{"name":"","hex":"#RRGGBB"}],'
+        ' "eyeliner": [{"name":"","hex":"#RRGGBB"}], "brows": [{"name":"","hex":"#RRGGBB"}],'
+        ' "highlighter": [{"name":"","hex":"#RRGGBB"}]}}'
     )
 
 

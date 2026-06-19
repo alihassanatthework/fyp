@@ -21,13 +21,38 @@ from typing import Dict, List, Optional
 # ---------------------------------------------------------------------------
 
 SAFETY_RULES = """
-STRICT SAFETY RULES (never violate these):
-- If patient is PREGNANT: avoid retinoids (retinol, tretinoin, adapalene), salicylic acid >2%, benzoyl peroxide, hydroquinone, chemical peels.
-- If patient has DIABETES: avoid alcohol-based products, harsh exfoliants; recommend gentle moisturising routines.
-- If patient has CARDIOVASCULAR ISSUES or HYPERTENSION: avoid high-caffeine topicals, aggressive stimulating treatments.
-- If patient has ASTHMA: avoid fragranced products, aerosol sprays.
-- ALWAYS check known allergens and exclude any ingredient the patient is allergic to.
-- If severity is Severe (score >= 70): always recommend consulting a dermatologist as the first step.
+STRICT SAFETY RULES (never violate these — they OVERRIDE every other instruction,
+including the medicine recommendations):
+
+GENERAL:
+- ALWAYS cross-check EVERY recommended medicine AND product against the patient's
+  medical flags, known allergens, and current medications below. If a medicine is
+  contraindicated, DO NOT recommend it — silently pick a safe alternative instead.
+- NEVER recommend a medicine that contains, or is cross-reactive with, any listed allergen.
+- NEVER recommend a medicine that dangerously interacts with the patient's current medications.
+- If you cannot find a safe medicine for a condition, return fewer medicines and add a
+  safety_note telling the patient to see a doctor — do NOT recommend an unsafe one.
+
+PREGNANCY / BREASTFEEDING — strictly AVOID and never recommend:
+  retinoids (tretinoin, adapalene, isotretinoin, tazarotene), oral/ topical finasteride
+  & dutasteride (handling risk), minoxidil, hydroquinone, salicylic acid >2%, high-dose
+  benzoyl peroxide, oral tetracyclines (doxycycline/minocycline), griseofulvin, oral
+  ketoconazole, chemical peels. Prefer pregnancy-safe options (e.g. azelaic acid,
+  gentle emollients, topical erythromycin only if needed).
+
+DIABETES: avoid potent prolonged topical steroids on large areas (impairs healing);
+  prefer gentle antifungals/moisturisers; flag that steroids need doctor supervision.
+
+CARDIOVASCULAR ISSUES / HYPERTENSION: avoid minoxidil (systemic absorption / tachycardia)
+  and high-caffeine stimulating topicals; flag for doctor review.
+
+ASTHMA: avoid fragranced/aerosol products and aspirin-family salicylates if aspirin-sensitive.
+
+ALLERGIES: exclude every listed allergen and its known cross-reactors (e.g. neomycin,
+  fragrance mix, formaldehyde-releasers, specific antibiotic classes).
+
+SEVERITY: if any condition is Severe (score >= 70), make "consult a dermatologist" the
+  first recommended step and keep self-medication conservative.
 """
 
 SKIN_CONDITION_CONTEXT = {
@@ -273,6 +298,56 @@ def _extract_json(text: str) -> Optional[Dict]:
 
 
 # ---------------------------------------------------------------------------
+# Deterministic medicine safety filter (belt-and-suspenders on top of the LLM)
+# ---------------------------------------------------------------------------
+# Drug name substrings that are contraindicated for a given condition flag.
+# Matched case-insensitively against the medicine name + brand examples.
+_CONTRAINDICATIONS = {
+    "is_pregnant": [
+        "tretinoin", "retinoin", "retinol", "adapalene", "tazarotene",
+        "isotretinoin", "retinoid", "finasteride", "dutasteride", "minoxidil",
+        "hydroquinone", "doxycycline", "minocycline", "tetracycline",
+        "griseofulvin", "spironolactone", "tazorac",
+    ],
+    "has_cardio_issues": ["minoxidil"],
+    "has_hypertension": ["minoxidil"],
+}
+
+
+def _filter_unsafe_medicines(medicines, medical_history):
+    """Return (safe_medicines, removed_names). Drops medicines whose name/brand
+    matches a contraindication for an active flag, or that contain a listed
+    allergen. Conservative: only removes on a clear textual match."""
+    if not isinstance(medicines, list) or not medical_history:
+        return medicines, []
+
+    # Active flag-based contraindicated substrings
+    banned = set()
+    for flag, drugs in _CONTRAINDICATIONS.items():
+        if medical_history.get(flag):
+            banned.update(drugs)
+
+    # Allergen substrings (user-provided, comma-separated)
+    allergens_raw = (medical_history.get("known_allergens") or "")
+    allergens = [a.strip().lower() for a in allergens_raw.split(",")
+                 if a.strip() and len(a.strip()) >= 3]
+
+    safe, removed = [], []
+    for med in medicines:
+        if not isinstance(med, dict):
+            continue
+        hay = (str(med.get("name", "")) + " " +
+               " ".join(med.get("brand_examples", []) or [])).lower()
+        hit = next((b for b in banned if b in hay), None) \
+            or next((a for a in allergens if a in hay), None)
+        if hit:
+            removed.append(med.get("name", hit))
+        else:
+            safe.append(med)
+    return safe, removed
+
+
+# ---------------------------------------------------------------------------
 # Main class
 # ---------------------------------------------------------------------------
 
@@ -444,7 +519,29 @@ Other conditions: {other_conditions}
 
 === TASK ===
 Provide personalised, evidence-based recommendations tailored to the detected conditions, severity, and medical history.
-Include medicines/treatments (OTC or prescription-level guidance), daily routine, and weekly routine.
+
+For "medicines": recommend 3-5 ACTUAL pharmaceutical medicines specifically INDICATED for the
+detected condition — use real generic drug names with example brand names, the dosage form and
+strength. Include both over-the-counter (otc:true) and, where it is the medical standard, common
+prescription options (otc:false). For prescription medicines, set otc:false and tell the patient to
+consult a doctor — do NOT give exact personal dosing for prescription drugs. Examples of the level of
+specificity required:
+  • Scalp Psoriasis → Coal tar shampoo (Neutrogena T/Gel), Calcipotriol 0.005% (Dovonex), Clobetasol 0.05% (Temovate, Rx)
+  • Seborrheic Dermatitis → Ketoconazole 2% shampoo (Nizoral), Zinc pyrithione (Head & Shoulders), Ciclopirox 1% (Rx)
+  • Scalp Infection / Tinea / Folliculitis → Terbinafine (Lamisil), Griseofulvin (Rx), Mupirocin 2% (Bactroban, Rx)
+  • Alopecia → Minoxidil 5% (Rogaine), Finasteride 1mg (Propecia, Rx)
+  • Acne → Benzoyl peroxide 2.5-5% (Benzac), Adapalene 0.1% (Differin), Clindamycin (Rx)
+  • Dryness/Dermatitis → Hydrocortisone 1% (Cortizone-10), Cetaphil/CeraVe moisturiser, Tacrolimus (Rx)
+Pick the medicines that match the ACTUAL detected condition above — do not list unrelated drugs.
+
+CRITICAL — PERSONALISE TO THIS PATIENT'S MEDICAL HISTORY: Before finalising the medicines
+list, re-read the MEDICAL FLAGS, Known allergens, and Current medications below and apply
+the STRICT SAFETY RULES. Remove ANY medicine that is contraindicated for this specific
+patient (pregnancy, allergy, drug interaction, diabetes, cardiovascular/hypertension,
+asthma) and replace it with a safe alternative. Each medicine you DO list must be safe for
+THIS patient. Add a short "safe_for_patient" note on each medicine explaining why it is
+appropriate given their history (e.g. "pregnancy-safe", "no interaction with current meds",
+"allergen-free").
 IMPORTANT: Return ONLY valid JSON — no markdown, no explanation outside the JSON.
 
 Required JSON structure:
@@ -455,7 +552,7 @@ Required JSON structure:
   }},
   "weekly_routine": ["suggestion 1", "suggestion 2"],
   "medicines": [
-    {{"name": "medicine or active ingredient name", "type": "topical|oral|shampoo|serum", "usage": "how and when to apply/take it", "reason": "why this is recommended for the detected condition"}}
+    {{"name": "generic drug name", "brand_examples": ["BrandA", "BrandB"], "form": "tablet|capsule|topical cream|ointment|medicated shampoo|solution|lotion", "strength": "e.g. 2%, 5mg, 0.1%", "usage": "how and when to apply/take it", "reason": "why this medicine treats the detected condition", "safe_for_patient": "why it is safe given this patient's medical history", "otc": true}}
   ],
   "products": [
     {{"name": "product name", "type": "cleanser|moisturiser|serum|shampoo|etc", "reason": "why this product suits this patient"}}
@@ -485,7 +582,15 @@ Required JSON structure:
                     prompt,
                     system=("You are a careful dermatology/trichology assistant. "
                             "Respond with ONLY a valid JSON object — no prose. "
-                            "Never prescribe prescription-only medicines."),
+                            "You MAY name real pharmaceutical medicines (generic + brand) "
+                            "that are standard treatment for the detected condition. For "
+                            "prescription-only medicines, set otc:false and advise consulting "
+                            "a doctor — never give exact personal dosing for prescription drugs. "
+                            "PATIENT SAFETY IS THE TOP PRIORITY: every medicine you list MUST be "
+                            "safe for THIS patient's medical history (pregnancy, allergies, current "
+                            "medications, diabetes, cardiovascular/hypertension, asthma). Never "
+                            "recommend a contraindicated or allergen-containing medicine — choose a "
+                            "safe alternative instead."),
                     temperature=0.3,
                 )
                 if parsed and isinstance(parsed, dict):
@@ -508,6 +613,16 @@ Required JSON structure:
             parsed.setdefault("products", [])
             parsed.setdefault("dermatologist_consult", "Consult a dermatologist if condition worsens.")
             parsed.setdefault("safety_notes", [])
+            # ── Deterministic safety net — drop any contraindicated medicine the
+            # LLM may have slipped through, regardless of what it returned. ──
+            parsed["medicines"], removed = _filter_unsafe_medicines(
+                parsed.get("medicines", []), medical_history)
+            if removed:
+                note = ("Some medicines were withheld because they may be unsafe "
+                        "given your medical history — please consult a doctor.")
+                if note not in parsed["safety_notes"]:
+                    parsed["safety_notes"].append(note)
+                print(f"🛡️ Safety filter removed {len(removed)} contraindicated medicine(s): {removed}")
             return parsed
 
         print(f"⚠️ Could not parse Ollama JSON output: {raw[:300]}")

@@ -9,18 +9,83 @@ import logging
 from collections import Counter
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 
 from image_analysis.models import AnalysisResult
 
+from django.conf import settings
 from django.core.cache import cache
+from django.core.mail import EmailMessage
 from django.utils import timezone
 from datetime import timedelta
 
 logger = logging.getLogger(__name__)
+
+# Official ME inbox — all user reports / inquiries are delivered here.
+OFFICIAL_EMAIL = "me.offical.team.system@gmail.com"
+
+_REPORT_LABELS = {
+    "bug": "Bug / technical issue",
+    "result": "Inaccurate analysis result",
+    "safety": "Safety or content concern",
+    "other": "Other",
+}
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def submit_report(request):
+    """
+    POST /api/report/
+    Sends a user-submitted report/inquiry to the official ME inbox.
+    Body: { category, email (optional), message }.
+    """
+    data = request.data or {}
+    category = (data.get("category") or "other").strip()
+    reporter = (data.get("email") or "").strip()
+    message = (data.get("message") or "").strip()
+
+    if not message:
+        return Response({"error": "Message is required."},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    label = _REPORT_LABELS.get(category, "Other")
+    # Identify the logged-in user when available.
+    user = getattr(request, "user", None)
+    user_str = (user.email if getattr(user, "is_authenticated", False) else None) \
+        or reporter or "(anonymous)"
+
+    subject = f"ME Report — {label}"
+    body = (
+        f"Category: {label}\n"
+        f"From: {user_str}\n"
+        f"Reply-to: {reporter or '(not provided)'}\n\n"
+        f"{message}\n"
+    )
+
+    try:
+        email = EmailMessage(
+            subject=subject,
+            body=body,
+            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+            to=[OFFICIAL_EMAIL],
+            reply_to=[reporter] if reporter else None,
+        )
+        email.send(fail_silently=False)
+        logger.info("Report emailed to %s (category=%s, from=%s)",
+                    OFFICIAL_EMAIL, category, user_str)
+        return Response({"status": "sent", "to": OFFICIAL_EMAIL},
+                        status=status.HTTP_200_OK)
+    except Exception as exc:
+        logger.error("Report email failed: %s", exc)
+        return Response(
+            {"error": "Could not send the report right now. Please email us "
+                      f"directly at {OFFICIAL_EMAIL}.", "detail": str(exc)},
+            status=status.HTTP_502_BAD_GATEWAY,
+        )
 
 
 class HistoryPagination(PageNumberPagination):
@@ -224,7 +289,7 @@ def analysis_history(request):
     Returns the current user's past analyses, newest first.
     Supports ?type= and ?severity= filters (same values the React UI sends).
     """
-    qs = AnalysisResult.objects.filter(user=request.user)
+    qs = AnalysisResult.objects.filter(user=request.user).order_by("-created_at")
 
     # --- optional filters sent by the React AnalysisHistory page ---
     type_filter = request.query_params.get("type", "All Types")
@@ -255,18 +320,27 @@ def analysis_history(request):
 
         results.append({
             "id":            obj.analysis_id,
+            "analysis_id":   obj.analysis_id,
             "type":          obj.analysis_type,
+            "analysis_type": obj.analysis_type,
+            # Machine-parseable ISO timestamp so the React UI can format AND
+            # sort it (the old preformatted `date` string was unparseable →
+            # "Invalid Date" + broken Newest/Oldest sort).
+            "created_at":    obj.created_at.isoformat(),
             "date":          obj.created_at.strftime("%d %b %Y · %I:%M %p"),
             "name":          top_condition or obj.analysis_type,
+            # Full conditions list so the row shows the real detected condition
+            # + severity badge (not the "Normal / Mild" fallback).
+            "conditions":    obj.conditions if isinstance(obj.conditions, list) else [],
             "severity":      obj.severity_label,
+            "severity_label": obj.severity_label,
+            "max_severity":  obj.max_severity,
             "severityClass": severity_class,
         })
 
-    # Paginate
-    paginator = HistoryPagination()
-    page = paginator.paginate_queryset(results, request)
-    if page is not None:
-        return paginator.get_paginated_response(page)
+    # Return the FULL list (newest first). This per-user history is small and
+    # the React page does its own client-side filtering + sorting, so we don't
+    # paginate here — otherwise only the first 20 of 50+ scans would appear.
     return Response(results, status=status.HTTP_200_OK)
 
 

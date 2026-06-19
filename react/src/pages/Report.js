@@ -1,16 +1,36 @@
 import { Flag } from 'lucide-react';
 import { useState } from 'react';
 import StaticPage from '../components/StaticPage';
+import apiClient from '../api/client';
 
 export default function Report() {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({ category: 'bug', email: '', message: '' });
 
-  const handleSubmit = (e) => {
+  const OFFICIAL_EMAIL = 'me.offical.team.system@gmail.com';
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Backend reporting endpoint not yet implemented — flag this clearly
-    // instead of pretending the message was received.
-    setSubmitted(true);
+    setSending(true);
+    setError('');
+    try {
+      // Send server-side — the backend emails the official ME inbox directly.
+      await apiClient.post('/report/', {
+        category: form.category,
+        email: form.email,
+        message: form.message,
+      });
+      setSubmitted(true);
+    } catch (err) {
+      setError(
+        err?.response?.data?.error ||
+        `Could not send right now. Please email us at ${OFFICIAL_EMAIL}.`
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -21,15 +41,14 @@ export default function Report() {
     >
       {submitted ? (
         <>
-          <h2>Report system not yet active</h2>
-          <p style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.35)',
+          <h2>Report sent ✓</h2>
+          <p style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.35)',
                        borderRadius: '0.75rem', padding: '0.75rem 1rem', margin: '0.75rem 0' }}>
-            Our reporting endpoint isn't connected yet. Your message wasn't sent.
-            Please email <a href="mailto:contact@meapp.placeholder.com">contact@meapp.placeholder.com</a>
-            for now.
+            Thanks — your report was delivered to the ME team. We'll review it and get
+            back to you{form.email ? ` at ${form.email}` : ''} if a reply is needed.
           </p>
           <button className="btn btn-primary" onClick={() => { setSubmitted(false); setForm({ category: 'bug', email: '', message: '' }); }}>
-            Try again
+            Submit another
           </button>
         </>
       ) : (
@@ -74,8 +93,14 @@ export default function Report() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>
-            Submit report
+          {error && (
+            <p style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.3)',
+                         borderRadius: '0.75rem', padding: '0.6rem 0.9rem', margin: 0, color: '#ef4444', fontSize: '0.85rem' }}>
+              {error}
+            </p>
+          )}
+          <button type="submit" className="btn btn-primary" disabled={sending} style={{ alignSelf: 'flex-start' }}>
+            {sending ? 'Sending…' : 'Submit report'}
           </button>
         </form>
       )}

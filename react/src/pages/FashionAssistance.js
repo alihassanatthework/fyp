@@ -958,10 +958,8 @@ export default function FashionAssistance() {
                   </div>
                 )}
               </div>
-            </div>
 
-            {/* Right: Event + Analyze */}
-            <div style={{ display:'flex', flexDirection:'column', gap:'1.25rem' }}>
+              {/* Step 2 — occasion, now directly under the upload */}
               <div className="card" style={{ padding:'1.5rem' }}>
                 <p className="fa-section-label">Step 2 &mdash; Select Occasion</p>
                 <div className="fa-event-grid">
@@ -986,6 +984,10 @@ export default function FashionAssistance() {
                   />
                 )}
               </div>
+            </div>
+
+            {/* Right: Gender + Measurements + Analyze */}
+            <div style={{ display:'flex', flexDirection:'column', gap:'1.25rem' }}>
 
               {/* Gender — drives male vs female recommendations */}
               <div className="card" style={{ padding:'1.25rem' }}>

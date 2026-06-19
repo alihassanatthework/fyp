@@ -17,6 +17,7 @@ from .mediapipe_detector import FaceScalpDetector
 from .unet_segmenter import UNetSegmenter
 from .efficientnet_classifier import EfficientNetClassifier
 from .yolo_detector import YOLODetector
+from .scalp_classifier import ScalpClassifier
 from .xgboost_severity import XGBoostSeverityClassifier
 from .llm_recommender import LLMRecommender
 from .pipeline import AIAnalysisPipeline, get_pipeline, process_image
@@ -28,6 +29,7 @@ __all__ = [
     'UNetSegmenter',
     'EfficientNetClassifier',
     'YOLODetector',
+    'ScalpClassifier',
     'XGBoostSeverityClassifier',
     'LLMRecommender',
     'AIAnalysisPipeline',

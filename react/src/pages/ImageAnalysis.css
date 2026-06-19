@@ -258,17 +258,19 @@
 /* image preview inside dropzone */
 .ia-preview-wrap {
   position: relative;
-  width: 400px;
-  height: 400px;
-  max-width: 100%;       /* shrink on small screens */
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1 / 1;    /* uniform square frame across all uploaders */
   border-radius: 0.85rem;
   overflow: hidden;
   margin: 0 auto 0.75rem; /* centered */
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
 }
 .ia-preview-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;     /* fill the 400×400 box, no bars */
+  object-fit: contain;    /* whole image visible, no crop or stretch */
   display: block;
 }
 .ia-preview-overlay {

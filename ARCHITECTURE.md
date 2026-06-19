@@ -1,7 +1,41 @@
-## AI Beauty Assistant - Architecture
+## ME — AI Skin & Scalp Assistant — Architecture
 
-> **Phase 1**: ✅ Complete — JWT auth, profiles, skin/scalp AI pipeline, analysis DB, diagnosis, recommendations, feedback, password reset, 39 tests passing.
-> **Phase 2**: 🔲 In Progress — Providers, Bookings, Makeup assistance, Fashion assistance.
+> **Phase 1**: ✅ Complete — JWT auth, profiles, skin/scalp AI pipeline, analysis DB, diagnosis, recommendations, feedback, password reset.
+> **Phase 2**: ✅ Complete — Providers, Bookings, Makeup assistance, Fashion assistance, premium tier, mobile UI.
+> **Phase 3 (current)**: ✅ Groq LLM integration, 5-class scalp classifier, skin-tone-driven makeup/fashion, medication recommendations with medical-history safety filtering, server-side reporting, legal/consent pages.
+
+---
+
+## Current State (as of 19 June 2026)
+
+Key changes layered on top of the original Phase 1/2 build:
+
+### AI / ML
+- **LLM = Groq** (`llama-3.3-70b`, `core/llm_groq.py`) is the **primary** recommender for skin/scalp care, makeup, and fashion, with **Ollama** as local fallback. Zero-shot prompting (no training). Browser User-Agent header added to bypass Cloudflare.
+- **Scalp branch rebuilt**: replaced the broken single-class `yolo_scalp.pt` with a **5-class EfficientNet-B0 classifier** (`core/ai_models/scalp_classifier.py`, `scalp_classifier_v1.pth`): Alopecia · Dermatitis · Infections · Normal · Psoriasis. **98.6% test accuracy.** Pipeline prefers it; YOLO kept as fallback. U-Net (skin eczema) untouched.
+  - Dataset built by `scripts/clean_organize_scalp.py` (pHash dedup, quality filter, 5-class map, 80/10/10 split → `dataset/scalp_clean/`). Trained by `train_scalp_5class.py` / `scripts/train_scalp.sh`. Evaluated by `scripts/evaluate_scalp.py`.
+- **Makeup & Fashion** now derive palettes/shades from **skin tone + undertone + season + event** (MediaPipe FaceMesh/Pose, LAB skin-tone + Fitzpatrick + undertone), with per-request variety. No more identical results for everyone.
+- **Medication recommendations**: LLM returns real pharmaceutical drugs (generic + brand + form + strength). Strengthened safety rules + a **deterministic backend filter** (`_filter_unsafe_medicines`) that drops contraindicated drugs based on the user's medical history (pregnancy, allergies, cardiovascular, etc.).
+
+### Backend
+- **Accounts**: `UserProfile.account_type` (free/premium); `POST /api/account/upgrade/`. Free tier daily scan limit (`FREE_DAILY_SCAN_LIMIT=5`, 429 when exceeded); premium unlimited.
+- **History API** returns full list, ordered, with ISO `created_at` + conditions (fixes "Invalid Date" + sorting).
+- **Reporting**: `POST /api/report/` emails the official inbox (`me.offical.team.system@gmail.com`) via Django mail (needs SMTP env to deliver).
+- **Scalp severity** derived from classifier confidence in `image_analysis/views.py`.
+
+### Frontend (React)
+- Axios interceptor parses DRF field errors (shows real reason, not "status code 400").
+- Diagnosis report: all-class scalp chart, **Recommended Medications** card with OTC/Rx badges + per-medicine "safe for you" note, uniform Analysis Images frames.
+- Uniform square `object-fit: contain` upload previews across skin/scalp/makeup/fashion.
+- History: shows 6 recent + "View all" toggle.
+- Legal pages (Terms, Privacy, Consent) rewritten professional + project-specific; signup requires consent checkbox (Terms + Privacy + Consent) before registering.
+- Footer/Contact wired to official Instagram, LinkedIn, Gmail.
+
+### Config / Secrets
+- `.env` (gitignored): `GROQ_API_KEY`, optional `EMAIL_HOST_USER`/`EMAIL_HOST_PASSWORD` (Gmail app password) for live report email.
+- `.claude/` gitignored; commits never credit Claude as co-author.
+
+---
 
 ## System Overview
 

@@ -103,15 +103,39 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // For all other errors extract a readable message
-    const message =
-      error.response?.data?.detail ||
-      error.response?.data?.error  ||
-      error.response?.data?.message ||
-      error.message ||
-      'Something went wrong';
+    // For all other errors extract a readable message. This also handles DRF
+    // field-validation errors like { email: ["user with this email already
+    // exists."] } or { password: ["too short"] } so the UI shows the REASON,
+    // not a generic "Request failed with status code 400".
+    const data = error.response?.data;
+    let message =
+      data?.detail ||
+      data?.error  ||
+      data?.message;
 
-    return Promise.reject(new Error(message));
+    if (!message && data && typeof data === 'object') {
+      // First field error: "email: user with this email already exists."
+      const firstKey = Object.keys(data)[0];
+      if (firstKey) {
+        const v = data[firstKey];
+        const text = Array.isArray(v) ? v[0] : String(v);
+        // Common auth fields already mention themselves ("An account with this
+        // email…") — show them bare. Other fields keep a "field: msg" prefix.
+        const bare = ['non_field_errors', 'email', 'password', 'detail'];
+        message = bare.includes(firstKey) ? text : `${firstKey}: ${text}`;
+      }
+    } else if (!message && typeof data === 'string') {
+      message = data;
+    }
+
+    message = message || error.message || 'Something went wrong';
+
+    // Preserve the original response so downstream handlers (e.g. extractError
+    // in AuthContext) can still inspect the raw error body if they want.
+    const wrapped = new Error(message);
+    wrapped.response = error.response;
+    wrapped.status = error.response?.status;
+    return Promise.reject(wrapped);
   }
 );
 

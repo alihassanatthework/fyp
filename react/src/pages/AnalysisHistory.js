@@ -46,6 +46,9 @@ export default function AnalysisHistory() {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState('');
   const [openingId, setOpeningId] = useState(null);  // shows spinner on clicked card
+  const [showAll, setShowAll] = useState(false);     // collapse to recent few by default
+
+  const RECENT_COUNT = 6;
 
   // The history endpoint returns only summary fields. To render DiagnosisReport
   // we need the full pipeline payload, which lives at /analysis/<id>/.
@@ -164,9 +167,18 @@ export default function AnalysisHistory() {
           </div>
         )}
 
+        {/* Recent count header */}
+        {!loading && !error && filtered.length > 0 && (
+          <p className="text-sm text-gray-500 text-gray-400" style={{ margin: '0 0 0.75rem' }}>
+            {showAll
+              ? `Showing all ${filtered.length} analyses`
+              : `Showing ${Math.min(RECENT_COUNT, filtered.length)} of ${filtered.length} recent analyses`}
+          </p>
+        )}
+
         {/* Records list */}
         <div className="flex flex-col gap-3">
-          {filtered.map((rec, i) => {
+          {(showAll ? filtered : filtered.slice(0, RECENT_COUNT)).map((rec, i) => {
             const isScalp = rec.type.includes('Scalp');
             return (
               <div
@@ -233,6 +245,20 @@ export default function AnalysisHistory() {
               <p className="text-sm text-gray-400 text-gray-500">
                 Try a different analysis type filter.
               </p>
+            </div>
+          )}
+
+          {/* View All / Show Less toggle */}
+          {filtered.length > RECENT_COUNT && (
+            <div className="flex justify-center" style={{ marginTop: '0.5rem' }}>
+              <button
+                onClick={() => setShowAll(s => !s)}
+                className="history-viewall-btn"
+              >
+                {showAll
+                  ? 'Show less'
+                  : `View all ${filtered.length} analyses`}
+              </button>
             </div>
           )}
         </div>

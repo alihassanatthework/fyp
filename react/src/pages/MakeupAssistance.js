@@ -536,6 +536,25 @@ export default function MakeupAssistance() {
         _serverRaw: suggestions,
       };
 
+      // Override the template swatches with the backend's skin-tone-derived
+      // shades (name + hex) so colours differ by skin tone, not just by event.
+      const bShades = suggestions.shades && typeof suggestions.shades === 'object'
+        ? suggestions.shades : null;
+      if (bShades) {
+        ['foundation','eyes','lips','blush','contour','eyeliner','brows','highlighter'].forEach(cat => {
+          const arr = bShades[cat]
+            || (cat === 'eyes' ? bShades.eyeshadow : null)
+            || (cat === 'lips' ? bShades.lipstick  : null);
+          if (Array.isArray(arr) && arr.length && merged[cat] && typeof merged[cat] === 'object') {
+            const mapped = arr
+              .map(s => ({ name: s?.name || 'Shade', color: s?.hex || s?.color }))
+              .filter(s => typeof s.color === 'string' && /^#?[0-9a-fA-F]{3,6}$/.test(s.color.trim()))
+              .map(s => ({ name: s.name, color: s.color.trim().startsWith('#') ? s.color.trim() : '#' + s.color.trim() }));
+            if (mapped.length) merged[cat] = { ...merged[cat], shades: mapped };
+          }
+        });
+      }
+
       clearInterval(tick);
       setProgress(100);
       setStepIdx(total - 1);
@@ -749,13 +768,9 @@ export default function MakeupAssistance() {
               {eventLabel} Look — {rec.palette}
             </div>
 
-            {/* ── Two columns: recommendations + preview ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
-
-              {/* Recommendation cards */}
-              <div>
-                <p className="mua-section-label" style={{ marginBottom: '0.75rem' }}>Personalised Makeup Recommendations</p>
-                <div className="mua-rec-grid">
+            {/* Recommendations — 4 columns × 2 rows */}
+            <p className="mua-section-label" style={{ marginBottom: '0.75rem' }}>Personalised Makeup Recommendations</p>
+            <div className="mua-rec-grid mua-rec-grid--4col">
                   {Object.entries(rec).filter(([key]) => key !== 'palette' && !key.startsWith('_')).map(([key, val], i) => {
                     const meta = CARD_META[key];
                     if (!meta) return null;
@@ -786,36 +801,32 @@ export default function MakeupAssistance() {
                       </div>
                     );
                   })}
-                </div>
-              </div>
+            </div>
 
-              {/* Right column — actions + summary (AR preview removed) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                {/* Book Salon Appointment */}
-                <button
-                  className="mua-salon-btn"
-                  onClick={() => navigate('/bookings?type=salon', { state: { type: 'salon', source: 'makeup' } })}
-                >
-                  <Scissors size={16}/> Book Salon Appointment
-                </button>
+            {/* Under the cards: Book Salon + Your Look at a Glance (full width) */}
+            <div className="mua-under-cards">
+              <button
+                className="mua-salon-btn"
+                onClick={() => navigate('/bookings?type=salon', { state: { type: 'salon', source: 'makeup' } })}
+              >
+                <Scissors size={16}/> Book Salon Appointment
+              </button>
 
-                {/* Quick summary card */}
-                <div className="card" style={{ padding: '1.25rem' }}>
-                  <p className="mua-section-label">Your Look at a Glance</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginTop: '0.25rem' }}>
-                    {[
-                      { label: 'Palette',  val: rec.palette },
-                      { label: 'Eyes',     val: rec.eyes?.shade },
-                      { label: 'Lips',     val: rec.lips?.shade },
-                      { label: 'Blush',    val: rec.blush?.shade },
-                      { label: 'Glow',     val: rec.highlighter?.shade },
-                    ].filter(row => row.val).map(row => (
-                      <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ fontSize: '0.77rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>{row.label}</span>
-                        <span style={{ fontSize: '0.78rem', color: 'var(--text-primary)', fontWeight: 600, textAlign: 'right', maxWidth: '62%' }}>{row.val}</span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="card" style={{ padding: '1.25rem' }}>
+                <p className="mua-section-label">Your Look at a Glance</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginTop: '0.25rem' }}>
+                  {[
+                    { label: 'Palette',  val: rec.palette },
+                    { label: 'Eyes',     val: rec.eyes?.shade },
+                    { label: 'Lips',     val: rec.lips?.shade },
+                    { label: 'Blush',    val: rec.blush?.shade },
+                    { label: 'Glow',     val: rec.highlighter?.shade },
+                  ].filter(row => row.val).map(row => (
+                    <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.77rem', color: 'var(--text-tertiary)', fontWeight: 600 }}>{row.label}</span>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--text-primary)', fontWeight: 600, textAlign: 'right', maxWidth: '62%' }}>{row.val}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

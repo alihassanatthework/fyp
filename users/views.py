@@ -521,16 +521,144 @@ class MyRoleView(APIView):
 
 
 class UpgradeAccountView(APIView):
-    """POST /api/account/upgrade/  — set the user's tier to premium.
+    """POST /api/account/upgrade/  — process a premium subscription payment.
 
-    No payment gateway is wired up; this flips account_type so premium
-    features (unlimited scans, crown badge) unlock immediately.
+    Demo payment: the card details are validated and "charged" on the client;
+    this endpoint receives the chosen plan + a card token (last4 only — full
+    card numbers are NEVER sent to or stored on the server) and activates
+    premium, returning a transaction reference like a real gateway would.
+    """
+    permission_classes = [IsAuthenticated]
+
+    PLANS = {
+        'monthly': {'amount': 4.99, 'label': 'Monthly'},
+        'yearly':  {'amount': 39.99, 'label': 'Yearly'},
+    }
+
+    def post(self, request):
+        import uuid
+        from django.utils import timezone
+
+        plan_key = (request.data or {}).get('plan', 'monthly')
+        plan = self.PLANS.get(plan_key, self.PLANS['monthly'])
+        card_last4 = str((request.data or {}).get('card_last4', '')).strip()[-4:]
+
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        profile.account_type = 'premium'
+        profile.save(update_fields=['account_type'])
+
+        txn_id = f"ME-{uuid.uuid4().hex[:12].upper()}"
+        logger.info("User %s upgraded to premium (plan=%s, amount=%.2f, txn=%s, card=****%s)",
+                    request.user.email, plan_key, plan['amount'], txn_id, card_last4 or '----')
+
+        return Response({
+            'success': True,
+            'account_type': 'premium',
+            'transaction_id': txn_id,
+            'plan': plan_key,
+            'plan_label': plan['label'],
+            'amount': plan['amount'],
+            'currency': 'USD',
+            'paid_at': timezone.now().isoformat(),
+            'card_last4': card_last4,
+        })
+
+
+# ── Safepay payment gateway (cards + Easypaisa + JazzCash) ───────────
+PREMIUM_PLANS_PKR = {
+    'monthly': {'amount': 1400, 'label': 'Monthly'},
+    'yearly':  {'amount': 11200, 'label': 'Yearly'},
+}
+
+
+class PaymentInitView(APIView):
+    """POST /api/payments/init/  — create a Safepay hosted-checkout session.
+
+    Returns a checkout_url the browser is redirected to, where the user picks
+    Card / Easypaisa / JazzCash. Falls back to {configured: False} when Safepay
+    keys are not set, so the frontend uses the built-in demo checkout instead.
     """
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        from core import safepay
+        from django.conf import settings
+
+        if not safepay.is_configured():
+            return Response({'configured': False}, status=status.HTTP_200_OK)
+
+        plan_key = (request.data or {}).get('plan', 'monthly')
+        plan = PREMIUM_PLANS_PKR.get(plan_key, PREMIUM_PLANS_PKR['monthly'])
+
+        tracker = safepay.create_session(plan['amount'], currency='PKR')
+        if not tracker:
+            return Response({'error': 'Could not start payment. Try again.'},
+                            status=status.HTTP_502_BAD_GATEWAY)
+
+        front = settings.FRONTEND_BASE_URL.rstrip('/')
+        url = safepay.checkout_url(
+            tracker,
+            redirect_url=f"{front}/upgrade?status=success",
+            cancel_url=f"{front}/upgrade?status=cancelled",
+            order_id=f"ME-{request.user.id}-{plan_key}",
+        )
+        return Response({
+            'configured': True, 'checkout_url': url, 'tracker': tracker,
+            'plan': plan_key, 'amount': plan['amount'], 'currency': 'PKR',
+        })
+
+
+class PaymentWebhookView(APIView):
+    """POST /api/payments/webhook/  — Safepay calls this on payment events.
+
+    Verifies the signature, and on a successful charge marks the matching user
+    premium. This is the SOURCE OF TRUTH (we don't trust the browser redirect).
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        from core import safepay
+
+        signature = request.headers.get('X-SFPY-SIGNATURE', '')
+        if not safepay.verify_webhook(request.body, signature):
+            return Response({'error': 'invalid signature'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        payload = request.data or {}
+        event = (payload.get('type') or payload.get('event') or '').lower()
+        data = payload.get('data') or {}
+        order_id = str(data.get('order_id') or data.get('metadata', {}).get('order_id') or '')
+
+        if 'succeed' in event or 'paid' in event or 'complete' in event:
+            # order_id format: ME-<user_id>-<plan>
+            try:
+                uid = int(order_id.split('-')[1])
+                profile, _ = UserProfile.objects.get_or_create(user_id=uid)
+                profile.account_type = 'premium'
+                profile.save(update_fields=['account_type'])
+                logger.info("Safepay webhook: user %s upgraded to premium (order=%s)", uid, order_id)
+            except Exception as e:
+                logger.error("Safepay webhook could not upgrade (order=%s): %s", order_id, e)
+        return Response({'received': True})
+
+
+class PaymentVerifyView(APIView):
+    """POST /api/payments/verify/  — confirm a payment after the Safepay redirect.
+
+    The browser returns to /upgrade?status=success&tracker=...; this queries
+    Safepay directly for the tracker's payment state (authoritative) and
+    activates premium when it reports paid."""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        from core import safepay
+
+        tracker = (request.data or {}).get('tracker', '')
+        if not tracker or not safepay.is_order_paid(tracker):
+            return Response({'verified': False}, status=status.HTTP_400_BAD_REQUEST)
+
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
         profile.account_type = 'premium'
         profile.save(update_fields=['account_type'])
-        logger.info("User %s upgraded to premium", request.user.email)
-        return Response({'success': True, 'account_type': 'premium'})
+        logger.info("User %s premium confirmed via Safepay tracker %s", request.user.email, tracker)
+        return Response({'verified': True, 'account_type': 'premium'})

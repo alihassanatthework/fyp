@@ -324,6 +324,27 @@ OLLAMA_MODEL  = os.getenv('OLLAMA_MODEL', 'llama3.2')
 GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
 GROQ_MODEL   = os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile')
 
+# ── Safepay payment gateway (cards + Easypaisa + JazzCash) ───────────
+# Free sandbox keys: https://sandbox.getsafepay.com (Developers → API Keys).
+# When SAFEPAY_API_KEY is empty the app falls back to the built-in demo
+# checkout, so nothing breaks before keys are added.
+SAFEPAY_ENVIRONMENT  = os.getenv('SAFEPAY_ENVIRONMENT', 'sandbox')   # sandbox | production
+SAFEPAY_API_KEY      = os.getenv('SAFEPAY_API_KEY', '')              # public/merchant key
+SAFEPAY_SECRET_KEY   = os.getenv('SAFEPAY_SECRET_KEY', '')           # secret (server-only)
+SAFEPAY_WEBHOOK_SECRET = os.getenv('SAFEPAY_WEBHOOK_SECRET', '')     # webhook signing secret
+SAFEPAY_API_BASE = (
+    'https://sandbox.api.getsafepay.com'
+    if SAFEPAY_ENVIRONMENT == 'sandbox'
+    else 'https://api.getsafepay.com'
+)
+SAFEPAY_CHECKOUT_BASE = (
+    'https://sandbox.api.getsafepay.com'
+    if SAFEPAY_ENVIRONMENT == 'sandbox'
+    else 'https://getsafepay.com'
+)
+# Where Safepay sends the user back after payment (your React route).
+FRONTEND_BASE_URL = os.getenv('FRONTEND_BASE_URL', 'http://localhost:3000')
+
 # ── Email Settings ───────────────────────────────────────────────
 # In development without EMAIL_HOST_USER set, emails print to the
 # terminal. With EMAIL_HOST_USER + EMAIL_HOST_PASSWORD set, real SMTP

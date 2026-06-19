@@ -169,7 +169,12 @@ export default function SignUp() {
                       {agreed ? <CheckSquare size={18}/> : <Square size={18}/>}
                     </span>
                     <span className="terms-text">
-                      I agree to the <Link to="/terms" onClick={(e) => e.stopPropagation()}>Terms and Conditions</Link> and consent to upload my face or scalp images for AI-based analysis.
+                      I have read and agree to the{' '}
+                      <Link to="/terms" onClick={(e) => e.stopPropagation()}>Terms and Conditions</Link>,{' '}
+                      <Link to="/privacy" onClick={(e) => e.stopPropagation()}>Privacy Policy</Link>, and{' '}
+                      <Link to="/consent" onClick={(e) => e.stopPropagation()}>Consent Form</Link>, and I consent to ME
+                      processing my uploaded face, scalp, or body images for AI-based analysis.
+                      I understand this is not a medical diagnosis. <strong>(Required)</strong>
                     </span>
                   </button>
 

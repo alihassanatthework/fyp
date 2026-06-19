@@ -5,6 +5,7 @@ from .views import (
     ForgotPasswordView, ResetPasswordView,
     UserListView, UserRoleView, MyRoleView,
     UpgradeAccountView,
+    PaymentInitView, PaymentWebhookView, PaymentVerifyView,
 )
 
 urlpatterns = [
@@ -23,6 +24,11 @@ urlpatterns = [
 
     # Account tier
     path('account/upgrade/', UpgradeAccountView.as_view(), name='account-upgrade'),
+
+    # Payments (Safepay: cards + Easypaisa + JazzCash)
+    path('payments/init/',    PaymentInitView.as_view(),    name='payment-init'),
+    path('payments/webhook/', PaymentWebhookView.as_view(), name='payment-webhook'),
+    path('payments/verify/',  PaymentVerifyView.as_view(),  name='payment-verify'),
 
     # Role
     path('auth/my-role/',              MyRoleView.as_view(),  name='my-role'),

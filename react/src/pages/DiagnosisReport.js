@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Download, Bookmark, BookmarkCheck, Bell, ArrowRight, CheckCircle2, ShieldCheck, BarChart3, X, RotateCcw, Home } from 'lucide-react';
+import { Download, Bookmark, BookmarkCheck, Bell, ArrowRight, CheckCircle2, ShieldCheck, BarChart3, X, RotateCcw, Home, Pill } from 'lucide-react';
 import apiClient from '../api/client';
 import { API_ENDPOINTS } from '../api/config';
 import {
@@ -65,6 +65,7 @@ export default function DiagnosisReport() {
 
   const conditions = report?.conditions || [];
   const recommendations = report?.recommendations || [];
+  const medicines = report?.recommendations_structured?.medicines || [];
 
   const primary = conditions[0] || {
     name: 'Normal',
@@ -377,6 +378,59 @@ export default function DiagnosisReport() {
           </div>
         </div>
 
+        {medicines.length > 0 && (
+          <div className="card p-6 medications-card">
+            <div className="recommendation-header">
+              <Pill size={18} className="recommendation-icon" />
+              <h2 className="condition-header-title">Recommended Medications</h2>
+            </div>
+            <p className="medications-sub">
+              Pharmaceutical options commonly used to treat {primary?.name}. Confirm
+              suitability with a pharmacist or doctor before use.
+            </p>
+            <div className="medications-grid">
+              {medicines.map((m, i) => (
+                <div className="med-card" key={i}>
+                  <div className="med-card-top">
+                    <span className="med-name">
+                      {m.name}{m.strength ? ` · ${m.strength}` : ''}
+                    </span>
+                    <span className={`med-badge ${m.otc === false ? 'rx' : 'otc'}`}>
+                      {m.otc === false ? 'Rx' : 'OTC'}
+                    </span>
+                  </div>
+                  {(m.form || (m.brand_examples && m.brand_examples.length > 0)) && (
+                    <div className="med-meta">
+                      {m.form && <span className="med-form">{m.form}</span>}
+                      {m.brand_examples && m.brand_examples.length > 0 && (
+                        <span className="med-brands">e.g. {m.brand_examples.join(', ')}</span>
+                      )}
+                    </div>
+                  )}
+                  {m.usage && (
+                    <p className="med-line"><span className="med-line-label">How to use:</span> {m.usage}</p>
+                  )}
+                  {m.reason && (
+                    <p className="med-line"><span className="med-line-label">Why:</span> {m.reason}</p>
+                  )}
+                  {m.safe_for_patient && (
+                    <p className="med-line med-safe"><span className="med-line-label">✓ Safe for you:</span> {m.safe_for_patient}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="disclaimer-box">
+              <p className="disclaimer-text">
+                <span className="disclaimer-label">Medication Disclaimer:</span> These are
+                AI-generated suggestions for educational purposes only — not a prescription.
+                Medicines marked <strong>Rx</strong> require a doctor's evaluation. Always
+                consult a qualified healthcare professional or pharmacist before starting any
+                medication.
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="diagnosis-grid">
           <div className="card p-6">
             <div className="recommendation-header">
@@ -424,17 +478,21 @@ export default function DiagnosisReport() {
         {(visualizedImage || originalImage) && (
           <div className="card p-6" style={{ marginTop: 16 }}>
             <h2 className="condition-header-title" style={{ marginBottom: 12 }}>Analysis Images</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 12 }}>
+            <div className="analysis-images-grid">
               {originalImage ? (
-                <div>
+                <div className="analysis-image-col">
                   <p className="text-sm" style={{ color: 'var(--text-tertiary)', marginBottom: 6 }}>Original</p>
-                  <img src={originalImage} alt="Original upload" style={{ width: '100%', borderRadius: 12 }} />
+                  <div className="analysis-image-frame">
+                    <img src={originalImage} alt="Original upload" />
+                  </div>
                 </div>
               ) : null}
               {visualizedImage ? (
-                <div>
+                <div className="analysis-image-col">
                   <p className="text-sm" style={{ color: 'var(--text-tertiary)', marginBottom: 6 }}>Overlay</p>
-                  <img src={visualizedImage} alt="Overlay visualization" style={{ width: '100%', borderRadius: 12 }} />
+                  <div className="analysis-image-frame">
+                    <img src={visualizedImage} alt="Overlay visualization" />
+                  </div>
                 </div>
               ) : null}
             </div>

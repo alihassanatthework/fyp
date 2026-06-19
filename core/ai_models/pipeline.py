@@ -22,6 +22,7 @@ from .roi_extractor import extract_roi_from_mask
 from .efficientnet_classifier import EfficientNetClassifier
 from .dryness_detector import DrynessDetector
 from .yolo_detector import YOLODetector
+from .scalp_classifier import ScalpClassifier
 from .xgboost_severity import XGBoostSeverityClassifier
 from .llm_recommender import LLMRecommender
 from .normal_detector import NormalDetector
@@ -85,6 +86,14 @@ class AIAnalysisPipeline:
             )
             self.yolo = YOLODetector(
                 model_path=model_configs.get('yolo_path')
+            )
+            # Primary scalp branch — 5-class EfficientNet-B0 classifier. Replaces
+            # the broken single-class yolo_scalp.pt. When the .pth is absent it
+            # reports is_available()==False and the pipeline falls back to YOLO.
+            self.scalp_classifier = ScalpClassifier(
+                model_path=model_configs.get('scalp_classifier_path',
+                                             'core/ai_models/scalp_classifier_v1.pth'),
+                device=self.device,
             )
             self.xgboost_severity = XGBoostSeverityClassifier(
             model_path=model_configs.get("xgboost_path")
@@ -282,14 +291,46 @@ class AIAnalysisPipeline:
                 # visualization overlay only.
                 roi_for_yolo = roi_image
 
-                detections = self.yolo.detect(roi_for_yolo)
-                # Keep raw detections for visualization
-                raw_detections = detections
-                detected_conditions = self._process_scalp_conditions(
-                    detections,
-                    roi_bbox,
-                    
-            )
+                # PRIMARY: 5-class scalp classifier (drop-in replacement for the
+                # broken single-class yolo_scalp.pt). Falls back to YOLO when the
+                # trained .pth is not present.
+                if (self.scalp_classifier is not None
+                        and self.scalp_classifier.is_available()):
+                    pred = self.scalp_classifier.predict(roi_for_yolo)
+                    print(f"🧠 ScalpClassifier → {pred['name'] if pred else None} "
+                          f"({pred['confidence']:.2f})" if pred else "🧠 ScalpClassifier → None")
+                    if pred and pred['confidence'] >= self.scalp_classifier.min_confidence:
+                        detected_conditions = [{
+                            'name': pred['name'],
+                            'class': pred['name'],
+                            'display': pred['display'],
+                            'confidence': pred['confidence'],
+                            'probs': pred['probs'],
+                            'bbox': None,
+                            'roi_bbox': roi_bbox,
+                            'type': 'scalp',
+                        }]
+                    else:
+                        # Low confidence → report Healthy/uncertain rather than guess.
+                        detected_conditions = [{
+                            'name': 'Normal',
+                            'class': 'Normal',
+                            'display': 'Healthy Scalp',
+                            'confidence': float(pred['confidence']) if pred else 0.0,
+                            'probs': pred['probs'] if pred else None,
+                            'bbox': None,
+                            'roi_bbox': roi_bbox,
+                            'type': 'scalp',
+                        }]
+                    raw_detections = None
+                else:
+                    detections = self.yolo.detect(roi_for_yolo)
+                    # Keep raw detections for visualization
+                    raw_detections = detections
+                    detected_conditions = self._process_scalp_conditions(
+                        detections,
+                        roi_bbox,
+                    )
 
         except Exception as e:
             # Fallback: return normal condition if classification fails

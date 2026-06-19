@@ -310,6 +310,27 @@ h1, h2, h3, h4, h5, h6, .font-display {
   box-shadow: 0 4px 10px rgba(67, 56, 202, 0.22);
   transform: translateY(-1px);
 }
+.history-viewall-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--nav-accent);
+  background: var(--bg-secondary);
+  border: 1px solid var(--nav-accent);
+  transition: all 0.18s ease;
+}
+.history-viewall-btn:hover {
+  background: var(--nav-accent);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.22);
+}
+
 .history-btn-ghost {
   background: var(--bg-secondary);
   color: var(--text-secondary);

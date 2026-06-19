@@ -2,22 +2,34 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  padding: 0.6rem 1rem 0;
-  background: var(--bg-primary);
+  padding: 0.85rem 1rem 0;   /* float gap from the top */
+  /* Transparent so the PAGE background shows on the sides of the floating
+     bar (was solid white, which looked like a white strip in light mode). */
+  background: transparent;
 }
 
 .navbar-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto;            /* + side gap via max-width → floats centered */
   padding: 0 1.5rem;
   height: 3.6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #3730a3, #4338ca, #4f46e5);
+  /* Uniform SOLID colour across the whole width (was a diagonal gradient
+     that looked uneven left-to-right). */
+  background: #4338ca;
   border-radius: 1rem;
-  box-shadow: 0 4px 24px rgba(67, 56, 202, 0.38);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* Floating effect — soft shadow lifts the bar above the page. */
+  box-shadow: 0 8px 28px rgba(67, 56, 202, 0.30), 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* Dark mode — deeper solid indigo to match the dark page theme. */
+body.dark .navbar-container {
+  background: #312e81;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .navbar-left {
