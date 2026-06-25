@@ -57,7 +57,7 @@ export default function ImageAnalysis() {
   const navigate = useNavigate();
 
   const { uploadImage, loading } = useAnalysis();
-  const { openNativeCamera } = useCamera();
+  const { openNativeCamera, openCamera, closeCamera, videoRef, isCameraOpen, error: cameraError } = useCamera();
   const dropDisabled = loading || uploadInFlightRef.current;
 
   useEffect(() => {
@@ -128,10 +128,38 @@ export default function ImageAnalysis() {
     }
   };
 
-  const handleTakePhoto = () => {
-    openNativeCamera((capturedFile) => {
-      validateAndSet(capturedFile);
-    });
+  const handleTakePhoto = async () => {
+    // Mobile: the native camera app (input capture) is the best experience.
+    // Desktop: input capture is ignored by browsers, so use a live getUserMedia
+    // webcam modal instead.
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(
+      typeof navigator !== 'undefined' ? navigator.userAgent : ''
+    );
+    if (isMobile) {
+      openNativeCamera((capturedFile) => validateAndSet(capturedFile));
+      return;
+    }
+    const res = await openCamera();
+    if (!res?.success) {
+      // Webcam blocked/unavailable → fall back to the file picker.
+      openNativeCamera((capturedFile) => validateAndSet(capturedFile));
+    }
+  };
+
+  // Grab the current webcam frame → File → set as the upload.
+  const captureFromWebcam = () => {
+    const v = videoRef.current;
+    if (!v || !v.videoWidth) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = v.videoWidth;
+    canvas.height = v.videoHeight;
+    canvas.getContext('2d').drawImage(v, 0, 0);
+    canvas.toBlob((blob) => {
+      if (blob) {
+        validateAndSet(new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' }));
+      }
+      closeCamera();
+    }, 'image/jpeg', 0.92);
   };
 
   const handleBack = () => {
@@ -271,6 +299,23 @@ export default function ImageAnalysis() {
                   <button type="button" className="ia-action-btn" onClick={handleTakePhoto} disabled={loading}>
                     <Camera size={16}/> Take Photo
                   </button>
+                </div>
+
+                {/* Live webcam modal (desktop). Kept mounted via display toggle
+                    so the <video> ref exists when the stream attaches. */}
+                <div className="ia-camera-modal" style={{ display: isCameraOpen ? 'flex' : 'none' }}>
+                  <div className="ia-camera-box">
+                    <video ref={videoRef} autoPlay playsInline muted className="ia-camera-video" />
+                    {cameraError && <p className="ia-camera-error">{cameraError}</p>}
+                    <div className="ia-camera-actions">
+                      <button type="button" className="ia-action-btn" onClick={closeCamera}>
+                        Cancel
+                      </button>
+                      <button type="button" className="ia-action-btn ia-camera-capture" onClick={captureFromWebcam}>
+                        <Camera size={16}/> Capture
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Errors */}

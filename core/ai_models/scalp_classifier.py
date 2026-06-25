@@ -85,12 +85,39 @@ class ScalpClassifier:
         std = torch.tensor(self.std).view(1, 3, 1, 1)
         return ((t - mean) / std).to(self.device)
 
+    def _affected_area(self, t: torch.Tensor, idx: int) -> float:
+        """Estimate the fraction of the scalp ROI affected by the predicted
+        condition using a Class Activation Map (CAM).
+
+        EfficientNet ends in global-average-pool → _fc, so the CAM for class
+        `idx` is the _fc-weighted sum of the final conv feature maps. We
+        threshold it and return the fraction of the map that lights up — a
+        real, image-derived "how much area is affected" measure (weak
+        localization), not a confidence proxy. Returns 0..1.
+        """
+        try:
+            feats = self.model.extract_features(t)          # (1, C, h, w)
+            w = self.model._fc.weight[idx]                  # (C,)
+            cam = torch.einsum('c,chw->hw', w, feats[0])    # (h, w)
+            cam = torch.relu(cam)
+            m = cam.max()
+            if float(m) <= 1e-6:
+                return 0.0
+            cam = cam / m
+            # Pixels above 50% of peak activation count as "affected".
+            affected = (cam > 0.5).float().mean().item()
+            return float(affected)
+        except Exception as e:
+            print(f"⚠️ ScalpClassifier CAM failed: {e}")
+            return 0.0
+
     @torch.no_grad()
     def predict(self, roi_image: np.ndarray, tta: bool = True) -> Optional[dict]:
         """Classify a scalp ROI.
 
-        Returns a dict {name, display, confidence, probs} or None if
-        unavailable. `name` is the raw class; `probs` maps every class → prob.
+        Returns {name, display, confidence, probs, affected_area} or None.
+        `affected_area` is the CAM-derived fraction (0..1) of the scalp the
+        condition covers — used for true area-based severity.
         """
         if self.model is None:
             return None
@@ -104,11 +131,14 @@ class ScalpClassifier:
             probs = (acc / len(views)).cpu().numpy()
             idx = int(np.argmax(probs))
             name = self.classes[idx]
+            # Area only meaningful for a disease (Normal → 0 affected area).
+            affected = 0.0 if name.lower() == 'normal' else self._affected_area(t, idx)
             return {
                 "name": name,
                 "display": DISPLAY_NAMES.get(name, name),
                 "confidence": float(probs[idx]),
                 "probs": {c: float(probs[i]) for i, c in enumerate(self.classes)},
+                "affected_area": affected,
             }
         except Exception as e:
             print(f"⚠️ ScalpClassifier.predict failed: {e}")

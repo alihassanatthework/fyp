@@ -796,8 +796,10 @@ class AnalyzeImageView(APIView):
                 probs = _scalp_clf['probs']
                 top_cls = max(probs, key=probs.get)
                 top_p = float(probs[top_cls])
-                p_normal = float(probs.get('Normal', 0.0))
                 disp = SCALP_DISPLAY.get(top_cls, top_cls)
+                # True affected-area fraction from the classifier's CAM (0..1).
+                affected_area = float(_scalp_clf.get('affected_area', 0.0))
+                area_pct = round(affected_area * 100, 1)
 
                 if top_cls.lower() == 'normal':
                     context['conditions'] = [{
@@ -807,12 +809,12 @@ class AnalyzeImageView(APIView):
                     }]
                     context['max_severity'] = 0
                 else:
-                    # Severity = how strongly the disease dominates "Healthy" (margin),
-                    # scaled by the condition's clinical weight. A confident disease
-                    # prediction with low Normal probability → higher severity.
-                    margin = max(0.0, top_p - p_normal)          # 0..1 dominance
+                    # TRUE area-based severity: how much of the scalp the condition
+                    # covers (from the CAM), scaled by the condition's clinical
+                    # weight — same mild/moderate/severe bands the skin branch uses.
                     weight = SCALP_WEIGHT.get(top_cls, 0.85)
-                    score_int = int(round(min(100, max(8, margin * 100 * weight))))
+                    base_level, base_score = _area_to_severity(area_pct)
+                    score_int = int(round(min(100, max(8, base_score * weight))))
                     if score_int < 35:
                         level = 'Mild'
                     elif score_int < 70:
@@ -821,7 +823,7 @@ class AnalyzeImageView(APIView):
                         level = 'Severe'
                     context['conditions'] = [{
                         'name': disp, 'severity_level': level,
-                        'severity_score': score_int, 'area_pct': 0.0,
+                        'severity_score': score_int, 'area_pct': area_pct,
                         'confidence': round(top_p, 3),
                     }]
                     context['max_severity'] = score_int

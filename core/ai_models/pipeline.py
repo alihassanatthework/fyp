@@ -306,6 +306,7 @@ class AIAnalysisPipeline:
                             'display': pred['display'],
                             'confidence': pred['confidence'],
                             'probs': pred['probs'],
+                            'affected_area': pred.get('affected_area', 0.0),
                             'bbox': None,
                             'roi_bbox': roi_bbox,
                             'type': 'scalp',

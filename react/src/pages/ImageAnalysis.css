@@ -640,3 +640,49 @@ body.dark .ia-error-bar {
 body.dark .ia-scan-quota { background: rgba(99,102,241,0.18); color: #a5b4fc; }
 body.dark .ia-scan-quota--premium { background: rgba(217,119,6,0.20); color: #fcd34d; }
 body.dark .ia-scan-limit { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.35); }
+
+/* ── Live webcam capture modal (desktop "Take Photo") ── */
+.ia-camera-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  padding: 1rem;
+}
+.ia-camera-box {
+  background: var(--bg-primary, #fff);
+  border-radius: 1rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+.ia-camera-video {
+  width: 100%;
+  border-radius: 0.75rem;
+  background: #000;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+.ia-camera-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+}
+.ia-camera-actions .ia-action-btn { flex: 1; }
+.ia-camera-capture {
+  background: var(--nav-accent, #4338ca) !important;
+  color: #fff !important;
+  border-color: var(--nav-accent, #4338ca) !important;
+}
+.ia-camera-error {
+  color: #ef4444;
+  font-size: 0.82rem;
+  margin: 0.5rem 0 0;
+  text-align: center;
+}

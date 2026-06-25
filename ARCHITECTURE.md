@@ -21,7 +21,7 @@ Key changes layered on top of the original Phase 1/2 build:
 - **Accounts**: `UserProfile.account_type` (free/premium); `POST /api/account/upgrade/`. Free tier daily scan limit (`FREE_DAILY_SCAN_LIMIT=5`, 429 when exceeded); premium unlimited.
 - **History API** returns full list, ordered, with ISO `created_at` + conditions (fixes "Invalid Date" + sorting).
 - **Reporting**: `POST /api/report/` emails the official inbox (`me.offical.team.system@gmail.com`) via Django mail (needs SMTP env to deliver).
-- **Scalp severity** derived from classifier confidence in `image_analysis/views.py`.
+- **Scalp severity** is true **area-based**: a Class Activation Map (CAM) on the scalp classifier estimates the affected-area fraction, scaled by per-condition clinical weight, then mapped to Mild/Moderate/Severe (same bands as the skin branch). See `ScalpClassifier._affected_area` + `image_analysis/views.py`.
 
 ### Frontend (React)
 - Axios interceptor parses DRF field errors (shows real reason, not "status code 400").
