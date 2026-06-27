@@ -205,10 +205,14 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    # Local dev: long-lived tokens so you're never logged out mid-session.
-    # Production: override via JWT_ACCESS_TOKEN_LIFETIME / JWT_REFRESH_TOKEN_LIFETIME env vars.
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_ACCESS_TOKEN_LIFETIME', '480'))),   # 8 hours
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=int(os.getenv('JWT_REFRESH_TOKEN_LIFETIME_DAYS', '30'))),  # 30 days
+    # 30-minute inactivity timeout: the access token is short (10 min) and the
+    # refresh token lasts 30 min. With rotation ON, every active request that
+    # refreshes the access token also issues a fresh 30-min refresh token, so
+    # the 30-minute window slides while the user is active. After 30 minutes of
+    # NO activity the refresh token expires and the user must log in again.
+    # Override in production via the env vars below.
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_ACCESS_TOKEN_LIFETIME', '10'))),       # 10 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_REFRESH_TOKEN_LIFETIME_MINUTES', '30'))),  # 30 min inactivity
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,

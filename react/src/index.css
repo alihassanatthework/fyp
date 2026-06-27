@@ -1954,3 +1954,36 @@ body.dark [class*="-icon-tile"] {
 body.dark [class*="-icon-wrap"] svg,
 body.dark [class*="-icon-tile"] svg { color: #e2e8f0 !important; }
 
+
+/* ── History: inline makeup/fashion report panel ── */
+.hist-report-panel {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border-color);
+}
+.hist-report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 1.1rem;
+}
+.hist-report-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.55rem 0.7rem;
+  background: var(--bg-tertiary);
+  border-radius: 0.6rem;
+}
+.hist-report-key {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--nav-accent);
+}
+.hist-report-val {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+@media (max-width: 640px) { .hist-report-grid { grid-template-columns: 1fr; } }
