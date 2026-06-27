@@ -56,13 +56,14 @@ class TestAnalysisHistory:
     def test_history_empty(self, auth_client):
         res = auth_client.get(self.URL)
         assert res.status_code == 200
-        assert res.data['results'] == []
+        # History returns a plain (un-paginated) list, newest first.
+        assert res.data == []
 
     def test_history_returns_user_records(self, auth_client, analysis):
         res = auth_client.get(self.URL)
         assert res.status_code == 200
-        assert res.data['count'] == 1
-        assert res.data['results'][0]['id'] == 'TEST0001'
+        assert len(res.data) == 1
+        assert res.data[0]['id'] == 'TEST0001'
 
     def test_history_filter_by_type(self, auth_client, user):
         AnalysisResult.objects.create(
@@ -75,7 +76,7 @@ class TestAnalysisHistory:
         )
         res = auth_client.get(self.URL + '?type=Skin Scan')
         assert res.status_code == 200
-        ids = [r['id'] for r in res.data['results']]
+        ids = [r['id'] for r in res.data]
         assert 'SKIN01' in ids
         assert 'SCALP01' not in ids
 
@@ -91,7 +92,7 @@ class TestAnalysisHistory:
         client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         res = client.get(self.URL)
         assert res.status_code == 200
-        assert res.data['count'] == 0
+        assert len(res.data) == 0
 
     def test_history_unauthenticated(self, client):
         res = client.get(self.URL)

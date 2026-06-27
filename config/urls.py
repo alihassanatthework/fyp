@@ -12,8 +12,6 @@ from django.http import HttpResponse
 from django.views.static import serve as static_serve
 from django.urls import re_path
 
-from image_analysis.views import AnalyzeImageView
-
 from pathlib import Path
 
 # React single-server integration:
@@ -41,15 +39,8 @@ def react_index(_request):
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Template-based upload/analysis flow (older UI).
-    # Kept for backwards compatibility/testing.
-    path('upload/', AnalyzeImageView.as_view(), name='upload'),
-
-    # If React build exists, we serve React for all routes.
-    # Otherwise, fall back to the legacy Django template frontend.
-    *([] if REACT_BUILD_DIR.exists() else [path('', include('frontend.urls'))]),
-
-    # React frontend API (JSON endpoints)
+    # React frontend API (JSON endpoints). The frontend is React-only —
+    # the legacy Django template UI was removed.
     path('api/', include('config.api.urls')),
 ]
 

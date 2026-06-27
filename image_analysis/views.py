@@ -6,7 +6,6 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from image_analysis.models import AnalysisResult
 from django.conf import settings
-from django.shortcuts import render
 import logging
 import os
 import uuid
@@ -147,12 +146,6 @@ def _clear_inflight(cache_key):
 class AnalyzeImageView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
-
-    def get(self, request):
-        """
-        Displays the HTML Upload Page.
-        """
-        return render(request, 'frontend/upload.html')
 
     def post(self, request, *args, **kwargs):
         """
@@ -1059,4 +1052,6 @@ class AnalyzeImageView(APIView):
                     request.session.modified = True
         except Exception:
             pass
-        return render(request, 'frontend/results.html', context)
+        # API is JSON-only (React frontend). The legacy template render was
+        # removed; non-JSON clients get the same JSON payload as the JSON branch.
+        return Response({"success": True, "data": context}, status=200)

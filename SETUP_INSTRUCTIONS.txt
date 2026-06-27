@@ -1,113 +1,107 @@
-════════════════════════════════════════════════════════════════════════
- ME — AI Skin & Scalp Assistant  ·  SETUP INSTRUCTIONS (personal transfer)
-════════════════════════════════════════════════════════════════════════
+================================================================
+ ME — AI Skin & Scalp Assistant  ·  SETUP INSTRUCTIONS
+ (Portable transfer package — full environment included)
+================================================================
 
-This archive contains the FULL project for personal use on another device:
-source code, trained model weights, a database dump, and real .env values.
+This zip contains the COMPLETE project: source code, trained model
+weights, the SQLite database with current data, and the .env file with
+real secrets (Groq, email, Safepay). It is for PRIVATE transfer to your
+own device only — do not share it.
 
-────────────────────────────────────────────────────────────────────────
- 0. REQUIREMENTS (install these first)
-────────────────────────────────────────────────────────────────────────
-  • Python  3.9.x          (tested on 3.9.6)
-  • Node.js 18+ / 20+      (tested on v26)  + npm 9+   (tested on 11.12)
-  • PostgreSQL 15          (data was dumped from postgresql@15)
-  • Ollama (optional)      for LLM recommendations — model: llama3.2
-                           https://ollama.com  →  `ollama pull llama3.2`
+----------------------------------------------------------------
+ 0. REQUIRED VERSIONS
+----------------------------------------------------------------
+  - Python : 3.9.x   (developed on 3.9.6)
+  - Node   : 18+      (developed on Node 26, npm 11)  -- Node 18 or 20 also fine
+  - OS     : macOS / Linux / Windows
+  - Disk   : ~3 GB (model weights are large)
+  - RAM    : 4 GB+ recommended (ML models load into memory)
 
-────────────────────────────────────────────────────────────────────────
+----------------------------------------------------------------
  1. UNZIP
-────────────────────────────────────────────────────────────────────────
-  Unzip anywhere, then `cd` into the project folder (the one with
-  manage.py in it).
+----------------------------------------------------------------
+  Unzip anywhere, e.g.:
+      ~/Desktop/ME_project/
+  Open a terminal in that folder (the one containing manage.py).
 
-────────────────────────────────────────────────────────────────────────
- 2. PYTHON BACKEND
-────────────────────────────────────────────────────────────────────────
-  # create + activate a virtual environment
-  python3 -m venv venv
-  source venv/bin/activate          # Windows: venv\Scripts\activate
+----------------------------------------------------------------
+ 2. BACKEND (Django) — Python setup
+----------------------------------------------------------------
+  Create a fresh virtual environment (the old venv was NOT included):
 
-  # install dependencies
-  pip install -r requirements.txt
+      python3 -m venv venv
+      source venv/bin/activate           # Windows: venv\Scripts\activate
 
-────────────────────────────────────────────────────────────────────────
- 3. DATABASE (PostgreSQL — restore the included dump)
-────────────────────────────────────────────────────────────────────────
-  The .env is preconfigured for:  DB name = fyp_skin_scalp, user = alihassan
-  (change DB_USER / DB_PASSWORD in .env if your local Postgres differs).
+  Install dependencies:
 
-  # make sure Postgres is running, then:
-  createdb fyp_skin_scalp                      # create empty DB
-  psql -d fyp_skin_scalp -f db_backup.sql      # restore ALL current data
+      pip install --upgrade pip
+      pip install -r requirements.txt
 
-  # (only if you skip the dump and want fresh empty tables instead)
-  # python manage.py migrate
+  Apply database migrations (DB is already included with data, but this
+  ensures the schema is in sync — it is safe and non-destructive):
 
-  NOTE: db_backup.sql already contains every table + all rows (users,
-  analyses, reports, etc.), so you do NOT need to run migrate after
-  restoring it. Use migrate ONLY for a clean empty database.
+      python manage.py migrate
 
-  To use SQLite instead of Postgres (quick offline run), set in .env:
-      USE_SQLITE=True
-  then:  python manage.py migrate     (creates db.sqlite3, empty)
+  (Optional) create an admin user if you need the Django admin:
 
-────────────────────────────────────────────────────────────────────────
- 4. ENV — already configured
-────────────────────────────────────────────────────────────────────────
-  .env is included WITH real values (DB, email SMTP, etc.). No action
-  needed unless your local Postgres user/password differs — then edit:
-      DB_USER, DB_PASSWORD, DB_NAME
-  in .env at the project root.
+      python manage.py createsuperuser
 
-────────────────────────────────────────────────────────────────────────
- 5. MODEL WEIGHTS — already included
-────────────────────────────────────────────────────────────────────────
-  All trained weights ship inside the archive:
-      core/ai_models/   efficientnet_b4_primary_v2.pth  (primary 4-class)
-                        dryness_v2.pth (+ calibration json)
-                        efficientnet_b4_skin.pth (legacy fallback)
-                        efficientnet_b0_normal_binary.pth
-      core/models/      yolo_scalp.pt  +  unet_checkpoints/...
-      checkpoints/      resnet_unet_best.pth ...
-  No download needed — inference works offline.
+----------------------------------------------------------------
+ 3. FRONTEND (React) — Node setup
+----------------------------------------------------------------
+  node_modules was NOT included — reinstall it:
 
-────────────────────────────────────────────────────────────────────────
- 6. RUN THE BACKEND  (Django :8000)
-────────────────────────────────────────────────────────────────────────
-  source venv/bin/activate
-  python manage.py runserver
-  # → http://localhost:8000
+      cd react
+      npm install
 
-────────────────────────────────────────────────────────────────────────
- 7. RUN THE FRONTEND  (React :3000)
-────────────────────────────────────────────────────────────────────────
-  cd react
-  npm install                  # installs node_modules (not shipped)
-  npm start                    # dev server → http://localhost:3000
-  #   or build for production:
-  # npm run build
+  Then either build for production OR run the dev server:
 
-────────────────────────────────────────────────────────────────────────
- 8. LOGIN
-────────────────────────────────────────────────────────────────────────
-  Use any account from the restored database (e.g. ali@gmail.com).
-  If you don't know a password, reset it:
-      python manage.py shell -c "from django.contrib.auth import get_user_model as G; u=G().objects.get(email='ali@gmail.com'); u.set_password('NewPass123'); u.save()"
+      npm run build         # production build served by Django
+        -- OR --
+      npm start             # dev server at http://localhost:3000
+      npm run start:https   # dev server over HTTPS (needed for camera on phone/LAN)
 
-────────────────────────────────────────────────────────────────────────
- 9. OPTIONAL — load testing (already wired)
-────────────────────────────────────────────────────────────────────────
-  bash scripts/run_load_server.sh         # gunicorn + gevent on :8000
-  locust --headless -u 150 -r 10 -t 2m --host http://localhost:8000 --html load.html
+  cd ..
 
-  Backend tests (no servers needed):
-  python -m pytest tests/
+----------------------------------------------------------------
+ 4. RUN THE BACKEND
+----------------------------------------------------------------
+      source venv/bin/activate            # if not already active
+      python manage.py runserver
 
-════════════════════════════════════════════════════════════════════════
- Troubleshooting
-════════════════════════════════════════════════════════════════════════
-  • "database does not exist"      → run createdb fyp_skin_scalp (step 3)
-  • "role/user does not exist"     → edit DB_USER in .env to your PG user
-  • two postgres versions clash    → keep only one running on port 5432
-  • MPS / GPU not used             → models fall back to CPU automatically
-════════════════════════════════════════════════════════════════════════
+  Backend:  http://localhost:8000
+  Frontend (dev): http://localhost:3000   (proxies /api to :8000)
+
+----------------------------------------------------------------
+ 5. .ENV — ALREADY CONFIGURED
+----------------------------------------------------------------
+  The .env file is INCLUDED with real values, so no setup is needed:
+    - GROQ_API_KEY        (LLM recommendations — Groq llama-3.3-70b)
+    - EMAIL_HOST_USER / EMAIL_HOST_PASSWORD  (report + password-reset email)
+    - SAFEPAY_*           (sandbox payment gateway: cards + Easypaisa + JazzCash)
+
+  Models are included under:
+    - core/ai_models/*.pth        (skin, scalp, dryness, normal classifiers)
+    - core/models/yolo_scalp.pt   (legacy scalp YOLO fallback)
+    - core/models/unet_checkpoints/  (U-Net eczema segmentation)
+
+  Database included: db.sqlite3 (current data).
+
+----------------------------------------------------------------
+ 6. QUICK START (copy-paste)
+----------------------------------------------------------------
+      python3 -m venv venv && source venv/bin/activate
+      pip install -r requirements.txt
+      python manage.py migrate
+      cd react && npm install && npm run build && cd ..
+      python manage.py runserver
+      # open http://localhost:8000
+
+----------------------------------------------------------------
+ NOTES
+----------------------------------------------------------------
+  - The dataset/ training folder was intentionally EXCLUDED (not needed to run).
+  - To retrain the scalp model: bash scripts/train_scalp.sh (needs the dataset).
+  - Camera capture needs HTTPS or localhost (use npm run start:https on a phone).
+  - LLM: Groq (primary, llama-3.3-70b) with Ollama (local) fallback.
+================================================================
